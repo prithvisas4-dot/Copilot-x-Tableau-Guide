@@ -1,6 +1,690 @@
 
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Tableau Copilot Guide</title></head>
+/* ------------------------------------------------------------
+   FONTS
+------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;600;700&display=swap%27);
+ 
+/* ------------------------------------------------------------
+   THEME COLORS
+------------------------------------------------------------ */
+:root {
+    --navy: #0d1b2a;
+    --navy-2: #0f1d32;
+    --purple: #A100FF;
+    --purple-glow: #C34DFF;
+    --cyan: #00E0FF;
+    --cyan-soft: #67F0FF;
+    --text: #FFFFFF;
+    --text-dim: rgba(255,255,255,0.65);
+    --grid-line: rgba(255,255,255,0.04);
+    --card-bg: rgba(255,255,255,0.05);
+    --card-border: rgba(255,255,255,0.08);
+}
+ 
+/* ------------------------------------------------------------
+   BASE
+------------------------------------------------------------ */
+body {
+    margin: 0;
+    background: var(--navy);
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+}
+ 
+/* ------------------------------------------------------------
+   GLOBAL NAVIGATION
+------------------------------------------------------------ */
+.nav {
+    position: sticky;
+    top: 0;
+    padding: 20px 40px;
+    display: flex;
+    gap: 28px;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 200;
+}
+ 
+.nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    opacity: 0.75;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+}
+ 
+.nav a:hover {
+    opacity: 1;
+}
+ 
+.nav a:hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: var(--purple);
+    border-radius: 2px;
+}
+ 
+/* ------------------------------------------------------------
+   SEARCH BAR (global)
+------------------------------------------------------------ */
+.nav-search {
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+ 
+.nav-search input {
+    padding: 8px 34px 8px 14px;
+    width: 180px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: white;
+    transition: 0.25s ease;
+}
+ 
+.nav-search input:focus {
+    width: 260px;
+    background: rgba(255,255,255,0.12);
+}
+ 
+.nav-search i {
+    position: absolute;
+    right: 10px;
+    color: var(--purple);
+}
+ 
+/* SEARCH RESULTS PANEL */
+.search-results {
+    position: absolute;
+    top: 70px;
+    right: 40px;
+    width: 300px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: rgba(10,15,30,0.92);
+    backdrop-filter: blur(12px);
+    border-radius: 10px;
+    display: none;
+    z-index: 500;
+}
+ 
+.search-results a {
+    display: block;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    text-decoration: none;
+    color: white;
+}
+ 
+.search-results a:hover {
+    background: rgba(161,0,255,0.15);
+}
+ 
+.search-results .no-results {
+    padding: 14px 18px;
+    opacity: 0.65;
+}
+ 
+/* ------------------------------------------------------------
+   HERO SECTION (Anim Grid + Glow Nodes)
+------------------------------------------------------------ */
+.hero {
+    padding: 160px 10vw;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+ 
+.hero h1 {
+    font-family: "Space Grotesk";
+    font-size: 58px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+ 
+.hero .hero-sub {
+    font-size: 18px;
+    opacity: 0.75;
+    margin-top: 12px;
+}
+ 
+/* Animated grid layer */
+.grid-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-size: 120px 120px;
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    animation: gridFloat 28s linear infinite;
+    z-index: -1;
+}
+ 
+@keyframes gridFloat {
+    from { transform: translate(0,0); }
+    to { transform: translate(-120px,-120px); }
+}
+ 
+/* Glow nodes */
+.node {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: pulse 3s ease-in-out infinite;
+}
+ 
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.4; }
+}
+ 
+/* ------------------------------------------------------------
+   BUTTONS
+------------------------------------------------------------ */
+.btn-row {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+ 
+.btn-solid {
+    background: var(--purple);
+    padding: 16px 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+ 
+.btn-solid:hover {
+    box-shadow: 0 0 20px var(--purple-glow);
+}
+ 
+.btn-outline {
+    border: 1px solid var(--purple);
+    color: var(--purple);
+    padding: 16px 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+}
+ 
+.btn-outline:hover {
+    background: rgba(161,0,255,0.15);
+}
+ 
+/* ------------------------------------------------------------
+   MAIN CONTENT SECTIONS
+------------------------------------------------------------ */
+.container {
+    padding: 100px 10vw;
+}
+ 
+.container h1 {
+    font-family: "Space Grotesk";
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+ 
+.container p {
+    font-size: 18px;
+    opacity: 0.75;
+}
+ 
+/* ------------------------------------------------------------
+   MODULE CARDS
+------------------------------------------------------------ */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+ 
+.module-card {
+    background: var(--card-bg);
+    padding: 34px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    transition: 0.25s ease;
+}
+ 
+.module-card:hover {
+    background: rgba(161,0,255,0.08);
+    border-color: var(--purple);
+    transform: translateY(-4px);
+}
+ 
+.module-card i {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: var(--cyan-soft);
+}
+ 
+.module-card h3 {
+    font-family: "Space Grotesk";
+    font-size: 22px;
+}
+ 
+/* ------------------------------------------------------------
+   FOOTER
+------------------------------------------------------------ */
+footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+ 
+/* ------------------------------------------------------------
+   GLOW NODE GENERATION
+------------------------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
+ 
+    const hero = document.querySelector(".hero");
+    if (hero) {
+        for (let i = 0; i < 40; i++) {
+            let n = document.createElement("div");
+            n.classList.add("node");
+            n.style.top = Math.random() * 100 + "%";
+            n.style.left = Math.random() * 100 + "%";
+            hero.appendChild(n);
+        }
+    }
+});
+ 
+/* ------------------------------------------------------------
+   LIVE SEARCH ENGINE
+------------------------------------------------------------ */
+const SEARCH_INDEX = [
+    { title: "Home", link: "index.html" },
+    { title: "Academy Overview", link: "academy.html" },
+ 
+    /* Beginner */
+    { title: "Beginner – What Tableau Is", link: "beginner.html" },
+    { title: "Beginner – Understanding Your Data", link: "beginner.html" },
+    { title: "Beginner – Dimensions vs Measures", link: "beginner.html" },
+    { title: "Beginner – Build First Chart", link: "beginner.html" },
+ 
+    /* Intermediate */
+    { title: "Intermediate – Calc Works One Sheet", link: "intermediate.html" },
+    { title: "Intermediate – Top N + Region", link: "intermediate.html" },
+    { title: "Intermediate – YoY Comparison", link: "intermediate.html" },
+ 
+    /* Advanced */
+    { title: "Advanced – Pressure Test Logic", link: "advanced.html" },
+    { title: "Advanced – Documentation", link: "advanced.html" },
+ 
+    /* Limitations */
+    { title: "Tableau Limitations", link: "limitations.html" },
+ 
+    /* Bonus Tools */
+    { title: "Excel QA Automation", link: "bonus.html" },
+];
+ 
+const input = document.getElementById("academySearch");
+const resultsPanel = document.getElementById("searchResults");
+ 
+if (input) {
+    input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        resultsPanel.innerHTML = "";
+ 
+        if (!q) {
+            resultsPanel.style.display = "none";
+            return;
+        }
+ 
+        const matches = SEARCH_INDEX.filter(i =>
+            i.title.toLowerCase().includes(q)
+        );
+ 
+        if (matches.length === 0) {
+            resultsPanel.innerHTML = "<div class='no-results'>No results found</div>";
+        } else {
+            matches.forEach(m => {
+                const a = document.createElement("a");
+                a.href = m.link;
+                a.textContent = m.title;
+                resultsPanel.appendChild(a);
+            });
+        }
+ 
+        resultsPanel.style.display = "block";
+    });
+}
+ 
+/* Close when clicking outside */
+document.addEventListener("click", e => {
+    if (e.target !== input && !resultsPanel.contains(e.target)) {
+        resultsPanel.style.display = "none";
+    }
+});
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tableau × Copilot Academy</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
 <body>
-<!-- FULL HTML SHOULD BE PASTED HERE FROM CHUNKS -->
-<p>Placeholder: Insert the full combined HTML content from all chunks here.</p>
-</body></html>
+<nav class="nav">
+    index.html<i class="ph-bold ph-house"></i> Home</a>
+    academy.html<i class="ph-bold ph-graduation-cap"></i> Academy</a>
+    beginner.html<i class="ph-bold ph-sparkle"></i> Beginner</a>
+    intermediate.html
+    advanced.html
+    limitations.html
+    bonus.html<i class="ph-bold ph-flask"></i> Extras</a>
+ 
+    <div class="nav-search">
+        <input id="academySearch" placeholder="Search…" />
+        <i class="ph-bold ph-magnifying-glass"></i>
+    </div>
+</nav>
+ 
+<div id="searchResults" class="search-results"></div>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+ 
+    <h1>
+        Master <span style="color:#A100FF;">Tableau × Copilot</span><br>
+        like a production‑grade data team.
+    </h1>
+ 
+    <p class="hero-sub">
+        Practical, fast, enterprise‑ready. No fluff.
+    </p>
+ 
+    <div class="btn-row">
+        academy.html
+            <i class="ph-bold ph-rocket-launch"></i> Enter Academy
+        </a>
+        #mission
+            <i class="ph-bold ph-compass"></i> View Mission
+        </a>
+    </div>
+</section>
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Copilot × Tableau Academy — Overview</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+<body>
+ 
+<nav class="nav">
+    index.html
+    academy.html
+    beginner.html
+    intermediate.html
+    advanced.html
+    limitations.html
+    bonus.html Extras</a>
+ 
+    <div class="nav-search">
+        <input id="academySearch" placeholder="Search…">
+        <i class="ph-bold ph-magnifying-glass"></i>
+    </div>
+</nav>
+ 
+<div id="searchResults" class="search-results"></div>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Welcome to the Academy</h1>
+    <p class="hero-sub">Choose your training module.</p>
+</section>
+ 
+<section class="container">
+ 
+    <div class="module-grid">
+ 
+        beginner.html
+            <i class="ph-bold ph-sparkle"></i>
+            <h3>Beginner</h3>
+            <p>Foundations of Tableau + Copilot.</p>
+        </a>
+ 
+        intermediate.html
+            <i class="ph-bold ph-lightning"></i>
+            <h3>Intermediate</h3>
+            <p>LOD, filters, blending, YoY.</p>
+        </a>
+ 
+        advanced.html
+            <i class="ph-bold ph-target"></i>
+            <h3>Advanced</h3>
+            <p>Enterprise workflows.</p>
+        </a>
+ 
+        limitations.html
+            <i class="ph-bold ph-warning"></i>
+            <h3>Tableau Limitations</h3>
+            <p>The system walls and fixes.</p>
+        </a>
+ 
+        bonus.htmlExtras</a>
+    </div>
+ 
+</section>
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Beginner Level</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
+<body>
+<nav class="nav">
+    index.htmlHome</a>
+    academy.htmlAcademy</a>
+</nav>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Level 01 — Beginner</h1>
+    <p class="hero-sub">Start your Tableau × Copilot journey.</p>
+</section>
+ 
+<section class="container">
+    <h1>The Beginner Track</h1>
+    <p>7 guided steps:</p>
+ 
+    <div class="module-grid">
+ 
+        <div class="module-card">
+            <h3>What Tableau Actually Is</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>Know Your Data</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>Dimensions vs Measures</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>First Chart Guided</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>Fixing One-Bar Issues</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>Understanding Errors</h3>
+        </div>
+ 
+        <div class="module-card">
+            <h3>First Dashboard</h3>
+        </div>
+ 
+    </div>
+</section>
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Intermediate Level</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
+<body>
+<nav class="nav">
+    index.htmlacademy.html</nav>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Level 02 — Intermediate</h1>
+</section>
+ 
+<section class="container">
+    <h1>Intermediate Modules</h1>
+ 
+    <div class="module-grid">
+ 
+        <div class="module-card"><h3>Scenario 01 — Calc works sometimes</h3></div>
+        <div class="module-card"><h3>Scenario 02 — Top N & Region</h3></div>
+        <div class="module-card"><h3>Scenario 03 — YoY Comparison</h3></div>
+        <div class="module-card"><h3>Scenario 04 — Slow Dashboards</h3></div>
+        <div class="module-card"><h3>Scenario 05 — Parameters</h3></div>
+        <div class="module-card"><h3>Scenario 06 — When to use LOD</h3></div>
+ 
+    </div>
+</section>
+ 
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Advanced Level</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
+<body>
+<nav class="nav">
+    index.htmlacademy.html
+</nav>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Level 03 — Advanced</h1>
+</section>
+ 
+<section class="container">
+    <h1>Advanced Power Modules</h1>
+ 
+    <div class="module-grid">
+        <div class="module-card"><i class="ph-bold ph-brain"></i><h3>Pressure Test Logic</h3></div>
+        <div class="module-card"><h3>Multiple Approaches</h3></div>
+        <div class="module-card"><h3>Stakeholder Translation</h3></div>
+        <div class="module-card"><h3>Documentation</h3></div>
+        <div class="module-card"><h3>Performance Audit</h3></div>
+        <div class="module-card"><h3>Pre‑Publish Checklist</h3></div>
+    </div>
+</section>
+ 
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tableau Limitations</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
+<body>
+<nav class="nav">
+    index.htmlacademy.html
+</nav>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Tableau Limitations</h1>
+</section>
+ 
+<section class="container">
+    <h1>System Walls & Workarounds</h1>
+</section>
+ 
+</body>
+</html>
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bonus Tools</title>
+    assets/css/main.css
+    https://unpkg.com/phosphor-icons
+    assets/js/app.js
+</head>
+ 
+<body>
+<nav class="nav">
+    index.htmlacademy.html
+</nav>
+ 
+<section class="hero">
+    <div class="grid-bg"></div>
+    <h1>Bonus Tools</h1>
+</section>
+ 
+<section class="container">
+    <h1>Your Analyst Toolkit</h1>
+</section>
+ 
+</body>
+</html>
+ 
