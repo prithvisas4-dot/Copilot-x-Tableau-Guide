@@ -1,690 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau × Copilot Practical Guide</title>
 
-/* ------------------------------------------------------------
-   FONTS
------------------------------------------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;600;700&display=swap%27);
- 
-/* ------------------------------------------------------------
-   THEME COLORS
------------------------------------------------------------- */
-:root {
-    --navy: #0d1b2a;
-    --navy-2: #0f1d32;
-    --purple: #A100FF;
-    --purple-glow: #C34DFF;
-    --cyan: #00E0FF;
-    --cyan-soft: #67F0FF;
-    --text: #FFFFFF;
-    --text-dim: rgba(255,255,255,0.65);
-    --grid-line: rgba(255,255,255,0.04);
-    --card-bg: rgba(255,255,255,0.05);
-    --card-border: rgba(255,255,255,0.08);
-}
- 
-/* ------------------------------------------------------------
-   BASE
------------------------------------------------------------- */
-body {
-    margin: 0;
-    background: var(--navy);
-    color: var(--text);
-    font-family: "Inter", sans-serif;
-    overflow-x: hidden;
-}
- 
-/* ------------------------------------------------------------
-   GLOBAL NAVIGATION
------------------------------------------------------------- */
-.nav {
-    position: sticky;
-    top: 0;
-    padding: 20px 40px;
-    display: flex;
-    gap: 28px;
-    background: rgba(10,15,30,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    z-index: 200;
-}
- 
-.nav a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
-    opacity: 0.75;
-    text-decoration: none;
-    font-weight: 500;
-    position: relative;
-}
- 
-.nav a:hover {
-    opacity: 1;
-}
- 
-.nav a:hover::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 100%;
-    height: 2px;
-    background: var(--purple);
-    border-radius: 2px;
-}
- 
-/* ------------------------------------------------------------
-   SEARCH BAR (global)
------------------------------------------------------------- */
-.nav-search {
-    margin-left: auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
- 
-.nav-search input {
-    padding: 8px 34px 8px 14px;
-    width: 180px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
-    color: white;
-    transition: 0.25s ease;
-}
- 
-.nav-search input:focus {
-    width: 260px;
-    background: rgba(255,255,255,0.12);
-}
- 
-.nav-search i {
-    position: absolute;
-    right: 10px;
-    color: var(--purple);
-}
- 
-/* SEARCH RESULTS PANEL */
-.search-results {
-    position: absolute;
-    top: 70px;
-    right: 40px;
-    width: 300px;
-    max-height: 360px;
-    overflow-y: auto;
-    background: rgba(10,15,30,0.92);
-    backdrop-filter: blur(12px);
-    border-radius: 10px;
-    display: none;
-    z-index: 500;
-}
- 
-.search-results a {
-    display: block;
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    text-decoration: none;
-    color: white;
-}
- 
-.search-results a:hover {
-    background: rgba(161,0,255,0.15);
-}
- 
-.search-results .no-results {
-    padding: 14px 18px;
-    opacity: 0.65;
-}
- 
-/* ------------------------------------------------------------
-   HERO SECTION (Anim Grid + Glow Nodes)
------------------------------------------------------------- */
-.hero {
-    padding: 160px 10vw;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
- 
-.hero h1 {
-    font-family: "Space Grotesk";
-    font-size: 58px;
-    line-height: 1.2;
-    font-weight: 700;
-}
- 
-.hero .hero-sub {
-    font-size: 18px;
-    opacity: 0.75;
-    margin-top: 12px;
-}
- 
-/* Animated grid layer */
-.grid-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 200%;
-    background-size: 120px 120px;
-    background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    animation: gridFloat 28s linear infinite;
-    z-index: -1;
-}
- 
-@keyframes gridFloat {
-    from { transform: translate(0,0); }
-    to { transform: translate(-120px,-120px); }
-}
- 
-/* Glow nodes */
-.node {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--purple);
-    border-radius: 50%;
-    opacity: 0.7;
-    animation: pulse 3s ease-in-out infinite;
-}
- 
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 0.4; }
-    50% { transform: scale(2); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.4; }
-}
- 
-/* ------------------------------------------------------------
-   BUTTONS
------------------------------------------------------------- */
-.btn-row {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
- 
-.btn-solid {
-    background: var(--purple);
-    padding: 16px 30px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
-}
- 
-.btn-solid:hover {
-    box-shadow: 0 0 20px var(--purple-glow);
-}
- 
-.btn-outline {
-    border: 1px solid var(--purple);
-    color: var(--purple);
-    padding: 16px 30px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 10px;
-    text-decoration: none;
-}
- 
-.btn-outline:hover {
-    background: rgba(161,0,255,0.15);
-}
- 
-/* ------------------------------------------------------------
-   MAIN CONTENT SECTIONS
------------------------------------------------------------- */
-.container {
-    padding: 100px 10vw;
-}
- 
-.container h1 {
-    font-family: "Space Grotesk";
-    font-size: 40px;
-    margin-bottom: 20px;
-}
- 
-.container p {
-    font-size: 18px;
-    opacity: 0.75;
-}
- 
-/* ------------------------------------------------------------
-   MODULE CARDS
------------------------------------------------------------- */
-.module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-    gap: 24px;
-    margin-top: 40px;
-}
- 
-.module-card {
-    background: var(--card-bg);
-    padding: 34px;
-    border-radius: 12px;
-    border: 1px solid var(--card-border);
-    transition: 0.25s ease;
-}
- 
-.module-card:hover {
-    background: rgba(161,0,255,0.08);
-    border-color: var(--purple);
-    transform: translateY(-4px);
-}
- 
-.module-card i {
-    font-size: 32px;
-    margin-bottom: 10px;
-    color: var(--cyan-soft);
-}
- 
-.module-card h3 {
-    font-family: "Space Grotesk";
-    font-size: 22px;
-}
- 
-/* ------------------------------------------------------------
-   FOOTER
------------------------------------------------------------- */
-footer {
-    text-align: center;
-    padding: 40px;
-    font-size: 14px;
-    opacity: 0.7;
-}
- 
-/* ------------------------------------------------------------
-   GLOW NODE GENERATION
------------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
- 
-    const hero = document.querySelector(".hero");
-    if (hero) {
-        for (let i = 0; i < 40; i++) {
-            let n = document.createElement("div");
-            n.classList.add("node");
-            n.style.top = Math.random() * 100 + "%";
-            n.style.left = Math.random() * 100 + "%";
-            hero.appendChild(n);
-        }
+  <!-- Typography (Option 1): Space Grotesk + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* -----------------------------------------------------
+       GLOBAL THEME + TYPOGRAPHY LOCK (Option 1)
+    ------------------------------------------------------ */
+    :root {
+      --navy: #0d1b2a;
+      --navy2: #0b1624;
+      --navy3: #0f1c30;
+
+      --purple: #A100FF;
+      --teal: #00d4aa;
+      --yellow: #ffdd55;
+      --red: #ff4f4f;
+      --grey: #94a3b8;
+
+      --font-display: "Space Grotesk", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-});
- 
-/* ------------------------------------------------------------
-   LIVE SEARCH ENGINE
------------------------------------------------------------- */
-const SEARCH_INDEX = [
-    { title: "Home", link: "index.html" },
-    { title: "Academy Overview", link: "academy.html" },
- 
-    /* Beginner */
-    { title: "Beginner – What Tableau Is", link: "beginner.html" },
-    { title: "Beginner – Understanding Your Data", link: "beginner.html" },
-    { title: "Beginner – Dimensions vs Measures", link: "beginner.html" },
-    { title: "Beginner – Build First Chart", link: "beginner.html" },
- 
-    /* Intermediate */
-    { title: "Intermediate – Calc Works One Sheet", link: "intermediate.html" },
-    { title: "Intermediate – Top N + Region", link: "intermediate.html" },
-    { title: "Intermediate – YoY Comparison", link: "intermediate.html" },
- 
-    /* Advanced */
-    { title: "Advanced – Pressure Test Logic", link: "advanced.html" },
-    { title: "Advanced – Documentation", link: "advanced.html" },
- 
-    /* Limitations */
-    { title: "Tableau Limitations", link: "limitations.html" },
- 
-    /* Bonus Tools */
-    { title: "Excel QA Automation", link: "bonus.html" },
-];
- 
-const input = document.getElementById("academySearch");
-const resultsPanel = document.getElementById("searchResults");
- 
-if (input) {
-    input.addEventListener("input", () => {
-        const q = input.value.trim().toLowerCase();
-        resultsPanel.innerHTML = "";
- 
-        if (!q) {
-            resultsPanel.style.display = "none";
-            return;
-        }
- 
-        const matches = SEARCH_INDEX.filter(i =>
-            i.title.toLowerCase().includes(q)
-        );
- 
-        if (matches.length === 0) {
-            resultsPanel.innerHTML = "<div class='no-results'>No results found</div>";
-        } else {
-            matches.forEach(m => {
-                const a = document.createElement("a");
-                a.href = m.link;
-                a.textContent = m.title;
-                resultsPanel.appendChild(a);
-            });
-        }
- 
-        resultsPanel.style.display = "block";
-    });
-}
- 
-/* Close when clicking outside */
-document.addEventListener("click", e => {
-    if (e.target !== input && !resultsPanel.contains(e.target)) {
-        resultsPanel.style.display = "none";
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--navy);
+      color: #e5e7eb;
+      font-family: var(--font-mono);
+      line-height: 1.65;
+      overflow-x: hidden;
     }
-});
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Tableau × Copilot Academy</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
+
+    /* subtle grid for "academy/product" feel */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
+    main, nav, section, footer, #progress-bar { position: relative; z-index: 1; }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
+
+    p { margin: 0; }
+
+    section {
+      padding: 110px 10vw;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--grey);
+      opacity: 0.95;
+      margin-bottom: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+``
+
+     /* -----------------------------------------------------
+       TOP SCROLL PROGRESS BAR
+    ------------------------------------------------------ */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: var(--purple);
+      width: 0%;
+      z-index: 9999;
+    }
+
+    /* -----------------------------------------------------
+       STICKY TOP NAV
+    ------------------------------------------------------ */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(13,27,42,0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px dashed rgba(161,0,255,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+    }
+
+    .nav-left {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: #cbd5e1;
+      text-decoration: none;
+      opacity: 0.92;
+    }
+
+    .nav-links a:hover { color: var(--purple); }
+
+    .nav-cta {
+      background: var(--purple);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.2s ease;
+    }
+    .nav-cta:hover { transform: translateY(-1px); }
+
+    /* -----------------------------------------------------
+       GLOBAL SEARCH BAR (Sticky + Scope + Empty State + Highlight)
+    ------------------------------------------------------ */
+    .search-shell {
+      position: sticky;
+      top: 64px; /* under nav */
+      z-index: 900;
+      max-width: 980px;
+      margin: 16px auto 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(13,27,42,0.55);
+      backdrop-filter: blur(10px);
+      border: 1px dashed rgba(255,255,255,0.20);
+      transition: 0.2s ease;
+    }
+
+    .search-shell.stuck {
+      background: rgba(13,27,42,0.88);
+      border-color: rgba(161,0,255,0.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.25);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .search-ico {
+      opacity: 0.7;
+      font-size: 14px;
+    }
+
+    #searchInput {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+    #searchInput::placeholder { color: #94a3b8; }
+
+    .search-clear {
+      border: none;
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border-radius: 10px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.85;
+    }
+    .search-clear:hover { opacity: 1; }
+
+    .search-scope {
+      width: 210px;
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      opacity: 0.75;
+      font-family: var(--font-mono);
+    }
+
+    .search-empty {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255,221,85,0.55);
+      background: rgba(255,221,85,0.08);
+      color: #ffeaa0;
+      font-size: 13px;
+      font-family: var(--font-mono);
+    }
+
+    mark.hl {
+      background: rgba(161,0,255,0.28);
+      border: 1px solid rgba(161,0,255,0.55);
+      color: #fff;
+      padding: 0 3px;
+      border-radius: 6px;
+    }
+
+     /* -----------------------------------------------------
+       HERO SECTION
+    ------------------------------------------------------ */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    .pill {
+      position: absolute;
+      top: 40px;
+      padding: 6px 18px;
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      opacity: 0.9;
+      font-family: var(--font-mono);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 4.6vw, 4rem);
+      line-height: 1.1;
+      max-width: 980px;
+    }
+    .hero h1 span { color: var(--purple); }
+
+    .subtext {
+      margin-top: 18px;
+      font-size: 16px;
+      opacity: 0.85;
+      max-width: 720px;
+      font-family: var(--font-mono);
+    }
+
+    .cta-area {
+      margin-top: 34px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 2px solid var(--purple);
+      text-decoration: none;
+      color: white;
+      transition: 0.2s ease;
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-solid { background: var(--purple); }
+    .btn-outline { background: transparent; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 25px;
+      font-size: 13px;
+      opacity: 0.7;
+      animation: fadeBounce 2s infinite ease-in-out;
+      font-family: var(--font-mono);
+    }
+
+    @keyframes fadeBounce {
+      0% { opacity: 0.4; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(6px); }
+      100% { opacity: 0.4; transform: translateY(0); }
+    }
+
+    /* -----------------------------------------------------
+       TWO-COLUMN STATS SECTION
+    ------------------------------------------------------ */
+    .info-section {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .info-left {
+      flex: 1;
+      font-size: 17px;
+      max-width: 560px;
+      font-family: var(--font-mono);
+      opacity: 0.92;
+    }
+
+    .info-left a {
+      color: var(--purple);
+      text-decoration: underline;
+    }
+
+    .info-right {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .stat-tile {
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 22px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 42px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      letter-spacing: -0.6px;
+    }
+    .stat-number.purple { color: var(--purple); }
+    .stat-number.teal   { color: var(--teal); }
+
+    .stat-label {
+      font-size: 13px;
+      opacity: 0.95;
+      letter-spacing: 2px;
+      font-family: var(--font-mono);
+      margin-top: 6px;
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      opacity: 0.65;
+      font-family: var(--font-mono);
+      margin-top: 6px;
+    }
+
+     /* -----------------------------------------------------
+       USE CASES (TABS + CARDS)
+    ------------------------------------------------------ */
+    .usecase-section { text-align: center; }
+
+    .usecase-title {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .usecase-sub {
+      font-family: var(--font-mono);
+      opacity: 0.8;
+      max-width: 860px;
+      margin: 0 auto 28px;
+      font-size: 14px;
+    }
+
+    .usecase-callout {
+      max-width: 900px;
+      margin: 0 auto 30px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      opacity: 0.92;
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 34px 0 26px;
+      flex-wrap: wrap;
+    }
+
+    .tab-bar button {
+      background: transparent;
+      border: 1px dashed rgba(255,255,255,0.30);
+      color: #cbd5e1;
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.15s ease;
+    }
+
+    .tab-bar button:hover { transform: translateY(-1px); }
+
+    .tab-bar button.active {
+      border-color: var(--purple);
+      color: var(--purple);
+      background: rgba(161,0,255,0.08);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .usecase-card {
+      display: flex;
+      gap: 22px;
+      padding: 24px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.02);
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .card-num {
+      font-size: 44px;
+      opacity: 0.18;
+      font-weight: 800;
+      font-family: var(--font-display);
+      min-width: 64px;
+    }
+    .card-num.purple { color: var(--purple); }
+    .card-num.teal { color: var(--teal); }
+
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      opacity: 0.78;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+    }
+
+    details.prompt-box {
+      background: rgba(161,0,255,0.14);
+      padding: 12px 12px 10px;
+      border-radius: 12px;
+      position: relative;
+      border: 1px dashed rgba(161,0,255,0.35);
+    }
+
+    details.prompt-box summary {
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      opacity: 0.95;
+      list-style: none;
+    }
+    details.prompt-box summary::-webkit-details-marker { display: none; }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      border-radius: 8px;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+    }
+
+    pre.prompt-text {
+      margin: 10px 0 0;
+      white-space: pre-wrap;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #fff;
+      opacity: 0.95;
+    }
+
+     /* -----------------------------------------------------
+       TRANSFORMATION SECTION
+    ------------------------------------------------------ */
+    .transform-section { text-align: center; }
+
+    .transform-label, .master-label, .journey-label, .bonus-label, .limitations-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+
+    .transform-title {
+      font-size: 34px;
+      margin-bottom: 28px;
+    }
+
+    .transform-card {
+      margin: 0 auto;
+      background: rgba(255,255,255,0.04);
+      padding: 26px 30px;
+      border-radius: 14px;
+      border-left: 4px dashed;
+      max-width: 840px;
+      text-align: left;
+    }
+
+    .transform-header {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .transform-arrow {
+      font-size: 26px;
+      opacity: 0.65;
+      margin: 22px 0;
+      font-family: var(--font-mono);
+    }
+
+    .transform-card ul {
+      margin: 0;
+      padding-left: 18px;
+      font-family: var(--font-mono);
+      opacity: 0.92;
+    }
+    .transform-card li { margin: 8px 0; }
+
+    /* -----------------------------------------------------
+       SCENARIO SECTION
+    ------------------------------------------------------ */
+    .scenario-section { text-align: center; }
+
+    .scenario-title {
+      font-size: 34px;
+      margin-bottom: 30px;
+    }
+
+    .scenario-card {
+      background: rgba(255,255,255,0.04);
+      padding: 26px 28px;
+      border-left: 4px solid var(--yellow);
+      border-radius: 14px;
+      margin: 0 auto 26px;
+      max-width: 900px;
+      text-align: left;
+    }
+
+    .scenario-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      opacity: 0.95;
+      margin-bottom: 10px;
+    }
+
+    .scenario-question {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .scenario-explainer {
+      opacity: 0.82;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .scenario-solve {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--teal);
+      opacity: 0.95;
+    }
+
+    /* -----------------------------------------------------
+       MASTER SECTION
+    ------------------------------------------------------ */
+    .master-title { font-size: 34px; margin-bottom: 10px; }
+    .master-sub {
+      opacity: 0.82;
+      font-family: var(--font-mono);
+      max-width: 900px;
+      margin: 0 auto 30px;
+      font-size: 14px;
+    }
+
+    .master-grid {
+      display: grid;
+      gap: 20px;
+      max-width: 980px;
+      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .master-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 24px 24px;
+      border-radius: 16px;
+      text-align: left;
+    }
+
+    .master-icon { font-size: 22px; margin-bottom: 10px; }
+    .master-card-title {
+      font-family: var(--font-mono);
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .master-desc {
+      font-family: var(--font-mono);
+      opacity: 0.82;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+
+     /* -----------------------------------------------------
+       JOURNEY SECTION
+    ------------------------------------------------------ */
+    .copilot-journey { text-align: center; }
+
+    .journey-title { font-size: 34px; margin-bottom: 10px; }
+    .journey-sub {
+      font-family: var(--font-mono);
+      opacity: 0.82;
+      max-width: 900px;
+      margin: 0 auto 30px;
+      font-size: 14px;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .journey-card {
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 26px;
+      border: 2px solid transparent;
+      text-decoration: none;
+      color: white;
+      transition: 0.2s ease;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .journey-card:hover { transform: translateY(-4px); }
+
+    .journey-icon { font-size: 22px; margin-bottom: 12px; }
+
+    .journey-level-label {
+      font-family: var(--font-mono);
+      letter-spacing: 0.2em;
+      font-size: 11px;
+      opacity: 0.95;
+      margin-bottom: 10px;
+    }
+
+    .journey-card-title { font-size: 18px; margin-bottom: 8px; }
+    .journey-card-desc { font-family: var(--font-mono); opacity: 0.82; font-size: 13px; margin-bottom: 14px; }
+
+    .journey-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .beginner-card { border: 1px dashed rgba(0,212,170,0.55); }
+    .intermediate-card-link { border: 1px dashed rgba(255,221,85,0.55); }
+    .advanced-card-link { border: 1px dashed rgba(161,0,255,0.55); }
+
+    .green { color: var(--teal); }
+    .yellow { color: var(--yellow); }
+    .purple { color: var(--purple); }
+
+    /* -----------------------------------------------------
+       LEVEL SECTIONS (ROUTED BY HASH)
+    ------------------------------------------------------ */
+    .level-section {
+      display: none; /* route-based */
+      text-align: left;
+    }
+
+    #beginner.level-section { border-left: 6px solid var(--teal); padding-left: 36px; }
+    #intermediate.level-section { border-left: 6px solid var(--yellow); padding-left: 36px; }
+    #advanced.level-section { border-left: 6px solid var(--purple); padding-left: 36px; }
+
+    .level-headline { font-size: 26px; margin-bottom: 12px; }
+    .level-subtext { font-family: var(--font-mono); opacity: 0.82; max-width: 920px; margin-bottom: 24px; }
+
+    .level-steps { display: grid; gap: 18px; max-width: 980px; }
+
+    .level-step-card, .advanced-card, .intermediate-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .step-number {
+      font-family: var(--font-mono);
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+
+    .step-title, .power-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .step-expl, .step-scenario, .scenario-problem, .scenario-retail {
+      font-family: var(--font-mono);
+      opacity: 0.82;
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    details.step-prompt, details.limit-prompt, details.bonus-prompt {
+      background: rgba(161,0,255,0.14);
+      border: 1px dashed rgba(161,0,255,0.35);
+      border-radius: 12px;
+      padding: 12px;
+      position: relative;
+    }
+
+    details.step-prompt summary,
+    details.limit-prompt summary,
+    details.bonus-prompt summary {
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    details.step-prompt summary::-webkit-details-marker,
+    details.limit-prompt summary::-webkit-details-marker,
+    details.bonus-prompt summary::-webkit-details-marker { display: none; }
+
+    .step-copy, .limit-copy, .bonus-copy, .diag-copy {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      border-radius: 8px;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+    }
+
+    pre.step-text, pre.limit-text, pre.bonus-text, pre.diagnostic-text {
+      margin: 10px 0 0;
+      white-space: pre-wrap;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #fff;
+      opacity: 0.95;
+    }
+
+    /* -----------------------------------------------------
+       LIMITATIONS SECTION + TABLE + DIAGNOSTIC
+    ------------------------------------------------------ */
+    .limitation-card {
+      border-left: 4px solid var(--red);
+      background: rgba(255,255,255,0.04);
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      border-top: 1px dashed rgba(255,255,255,0.16);
+      border-right: 1px dashed rgba(255,255,255,0.16);
+      border-bottom: 1px dashed rgba(255,255,255,0.16);
+    }
+
+    .limitation-label {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #ffd1d1;
+    }
+
+    .limit-block h4 {
+      margin: 12px 0 6px;
+      color: var(--purple);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+    }
+
+    .limit-block p { font-family: var(--font-mono); opacity: 0.85; font-size: 13px; }
+
+    .limit-ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      margin-top: 18px;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    .limit-ref-table thead tr { background: var(--purple); color: white; }
+    .limit-ref-table th, .limit-ref-table td { padding: 12px 10px; font-size: 13px; }
+
+    .limit-ref-table tbody tr:nth-child(odd) { background: var(--navy2); }
+    .limit-ref-table tbody tr:nth-child(even) { background: var(--navy3); }
+
+    .limitations-diagnostic-banner {
+      background: #39006e;
+      text-align: center;
+    }
+
+    .diagnostic-prompt-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 22px;
+      border-radius: 16px;
+      max-width: 980px;
+      margin: 0 auto;
+      position: relative;
+      text-align: left;
+    }
+
+    /* -----------------------------------------------------
+       FOOTER + BACK TO TOP
+    ------------------------------------------------------ */
+    .guide-footer {
+      text-align: center;
+      padding: 60px 20px;
+      border-top: 1px dashed rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.06);
+    }
+
+    .footer-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-row a {
+      color: var(--teal);
+      text-decoration: underline;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .reset-btn {
+      border: 1px solid var(--red);
+      color: var(--red);
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 26px;
+      right: 26px;
+      background: var(--purple);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.25s ease;
+      border: 1px solid rgba(255,255,255,0.12);
+      font-family: var(--font-mono);
+      z-index: 2000;
+    }
+
+    .back-to-top.show { opacity: 1; visibility: visible; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      section { padding: 90px 6vw; }
+      .info-section { flex-direction: column; align-items: stretch; }
+      .search-row { flex-direction: column; }
+      .search-scope { width: 100%; }
+    }
+  </style>
 </head>
- 
-<body>
-<nav class="nav">
-    index.html<i class="ph-bold ph-house"></i> Home</a>
-    academy.html<i class="ph-bold ph-graduation-cap"></i> Academy</a>
-    beginner.html<i class="ph-bold ph-sparkle"></i> Beginner</a>
-    intermediate.html
-    advanced.html
-    limitations.html
-    bonus.html<i class="ph-bold ph-flask"></i> Extras</a>
- 
-    <div class="nav-search">
-        <input id="academySearch" placeholder="Search…" />
-        <i class="ph-bold ph-magnifying-glass"></i>
+
+   <body>
+  <div id="progress-bar"></div>
+
+  <!-- Sticky Nav -->
+  <nav class="top-nav">
+    <div class="nav-left">TABLEAU × COPILOT</div>
+    <ul class="nav-links">
+      <li><a href="#usecases">Use Cases</a></li>
+      <li><a href="#scenarios">Scenarios</a></li>
+      <li><a href="#journey">Your Level</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+    </ul>
+    <a href="#usecases" class="nav-cta">Enter Guide →</a>
+  </nav>
+
+  <!-- Global Search -->
+  <div id="searchShell" class="search-shell">
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <span class="search-ico">⌕</span>
+        <input id="searchInput" type="text" placeholder="Search Tableau problems, prompts, concepts…" />
+        <button id="searchClear" class="search-clear" aria-label="Clear search">×</button>
+      </div>
+
+      <select id="searchScope" class="search-scope" aria-label="Search scope">
+        <option value="all">All sections</option>
+        <option value="usecases">Use Cases</option>
+        <option value="scenarios">Scenarios</option>
+        <option value="levels">Your Level</option>
+        <option value="limitations">Limitations</option>
+      </select>
     </div>
-</nav>
- 
-<div id="searchResults" class="search-results"></div>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
- 
+
+    <div class="search-meta">
+      <span id="searchCount">Type to search</span>
+      <span class="search-shortcut">Ctrl / ⌘ K · Esc clears</span>
+    </div>
+
+    <div id="searchEmpty" class="search-empty" style="display:none;">
+      No matches found. Try “LOD”, “slow dashboard”, “context filter”, “COUNTD”, “RAG”.
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="pill">TABLEAU × COPILOT · PRACTICAL GUIDE · Your Company Name 2025</div>
+
     <h1>
-        Master <span style="color:#A100FF;">Tableau × Copilot</span><br>
-        like a production‑grade data team.
+      You’re about to solve any Tableau requirement.<br />
+      <span>with Microsoft Copilot.</span>
     </h1>
- 
-    <p class="hero-sub">
-        Practical, fast, enterprise‑ready. No fluff.
+
+    <p class="subtext">
+      No guesswork. No Stack Overflow rabbit holes. Just the right Copilot prompt — that actually works.
     </p>
- 
-    <div class="btn-row">
-        academy.html
-            <i class="ph-bold ph-rocket-launch"></i> Enter Academy
-        </a>
-        #mission
-            <i class="ph-bold ph-compass"></i> View Mission
-        </a>
+
+    <div class="cta-area">
+      <a class="btn btn-solid" href="#coverage">See What's Covered ↓</a>
+      <a class="btn btn-outline" href="#usecases">Jump to Use Cases →</a>
     </div>
-</section>
-</body>
-</html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Copilot × Tableau Academy — Overview</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
-<body>
- 
-<nav class="nav">
-    index.html
-    academy.html
-    beginner.html
-    intermediate.html
-    advanced.html
-    limitations.html
-    bonus.html Extras</a>
- 
-    <div class="nav-search">
-        <input id="academySearch" placeholder="Search…">
-        <i class="ph-bold ph-magnifying-glass"></i>
+
+    <div class="scroll-hint">Scroll to explore<br />↓</div>
+  </section>
+
+  <!-- COVERAGE / STATS -->
+  <section id="coverage" class="info-section container">
+    <div class="info-left">
+      Most Tableau users spend 70% of their time figuring out how to build something —
+      not actually building it. Copilot changes that. Ask the right question, get the right answer,
+      <a href="#usecases">ship the right viz</a>.
     </div>
-</nav>
- 
-<div id="searchResults" class="search-results"></div>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Welcome to the Academy</h1>
-    <p class="hero-sub">Choose your training module.</p>
-</section>
- 
-<section class="container">
- 
-    <div class="module-grid">
- 
-        beginner.html
-            <i class="ph-bold ph-sparkle"></i>
-            <h3>Beginner</h3>
-            <p>Foundations of Tableau + Copilot.</p>
+
+    <div class="info-right">
+      <div class="stat-tile searchable">
+        <div class="stat-number purple">70%</div>
+        <div class="stat-label">TIME SAVED</div>
+        <div class="stat-sub">on repeated Tableau tasks</div>
+      </div>
+
+      <div class="stat-tile searchable">
+        <div class="stat-number teal">10+</div>
+        <div class="stat-label">USE CASES</div>
+        <div class="stat-sub">covered with ready prompts</div>
+      </div>
+
+      <div class="stat-tile searchable">
+        <div class="stat-number purple">0</div>
+        <div class="stat-label">PRIOR COPILOT</div>
+        <div class="stat-sub">experience needed</div>
+      </div>
+
+      <div class="stat-tile searchable">
+        <div class="stat-number teal">1</div>
+        <div class="stat-label">PROMPT AWAY</div>
+        <div class="stat-sub">from any Tableau solution</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES (Tabs) -->
+  <section id="usecases" class="usecase-section">
+    <div class="container">
+      <h2 class="usecase-title">10 Use Cases. One Copilot.</h2>
+      <p class="usecase-sub">
+        Each card gives you the exact Copilot prompt to solve that Tableau requirement — right now.
+      </p>
+
+      <div class="usecase-callout searchable">
+        ◈ <strong>THIS IS NOT A THEORY GUIDE</strong> — Every prompt is tested against real Tableau scenarios.
+        Copy. Paste. Ship.
+      </div>
+
+      <div class="tab-bar" id="usecaseTabs">
+        <button class="active" data-tab="uc1">01</button>
+        <button data-tab="uc2">02</button>
+        <button data-tab="uc3">03</button>
+        <button data-tab="uc4">04</button>
+        <button data-tab="uc5">05</button>
+        <button data-tab="uc6">06</button>
+        <button data-tab="uc7">07</button>
+        <button data-tab="uc8">08</button>
+        <button data-tab="uc9">09</button>
+        <button data-tab="uc10">10</button>
+      </div>
+
+       <div class="tab-content active" id="uc1">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">01</div>
+          <div>
+            <h3 class="card-title">Building Dashboards from Scratch</h3>
+            <p class="card-desc">Get step‑by‑step layout guidance and generated worksheets based on your data.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Generate a complete Tableau dashboard layout based on this data source. My fields are: [list fields]. My stakeholder goal is: [goal]. Provide: (1) recommended worksheet set, (2) exact chart types, (3) dashboard layout zones, (4) interactions (filters/actions), and (5) formatting rules for exec-readiness.</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc2">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">02</div>
+          <div>
+            <h3 class="card-title">Fixing &amp; Debugging a Visualization</h3>
+            <p class="card-desc">Get pinpoint explanations for why a viz is wrong — and the exact steps to fix it.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Help me debug this Tableau viz. Here is what I expected: [expected]. Here is what I see: [actual]. Here are my fields + calcs: [paste]. Tell me the most likely causes (aggregation, filters, joins/blends, granularity). Then give step-by-step checks to fix it.</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc3">
+        <div class="usecase-card searchable">
+          <div class="card-num teal">03</div>
+          <div>
+            <h3 class="card-title">Writing Calculated Fields &amp; Formulas</h3>
+            <p class="card-desc">Generate correct Tableau formulas without memorizing syntax.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Write a Tableau calculated field that does the following business logic: [plain English logic]. My fields are: [field list]. Output should be [dimension/measure]. Also explain each line and list edge cases (nulls, 0 division, filter impact).</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc4">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">04</div>
+          <div>
+            <h3 class="card-title">Connecting to Data Sources</h3>
+            <p class="card-desc">Simplify connection steps for any database — including joins and schema checks.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Guide me through connecting Tableau to [SQL Server/Redshift/Snowflake/etc]. My tables are [tables]. Tell me: best connection type (live vs extract), key fields to join, relationship vs join, and a checklist to validate grain, duplicates, and null risks before I build.</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc5">
+        <div class="usecase-card searchable">
+          <div class="card-num teal">05</div>
+          <div>
+            <h3 class="card-title">Designing for Leadership &amp; Executives</h3>
+            <p class="card-desc">Get dashboard layouts that reflect business‑level clarity and messaging.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Design an executive-ready Tableau dashboard for this goal: [goal]. Audience: [leadership persona]. Must include: KPI tiles, trend view, breakdown, and key drivers. Recommend: layout grid, color rules, fonts, spacing, and the story flow (what users read first/second/third).</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc6">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">06</div>
+          <div>
+            <h3 class="card-title">Performance Optimization</h3>
+            <p class="card-desc">Diagnose slow dashboards and get targeted improvements instantly.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">My Tableau dashboard is slow. Dataset size: [rows]. Connection: [live/extract]. Sheets: [count]. Filters: [count]. Walk me through Performance Recorder diagnosis, then give a prioritized fix list (extract vs live, filter order, context filters, reduce marks, simplify calcs, optimize joins/relationships).</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc7">
+        <div class="usecase-card searchable">
+          <div class="card-num teal">07</div>
+          <div>
+            <h3 class="card-title">Creating LOD Expressions</h3>
+            <p class="card-desc">Build accurate FIXED, INCLUDE, EXCLUDE statements for any requirement.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">I need an LOD for this business question: [question]. My grain is [grain]. My fields: [fields]. Recommend FIXED vs INCLUDE vs EXCLUDE, write the exact LOD syntax, explain how filters affect it (context/dimension), and how to validate it against known totals.</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc8">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">08</div>
+          <div>
+            <h3 class="card-title">Building Parameters &amp; Filters</h3>
+            <p class="card-desc">Auto‑generate parameter logic and dynamic filter systems.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Help me build a parameter-driven filter system. Users should switch between: [options]. Show steps to create parameter, calculated field logic, how to apply across sheets, and how to avoid common pitfalls (order of operations, performance).</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc9">
+        <div class="usecase-card searchable">
+          <div class="card-num teal">09</div>
+          <div>
+            <h3 class="card-title">Storytelling with Data</h3>
+            <p class="card-desc">Turn insights into clear narrative sequences for stakeholders.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">My stakeholder wants a clear story from this analysis: [analysis]. Suggest the best storytelling layout (sequence of views), annotations, KPI callouts, and the exact wording for titles/subtitles. Also give 3 “what changed + why” insights to highlight.</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="uc10">
+        <div class="usecase-card searchable">
+          <div class="card-num purple">10</div>
+          <div>
+            <h3 class="card-title">Publishing &amp; Sharing Workbooks</h3>
+            <p class="card-desc">Automate publishing workflows, permissions &amp; governance.</p>
+            <details class="prompt-box">
+              <summary>Copilot Prompt to Use ▸</summary>
+              <button class="copy-btn" type="button">COPY</button>
+              <pre class="prompt-text">Guide me through publishing this Tableau workbook to Tableau Server. I need: permissions approach, project/folder placement, extract refresh strategy, row-level security checklist, naming conventions, and a pre-publish QA checklist (numbers validation + performance).</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+      <!-- TRANSFORMATION -->
+  <section class="transform-section">
+    <div class="container">
+      <div class="transform-label">T H E&nbsp;&nbsp;T R A N S F O R M A T I O N</div>
+      <h2 class="transform-title">What changes when you use Copilot for Tableau.</h2>
+
+      <div class="transform-card without searchable" style="border-color: var(--red);">
+        <div class="transform-header" style="color: var(--red);">✕ WITHOUT COPILOT</div>
+        <ul>
+          <li>Analysts spend hours searching docs for the right chart type</li>
+          <li>Calculated fields take 3 tries and a StackOverflow visit</li>
+          <li>Leadership asks for a change — you rebuild from scratch</li>
+          <li>Data connections break and there's no clear fix path</li>
+          <li>Formatting and design are guesswork</li>
+        </ul>
+      </div>
+
+      <div class="transform-arrow">↓</div>
+
+      <div class="transform-card with searchable" style="border-color: var(--teal);">
+        <div class="transform-header" style="color: var(--teal);">✓ WITH COPILOT</div>
+        <ul>
+          <li>Describe what you want — get the exact steps in seconds</li>
+          <li>Calculated fields generated, explained, and ready to paste</li>
+          <li>Leadership changes handled with one follow‑up prompt</li>
+          <li>Data connection errors diagnosed and resolved instantly</li>
+          <li>Design &amp; formatting guided by best‑practice prompts</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENARIOS -->
+  <section id="scenarios" class="scenario-section">
+    <div class="container">
+      <h2 class="scenario-title">Real scenarios. Real prompts.</h2>
+
+      <div class="scenario-card searchable">
+        <div class="scenario-label">⚡ S C E N A R I O</div>
+        <div class="scenario-question">“My bar chart shows the right total but wrong breakdown by region. What’s wrong?”</div>
+        <p class="scenario-explainer">
+          This usually points to a mismatch between aggregation levels, missing dimensions,
+          or a hidden filter affecting part of the view.
+        </p>
+        <div class="scenario-solve">→ Solved in Use Case 02 · Fixing &amp; Debugging</div>
+      </div>
+
+      <div class="scenario-card searchable">
+        <div class="scenario-label">⚡ S C E N A R I O</div>
+        <div class="scenario-question">“Leadership wants a KPI tile that turns red below target, yellow near it, green above. How?”</div>
+        <p class="scenario-explainer">
+          Multi‑state KPI logic requires threshold logic + formatting rules that beginners rarely know.
+        </p>
+        <div class="scenario-solve">→ Solved in Use Case 03 · Calculated Fields</div>
+      </div>
+
+      <div class="scenario-card searchable">
+        <div class="scenario-label">⚡ S C E N A R I O</div>
+        <div class="scenario-question">“My dashboard takes 45 seconds to load. What do I check first?”</div>
+        <p class="scenario-explainer">
+          Slow dashboards come from extracts, filters, joins, blends, and mark counts — identifying the bottleneck is key.
+        </p>
+        <div class="scenario-solve">→ Solved in Use Case 06 · Performance Optimization</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT YOU'LL MASTER -->
+  <section class="master-section">
+    <div class="container">
+      <div class="master-label">W H A T&nbsp;&nbsp;Y O U ' L L&nbsp;&nbsp;M A S T E R</div>
+      <h2 class="master-title">Walk out ready to ship.</h2>
+      <p class="master-sub">
+        Not just Tableau knowledge — Copilot workflows you can apply the next morning on a real requirement.
+      </p>
+
+      <div class="master-grid">
+        <div class="master-card searchable">
+          <div class="master-icon">🎯</div>
+          <div class="master-card-title">Prompt Any Requirement</div>
+          <p class="master-desc">Translate stakeholder asks into a working Copilot prompt in under 60 seconds.</p>
+        </div>
+
+        <div class="master-card searchable">
+          <div class="master-icon">🔧</div>
+          <div class="master-card-title">Debug Like a Senior</div>
+          <p class="master-desc">Diagnose broken vizzes, slow dashboards, and incorrect calcs fast.</p>
+        </div>
+
+        <div class="master-card searchable">
+          <div class="master-icon">📐</div>
+          <div class="master-card-title">Design for Leadership</div>
+          <p class="master-desc">Build exec‑ready dashboards with layout, color, and storytelling guidance.</p>
+        </div>
+
+        <div class="master-card searchable">
+          <div class="master-icon">🚀</div>
+          <div class="master-card-title">Ship Without Blockers</div>
+          <p class="master-desc">From data connection to published workbook — Copilot fills every gap.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section id="journey" class="copilot-journey">
+    <div class="container">
+      <div class="journey-label">YOUR COPILOT JOURNEY · PICK YOUR LEVEL</div>
+      <h2 class="journey-title">Where are you with Tableau?</h2>
+      <p class="journey-sub">
+        Copilot works differently depending on what you already know.
+        Find your level — and start from exactly the right place.
+      </p>
+
+      <div class="journey-grid">
+        <a href="#beginner" class="journey-card beginner-card searchable">
+          <div class="journey-icon">🌱</div>
+          <div class="journey-level-label green">BEGINNER</div>
+          <h3 class="journey-card-title">I'm new to Tableau</h3>
+          <p class="journey-card-desc">Never built a dashboard.<br>Don’t know where to start.</p>
+          <div class="journey-link green">Jump to my level →</div>
         </a>
- 
-        intermediate.html
-            <i class="ph-bold ph-lightning"></i>
-            <h3>Intermediate</h3>
-            <p>LOD, filters, blending, YoY.</p>
+
+        <a href="#intermediate" class="journey-card intermediate-card-link searchable">
+          <div class="journey-icon">⚡</div>
+          <div class="journey-level-label yellow">INTERMEDIATE</div>
+          <h3 class="journey-card-title">I know the basics</h3>
+          <p class="journey-card-desc">I can build charts<br>but struggle with complex logic.</p>
+          <div class="journey-link yellow">Jump to my level →</div>
         </a>
- 
-        advanced.html
-            <i class="ph-bold ph-target"></i>
-            <h3>Advanced</h3>
-            <p>Enterprise workflows.</p>
+
+        <a href="#advanced" class="journey-card advanced-card-link searchable">
+          <div class="journey-icon">🚀</div>
+          <div class="journey-level-label purple">ADVANCED</div>
+          <h3 class="journey-card-title">I'm fluent in Tableau</h3>
+          <p class="journey-card-desc">I know Tableau well.<br>I want Copilot to make me sharper.</p>
+          <div class="journey-link purple">Jump to my level →</div>
         </a>
- 
-        limitations.html
-            <i class="ph-bold ph-warning"></i>
-            <h3>Tableau Limitations</h3>
-            <p>The system walls and fixes.</p>
-        </a>
- 
-        bonus.htmlExtras</a>
+      </div>
     </div>
- 
-</section>
-</body>
-</html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Beginner Level</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
- 
-<body>
-<nav class="nav">
-    index.htmlHome</a>
-    academy.htmlAcademy</a>
-</nav>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Level 01 — Beginner</h1>
-    <p class="hero-sub">Start your Tableau × Copilot journey.</p>
-</section>
- 
-<section class="container">
-    <h1>The Beginner Track</h1>
-    <p>7 guided steps:</p>
- 
-    <div class="module-grid">
- 
-        <div class="module-card">
-            <h3>What Tableau Actually Is</h3>
+  </section>
+
+  <!-- LEVEL 01 -->
+  <section id="beginner" class="level-section">
+    <div class="container">
+      <div class="section-label">🌱 LEVEL 01 · BEGINNER</div>
+      <h2 class="level-headline">You don't need to learn Tableau. You need to learn what to ask.</h2>
+      <p class="level-subtext">Copilot becomes your Tableau teacher, your syntax guide, and your error fixer — all at once. Here’s how to use it from day one.</p>
+
+      <div class="level-steps">
+        <div class="level-step-card searchable">
+          <div class="step-number">STEP 01</div>
+          <h3 class="step-title">Understand What Tableau Even Does</h3>
+          <p class="step-expl">Before touching the tool, ask Copilot to explain Tableau's purpose in plain language relevant to your role.</p>
+          <p class="step-scenario"><strong>Retail Scenario:</strong> You joined FreshMart and your manager says “you’ll be working in Tableau.” You have no idea what that means.</p>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">Explain what Tableau is used for in a retail business context. I'm new to data analytics. Tell me what kinds of questions Tableau helps answer, what data it connects to, and what I’ll be building day-to-day as a junior analyst at a retail company.</pre>
+          </details>
         </div>
- 
-        <div class="module-card">
-            <h3>Know Your Data</h3>
+
+        <div class="level-step-card searchable">
+          <div class="step-number">STEP 02</div>
+          <h3 class="step-title">Understand Your Data Before Connecting</h3>
+          <p class="step-expl">The biggest beginner mistake is connecting data without understanding it. Copilot helps you ask the right questions first.</p>
+          <p class="step-scenario"><strong>Retail Scenario:</strong> Your manager sends “FreshMart_Sales_Q1.xlsx” and says build a sales dashboard.</p>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">I've received an Excel file with retail sales data. Before I connect it to Tableau, what questions should I ask about the data? Tell me how to identify the grain of the data, key fields for a sales dashboard, data quality risks, and how to check if it’s structured correctly for Tableau.</pre>
+          </details>
         </div>
- 
-        <div class="module-card">
-            <h3>Dimensions vs Measures</h3>
+
+        <div class="level-step-card searchable">
+          <div class="step-number">STEP 03</div>
+          <h3 class="step-title">Connect Data &amp; Understand the Data Pane</h3>
+          <p class="step-expl">Beginners get lost when they see blue vs green fields. Copilot can explain the entire pane for your dataset.</p>
+          <p class="step-scenario"><strong>Retail Scenario:</strong> You connected the FreshMart file; half the fields are blue and half green.</p>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">I've connected an Excel file to Tableau for the first time. I see blue fields and green fields. Explain what dimensions vs measures mean, why the distinction matters, and classify Store Name, Order Date, Sales Amount, Product Category — with reasons.</pre>
+          </details>
         </div>
- 
-        <div class="module-card">
-            <h3>First Chart Guided</h3>
-        </div>
- 
-        <div class="module-card">
-            <h3>Fixing One-Bar Issues</h3>
-        </div>
- 
-        <div class="module-card">
-            <h3>Understanding Errors</h3>
-        </div>
- 
-        <div class="module-card">
-            <h3>First Dashboard</h3>
-        </div>
- 
+      </div>
     </div>
-</section>
-</body>
-</html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Intermediate Level</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
- 
-<body>
-<nav class="nav">
-    index.htmlacademy.html</nav>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Level 02 — Intermediate</h1>
-</section>
- 
-<section class="container">
-    <h1>Intermediate Modules</h1>
- 
-    <div class="module-grid">
- 
-        <div class="module-card"><h3>Scenario 01 — Calc works sometimes</h3></div>
-        <div class="module-card"><h3>Scenario 02 — Top N & Region</h3></div>
-        <div class="module-card"><h3>Scenario 03 — YoY Comparison</h3></div>
-        <div class="module-card"><h3>Scenario 04 — Slow Dashboards</h3></div>
-        <div class="module-card"><h3>Scenario 05 — Parameters</h3></div>
-        <div class="module-card"><h3>Scenario 06 — When to use LOD</h3></div>
- 
+  </section>
+
+  <!-- LEVEL 02 -->
+  <section id="intermediate" class="level-section">
+    <div class="container">
+      <div class="section-label">⚡ LEVEL 02 · INTERMEDIATE</div>
+      <h2 class="level-headline">You know enough to build. Now learn enough to build it right.</h2>
+      <p class="level-subtext">These are the prompts that bridge the gap between “it works” and “it’s actually correct.”</p>
+
+      <div class="level-steps">
+        <div class="intermediate-card searchable">
+          <div class="step-number">SCENARIO 01</div>
+          <h3 class="step-title">Your Calculations Work Sometimes</h3>
+          <p class="scenario-problem"><strong>Problem:</strong> Your IF/THEN works on one sheet but returns NULL on another.</p>
+          <p class="scenario-retail"><strong>Retail Scenario:</strong> Margin % works on product sheet but shows NULL on store sheet.</p>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">I have a calculated field in Tableau: [Margin %] = (SUM([Sales]) - SUM([Cost])) / SUM([Sales]). It works on my product-level sheet but shows NULL on my store-level sheet. Explain why this happens and how to fix it — aggregation differences, how dimensions affect calcs, and whether I need an LOD expression.</pre>
+          </details>
+        </div>
+
+        <div class="intermediate-card searchable">
+          <div class="step-number">SCENARIO 02</div>
+          <h3 class="step-title">Your Filters Are Giving Wrong Results</h3>
+          <p class="scenario-problem"><strong>Problem:</strong> Top N + Region filter returns unexpected rows.</p>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">I have a Top 10 filter on Product Name and a Region filter set to 'North'. But my Top 10 includes products with no North sales. Explain Tableau’s filter order of operations, why this happens, and walk me through using a Context Filter to fix it.</pre>
+          </details>
+        </div>
+      </div>
     </div>
-</section>
- 
-</body>
-</html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Advanced Level</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
- 
-<body>
-<nav class="nav">
-    index.htmlacademy.html
-</nav>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Level 03 — Advanced</h1>
-</section>
- 
-<section class="container">
-    <h1>Advanced Power Modules</h1>
- 
-    <div class="module-grid">
-        <div class="module-card"><i class="ph-bold ph-brain"></i><h3>Pressure Test Logic</h3></div>
-        <div class="module-card"><h3>Multiple Approaches</h3></div>
-        <div class="module-card"><h3>Stakeholder Translation</h3></div>
-        <div class="module-card"><h3>Documentation</h3></div>
-        <div class="module-card"><h3>Performance Audit</h3></div>
-        <div class="module-card"><h3>Pre‑Publish Checklist</h3></div>
+  </section>
+
+  <!-- LEVEL 03 -->
+  <section id="advanced" class="level-section">
+    <div class="container">
+      <div class="section-label">🚀 LEVEL 03 · ADVANCED</div>
+      <h2 class="level-headline">You already know Tableau. Now use Copilot to think faster than your stakeholders.</h2>
+      <p class="level-subtext">At this level, Copilot isn’t your teacher — it’s your senior thought partner.</p>
+
+      <div class="level-steps">
+        <div class="advanced-card searchable">
+          <div class="step-number">POWER USE 01</div>
+          <h3 class="power-title">Pressure‑Test Your Logic</h3>
+          <details class="step-prompt">
+            <summary>COPILOT PROMPT TO USE ▸</summary>
+            <button class="step-copy" type="button">COPY</button>
+            <pre class="step-text">Here is a calculated field I've written in Tableau: [paste your calculation]. I'm using it for [business purpose]. Review this logic, identify edge cases where it might return incorrect results, suggest a more robust version, and explain trade-offs.</pre>
+          </details>
+        </div>
+      </div>
     </div>
-</section>
- 
+  </section>
+
+
+      <!-- LIMITATIONS HEADER -->
+  <section id="limitations" class="tableau-limitations">
+    <div class="container">
+      <div class="limitations-label">KNOW THE WALLS · TABLEAU LIMITATIONS</div>
+      <h2 class="limitations-headline">Where Tableau stops. And what to do next.</h2>
+      <p class="limitations-subtext" style="font-family: var(--font-mono); opacity: 0.82;">
+        Real, by-design limitations — with the exact Copilot prompt to navigate each one.
+      </p>
+      <div class="usecase-callout searchable" style="border-color: rgba(255,221,85,0.55);">
+        ⚠ These are not bugs. These are by-design constraints you need to architect around.
+      </div>
+    </div>
+  </section>
+
+  <!-- LIMITATION CARDS -->
+  <section id="limitationCards" class="limitation-cards">
+    <div class="container">
+
+      <div class="limitation-card searchable">
+        <div class="limitation-label">LIMITATION 01 — Cannot Mix Aggregate &amp; Non‑Aggregate</div>
+        <div class="limit-block"><h4>THE LIMITATION</h4><p>You cannot combine SUM([Sales]) with row‑level [Sales] in the same expression.</p></div>
+        <div class="limit-block"><h4>WHY IT HAPPENS</h4><p>Aggregate and row‑level calcs run at different granularities — Tableau cannot resolve both together.</p></div>
+        <div class="limit-block"><h4>RETAIL SCENARIO</h4><p>You try SUM([Sales]) / [Sales] to get product share — Tableau errors out.</p></div>
+        <div class="limit-block"><h4>WORKAROUND</h4><p>Use a FIXED LOD: <code>{FIXED : SUM([Sales])}</code> then divide aggregated values.</p></div>
+        <details class="limit-prompt">
+          <summary>COPILOT PROMPT TO USE ▸</summary>
+          <button class="limit-copy" type="button">COPY</button>
+          <pre class="limit-text">I'm getting this Tableau error: 'Cannot mix aggregate and non-aggregate arguments.' Explain exactly why it happens and show me how to fix product share of total sales using a FIXED LOD — with correct syntax.</pre>
+        </details>
+      </div>
+
+      <div class="limitation-card searchable">
+        <div class="limitation-label">LIMITATION 02 — FIXED LOD Ignores Dimension Filters</div>
+        <div class="limit-block"><h4>THE LIMITATION</h4><p>FIXED LODs compute before dimension filters — ignoring user selections.</p></div>
+        <div class="limit-block"><h4>WHY IT HAPPENS</h4><p>FIXED LOD sits higher in Tableau’s order of operations.</p></div>
+        <div class="limit-block"><h4>RETAIL SCENARIO</h4><p>Region filter = “North”, but FIXED company sales still show all regions.</p></div>
+        <div class="limit-block"><h4>WORKAROUND</h4><p>Promote Region to Context or rewrite with INCLUDE.</p></div>
+        <details class="limit-prompt">
+          <summary>COPILOT PROMPT TO USE ▸</summary>
+          <button class="limit-copy" type="button">COPY</button>
+          <pre class="limit-text">My FIXED LOD ignores Region filter. Explain why based on Tableau's order of operations, and give two fixes: (1) promote the filter to Context, (2) rewrite as INCLUDE — with syntax for both.</pre>
+        </details>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUICK REFERENCE TABLE -->
+  <section class="limitations-summary">
+    <div class="container">
+      <h2 class="summary-title" style="font-size: 30px;">Quick Reference — Tableau Limitations at a Glance</h2>
+
+      <table class="limit-ref-table searchable">
+        <thead>
+          <tr>
+            <th>#</th><th>Limitation</th><th>Error / Symptom</th><th>Quick Fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>01</td><td>Mixing Aggregate / Non‑Aggregate</td><td>"Cannot mix aggregate and non‑aggregate"</td><td>Use FIXED to align granularity</td></tr>
+          <tr><td>02</td><td>FIXED LOD Ignores Filters</td><td>Totals don’t change with filters</td><td>Use Context or INCLUDE</td></tr>
+        </tbody>
+      </table>
+
+      <p class="summary-note" style="font-family: var(--font-mono); opacity:0.75; margin-top: 12px;">
+        Bookmark this section. You will hit every one of these in production.
+      </p>
+    </div>
+  </section>
+
+  <!-- DIAGNOSTIC BANNER -->
+  <section class="limitations-diagnostic-banner">
+    <div class="container">
+      <h2 class="diagnostic-title" style="font-size: 32px; margin-bottom: 10px;">Hit a wall? Start here.</h2>
+      <p class="diagnostic-sub" style="font-family: var(--font-mono); opacity: 0.85; margin-bottom: 16px;">
+        When you don't know which limitation you've hit, use this diagnostic prompt first:
+      </p>
+
+      <div class="diagnostic-prompt-box searchable">
+        <button class="diag-copy" type="button">COPY</button>
+        <pre class="diagnostic-text">I'm getting an unexpected result in Tableau.
+Here is what I'm trying to do: [describe your goal].
+Here is what's actually happening: [describe the result or error].
+Here are the fields and calculations I'm using: [paste field names and calc syntax].
+
+Based on this, diagnose which Tableau limitation or order-of-operations issue I've likely hit — and give me the most direct fix.</pre>
+      </div>
+
+      <p class="diagnostic-bottom" style="font-family: var(--font-mono); opacity: 0.85; margin-top: 14px;">
+        <em>This single prompt resolves 80% of Tableau walls — because it forces you to describe exactly what you're seeing.</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="guide-footer" id="glossary">
+    <p class="footer-main" style="font-family: var(--font-mono); opacity:0.9;">
+      Tableau × Copilot Guide — Practical Prompts for Real Requirements
+    </p>
+
+    <div class="footer-row">
+      <a href="#glossary">Glossary</a>
+      <button class="reset-btn" onclick="resetProgress()">↺ Reset Progress</button>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button id="backToTop" class="back-to-top" onclick="scrollToTop()">Back to Top ↑</button>
+
+  <!-- -----------------------------------------------------
+       JAVASCRIPT: progress bar + tabs + routes + search + copy
+  ------------------------------------------------------ -->
+  <script>
+    /* Scroll progress + back to top */
+    window.addEventListener("scroll", () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const fullHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = fullHeight > 0 ? (scrollTop / fullHeight) * 100 : 0;
+      document.getElementById("progress-bar").style.width = progress + "%";
+
+      const btn = document.getElementById("backToTop");
+      if (scrollTop > 300) btn.classList.add("show");
+      else btn.classList.remove("show");
+    });
+
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+    function resetProgress() {
+      localStorage.clear();
+      document.querySelectorAll("input[type='checkbox']").forEach(cb => cb.checked = false);
+      alert("Progress reset successfully!");
+    }
+
+    /* Use Case Tabs */
+    document.querySelectorAll('#usecaseTabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#usecaseTabs button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    /* Level Routing (hash routes) */
+    window.showLevelFromHash = function showLevelFromHash() {
+      const all = document.querySelectorAll('.level-section');
+      all.forEach(s => s.style.display = 'none');
+
+      const h = location.hash;
+      if (h === '#beginner' || h === '#intermediate' || h === '#advanced') {
+        const el = document.querySelector(h);
+        if (el) el.style.display = 'block';
+      }
+    };
+    window.addEventListener('hashchange', window.showLevelFromHash);
+    window.showLevelFromHash();
+
+    /* Copy buttons (works for all: usecase, step, limit, diag, bonus) */
+    function attachCopyHandlers() {
+      const buttons = document.querySelectorAll('.copy-btn, .step-copy, .limit-copy, .bonus-copy, .diag-copy');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const root = btn.closest('details') || btn.closest('.diagnostic-prompt-box') || btn.parentElement;
+          const pre = root ? root.querySelector('pre') : null;
+          if (!pre) return;
+
+          const text = pre.innerText.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = "COPIED";
+            setTimeout(() => btn.textContent = old, 1100);
+          } catch {
+            const old = btn.textContent;
+            btn.textContent = "COPY (manual)";
+            setTimeout(() => btn.textContent = old, 1100);
+          }
+        });
+      });
+    }
+    attachCopyHandlers();
+
+    /* Global Search: scope + highlight + empty state + sticky polish */
+    (() => {
+      const input = document.getElementById("searchInput");
+      const scopeSelect = document.getElementById("searchScope");
+      const clearBtn = document.getElementById("searchClear");
+      const emptyEl = document.getElementById("searchEmpty");
+      const countEl = document.getElementById("searchCount");
+      const shell = document.getElementById("searchShell");
+
+      if (!input || !scopeSelect) return;
+
+      const sections = {
+        all: ["#usecases", "#scenarios", "#journey", "#beginner", "#intermediate", "#advanced", "#limitations", "#limitationCards"],
+        usecases: ["#usecases"],
+        scenarios: ["#scenarios"],
+        levels: ["#journey", "#beginner", "#intermediate", "#advanced"],
+        limitations: ["#limitations", "#limitationCards"]
+      };
+
+      const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      function highlightMatches(root, query) {
+        const regex = new RegExp(escapeRegExp(query), "gi");
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+            const p = node.parentElement;
+            if (!p) return NodeFilter.FILTER_REJECT;
+            if (p.closest("script, style, input, textarea, select, button")) return NodeFilter.FILTER_REJECT;
+            return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          }
+        });
+
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+
+        nodes.forEach(node => {
+          const text = node.nodeValue;
+          const frag = document.createDocumentFragment();
+          let lastIndex = 0;
+
+          text.replace(regex, (match, offset) => {
+            const before = text.slice(lastIndex, offset);
+            if (before) frag.appendChild(document.createTextNode(before));
+            const mark = document.createElement("mark");
+            mark.className = "hl";
+            mark.textContent = match;
+            frag.appendChild(mark);
+            lastIndex = offset + match.length;
+            return match;
+          });
+
+          const after = text.slice(lastIndex);
+          if (after) frag.appendChild(document.createTextNode(after));
+          node.parentNode.replaceChild(frag, node);
+        });
+      }
+
+      function restoreCard(card) {
+        if (!card.dataset.originalHtml) {
+          card.dataset.originalHtml = card.innerHTML;
+        } else {
+          card.innerHTML = card.dataset.originalHtml;
+        }
+        card.style.display = "";
+      }
+
+      function setSectionVisibility(scopeKey, searching) {
+        sections.all.forEach(sel => {
+          document.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.origDisplay) el.dataset.origDisplay = getComputedStyle(el).display;
+          });
+        });
+
+        if (!searching || scopeKey === "all") {
+          sections.all.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.style.display = el.dataset.origDisplay || "");
+          });
+          if (typeof window.showLevelFromHash === "function") window.showLevelFromHash();
+          return;
+        }
+
+        sections.all.forEach(sel => {
+          document.querySelectorAll(sel).forEach(el => el.style.display = "none");
+        });
+
+        (sections[scopeKey] || []).forEach(sel => {
+          document.querySelectorAll(sel).forEach(el => el.style.display = el.dataset.origDisplay || "");
+        });
+      }
+
+      function getScopedCards(scopeKey) {
+        if (scopeKey === "all") return Array.from(document.querySelectorAll(".searchable"));
+
+        const containers = (sections[scopeKey] || [])
+          .flatMap(sel => Array.from(document.querySelectorAll(sel)));
+
+        const cards = [];
+        containers.forEach(c => cards.push(...c.querySelectorAll(".searchable")));
+        return cards;
+      }
+
+      function runSearch() {
+        const query = input.value.toLowerCase().trim();
+        const scopeKey = scopeSelect.value;
+
+        const scopedCards = getScopedCards(scopeKey);
+        scopedCards.forEach(restoreCard);
+
+        const searching = query.length > 0;
+        setSectionVisibility(scopeKey, searching);
+
+        if (!searching) {
+          emptyEl.style.display = "none";
+          countEl.textContent = "Type to search";
+          attachCopyHandlers(); // restore copy handlers after HTML restore
+          return;
+        }
+
+        let visible = 0;
+        scopedCards.forEach(card => {
+          const hay = card.textContent.toLowerCase();
+          const match = hay.includes(query);
+          if (!match) card.style.display = "none";
+          else {
+            visible++;
+            highlightMatches(card, query);
+          }
+        });
+
+        countEl.textContent = `${visible} result${visible === 1 ? "" : "s"} · Scope: ${scopeSelect.options[scopeSelect.selectedIndex].text}`;
+        emptyEl.style.display = visible === 0 ? "block" : "none";
+
+        attachCopyHandlers(); // ensure copy still works after highlights
+      }
+
+      input.addEventListener("input", runSearch);
+      scopeSelect.addEventListener("change", runSearch);
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        runSearch();
+        input.focus();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+          e.preventDefault();
+          input.focus();
+        }
+        if (e.key === "Escape") {
+          input.value = "";
+          runSearch();
+          input.blur();
+        }
+      });
+
+      window.addEventListener("scroll", () => {
+        if (!shell) return;
+        if (window.scrollY > 120) shell.classList.add("stuck");
+        else shell.classList.remove("stuck");
+      });
+
+      runSearch();
+    })();
+  </script>
 </body>
 </html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Tableau Limitations</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
- 
-<body>
-<nav class="nav">
-    index.htmlacademy.html
-</nav>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Tableau Limitations</h1>
-</section>
- 
-<section class="container">
-    <h1>System Walls & Workarounds</h1>
-</section>
- 
-</body>
-</html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Bonus Tools</title>
-    assets/css/main.css
-    https://unpkg.com/phosphor-icons
-    assets/js/app.js
-</head>
- 
-<body>
-<nav class="nav">
-    index.htmlacademy.html
-</nav>
- 
-<section class="hero">
-    <div class="grid-bg"></div>
-    <h1>Bonus Tools</h1>
-</section>
- 
-<section class="container">
-    <h1>Your Analyst Toolkit</h1>
-</section>
- 
-</body>
-</html>
- 
