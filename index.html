@@ -1,1846 +1,2955 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tableau × Copilot Practical Guide</title>
-
-  <!-- Typography (Option 1): Space Grotesk + JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    /* -----------------------------------------------------
-       GLOBAL THEME + TYPOGRAPHY LOCK (Option 1)
-    ------------------------------------------------------ */
-    :root {
-      --navy: #0d1b2a;
-      --navy2: #0b1624;
-      --navy3: #0f1c30;
-
-      --purple: #A100FF;
-      --teal: #00d4aa;
-      --yellow: #ffdd55;
-      --red: #ff4f4f;
-      --grey: #94a3b8;
-
-      --font-display: "Space Grotesk", system-ui, sans-serif;
-      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background: var(--navy);
-      color: #e5e7eb;
-      font-family: var(--font-mono);
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-
-    /* subtle grid for "academy/product" feel */
-    body::before{
-      content:"";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 44px 44px;
-      pointer-events: none;
-      opacity: 0.22;
-      z-index: 0;
-    }
-
-    main, nav, section, footer, #progress-bar { position: relative; z-index: 1; }
-
-    h1, h2, h3, h4 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      margin: 0;
-    }
-
-    p { margin: 0; }
-
-    section {
-      padding: 110px 10vw;
-    }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--grey);
-      opacity: 0.95;
-      margin-bottom: 16px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-``
-
-     /* -----------------------------------------------------
-       TOP SCROLL PROGRESS BAR
-    ------------------------------------------------------ */
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: var(--purple);
-      width: 0%;
-      z-index: 9999;
-    }
-
-    /* -----------------------------------------------------
-       STICKY TOP NAV
-    ------------------------------------------------------ */
-    .top-nav {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(13,27,42,0.88);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px dashed rgba(161,0,255,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 32px;
-    }
-
-    .nav-left {
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 26px;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav-links a {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: #cbd5e1;
-      text-decoration: none;
-      opacity: 0.92;
-    }
-
-    .nav-links a:hover { color: var(--purple); }
-
-    .nav-cta {
-      background: var(--purple);
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: 0.2s ease;
-    }
-    .nav-cta:hover { transform: translateY(-1px); }
-
-    /* -----------------------------------------------------
-       GLOBAL SEARCH BAR (Sticky + Scope + Empty State + Highlight)
-    ------------------------------------------------------ */
-    .search-shell {
-      position: sticky;
-      top: 64px; /* under nav */
-      z-index: 900;
-      max-width: 980px;
-      margin: 16px auto 0;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(13,27,42,0.55);
-      backdrop-filter: blur(10px);
-      border: 1px dashed rgba(255,255,255,0.20);
-      transition: 0.2s ease;
-    }
-
-    .search-shell.stuck {
-      background: rgba(13,27,42,0.88);
-      border-color: rgba(161,0,255,0.35);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    }
-
-    .search-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .search-input-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed rgba(255,255,255,0.25);
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-
-    .search-ico {
-      opacity: 0.7;
-      font-size: 14px;
-    }
-
-    #searchInput {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-family: var(--font-mono);
-      font-size: 14px;
-    }
-    #searchInput::placeholder { color: #94a3b8; }
-
-    .search-clear {
-      border: none;
-      background: rgba(255,255,255,0.10);
-      color: #fff;
-      border-radius: 10px;
-      padding: 4px 10px;
-      cursor: pointer;
-      font-size: 16px;
-      line-height: 1;
-      opacity: 0.85;
-    }
-    .search-clear:hover { opacity: 1; }
-
-    .search-scope {
-      width: 210px;
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed rgba(255,255,255,0.25);
-      color: #fff;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      outline: none;
-    }
-
-    .search-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 12px;
-      opacity: 0.75;
-      font-family: var(--font-mono);
-    }
-
-    .search-empty {
-      margin-top: 12px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px dashed rgba(255,221,85,0.55);
-      background: rgba(255,221,85,0.08);
-      color: #ffeaa0;
-      font-size: 13px;
-      font-family: var(--font-mono);
-    }
-
-    mark.hl {
-      background: rgba(161,0,255,0.28);
-      border: 1px solid rgba(161,0,255,0.55);
-      color: #fff;
-      padding: 0 3px;
-      border-radius: 6px;
-    }
-
-     /* -----------------------------------------------------
-       HERO SECTION
-    ------------------------------------------------------ */
-    .hero {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      padding: 0 20px;
-    }
-
-    .pill {
-      position: absolute;
-      top: 40px;
-      padding: 6px 18px;
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 999px;
-      font-size: 12px;
-      letter-spacing: 1px;
-      opacity: 0.9;
-      font-family: var(--font-mono);
-    }
-
-    .hero h1 {
-      font-size: clamp(2.8rem, 4.6vw, 4rem);
-      line-height: 1.1;
-      max-width: 980px;
-    }
-    .hero h1 span { color: var(--purple); }
-
-    .subtext {
-      margin-top: 18px;
-      font-size: 16px;
-      opacity: 0.85;
-      max-width: 720px;
-      font-family: var(--font-mono);
-    }
-
-    .cta-area {
-      margin-top: 34px;
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn {
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border: 2px solid var(--purple);
-      text-decoration: none;
-      color: white;
-      transition: 0.2s ease;
-      font-family: var(--font-mono);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn-solid { background: var(--purple); }
-    .btn-outline { background: transparent; }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 25px;
-      font-size: 13px;
-      opacity: 0.7;
-      animation: fadeBounce 2s infinite ease-in-out;
-      font-family: var(--font-mono);
-    }
-
-    @keyframes fadeBounce {
-      0% { opacity: 0.4; transform: translateY(0); }
-      50% { opacity: 1; transform: translateY(6px); }
-      100% { opacity: 0.4; transform: translateY(0); }
-    }
-
-    /* -----------------------------------------------------
-       TWO-COLUMN STATS SECTION
-    ------------------------------------------------------ */
-    .info-section {
-      display: flex;
-      gap: 60px;
-      align-items: center;
-    }
-
-    .info-left {
-      flex: 1;
-      font-size: 17px;
-      max-width: 560px;
-      font-family: var(--font-mono);
-      opacity: 0.92;
-    }
-
-    .info-left a {
-      color: var(--purple);
-      text-decoration: underline;
-    }
-
-    .info-right {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .stat-tile {
-      border: 1px dashed rgba(255,255,255,0.25);
-      padding: 22px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 42px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      letter-spacing: -0.6px;
-    }
-    .stat-number.purple { color: var(--purple); }
-    .stat-number.teal   { color: var(--teal); }
-
-    .stat-label {
-      font-size: 13px;
-      opacity: 0.95;
-      letter-spacing: 2px;
-      font-family: var(--font-mono);
-      margin-top: 6px;
-    }
-
-    .stat-sub {
-      font-size: 12px;
-      opacity: 0.65;
-      font-family: var(--font-mono);
-      margin-top: 6px;
-    }
-
-     /* -----------------------------------------------------
-       USE CASES (TABS + CARDS)
-    ------------------------------------------------------ */
-    .usecase-section { text-align: center; }
-
-    .usecase-title {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    .usecase-sub {
-      font-family: var(--font-mono);
-      opacity: 0.8;
-      max-width: 860px;
-      margin: 0 auto 28px;
-      font-size: 14px;
-    }
-
-    .usecase-callout {
-      max-width: 900px;
-      margin: 0 auto 30px;
-      border: 1px dashed rgba(255,255,255,0.25);
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      opacity: 0.92;
-    }
-
-    .tab-bar {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin: 34px 0 26px;
-      flex-wrap: wrap;
-    }
-
-    .tab-bar button {
-      background: transparent;
-      border: 1px dashed rgba(255,255,255,0.30);
-      color: #cbd5e1;
-      padding: 8px 14px;
-      font-family: var(--font-mono);
-      cursor: pointer;
-      border-radius: 10px;
-      transition: 0.15s ease;
-    }
-
-    .tab-bar button:hover { transform: translateY(-1px); }
-
-    .tab-bar button.active {
-      border-color: var(--purple);
-      color: var(--purple);
-      background: rgba(161,0,255,0.08);
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .usecase-card {
-      display: flex;
-      gap: 22px;
-      padding: 24px;
-      border: 1px dashed rgba(255,255,255,0.18);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.02);
-      max-width: 920px;
-      margin: 0 auto;
-      text-align: left;
-    }
-
-    .card-num {
-      font-size: 44px;
-      opacity: 0.18;
-      font-weight: 800;
-      font-family: var(--font-display);
-      min-width: 64px;
-    }
-    .card-num.purple { color: var(--purple); }
-    .card-num.teal { color: var(--teal); }
-
-    .card-title {
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    .card-desc {
-      font-size: 14px;
-      opacity: 0.78;
-      margin-bottom: 12px;
-      font-family: var(--font-mono);
-    }
-
-    details.prompt-box {
-      background: rgba(161,0,255,0.14);
-      padding: 12px 12px 10px;
-      border-radius: 12px;
-      position: relative;
-      border: 1px dashed rgba(161,0,255,0.35);
-    }
-
-    details.prompt-box summary {
-      cursor: pointer;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      opacity: 0.95;
-      list-style: none;
-    }
-    details.prompt-box summary::-webkit-details-marker { display: none; }
-
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 11px;
-      background: rgba(255,255,255,0.18);
-      color: white;
-      border-radius: 8px;
-      border: none;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-family: var(--font-mono);
-    }
-
-    pre.prompt-text {
-      margin: 10px 0 0;
-      white-space: pre-wrap;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: #fff;
-      opacity: 0.95;
-    }
-
-     /* -----------------------------------------------------
-       TRANSFORMATION SECTION
-    ------------------------------------------------------ */
-    .transform-section { text-align: center; }
-
-    .transform-label, .master-label, .journey-label, .bonus-label, .limitations-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--grey);
-      margin-bottom: 16px;
-      opacity: 0.9;
-    }
-
-    .transform-title {
-      font-size: 34px;
-      margin-bottom: 28px;
-    }
-
-    .transform-card {
-      margin: 0 auto;
-      background: rgba(255,255,255,0.04);
-      padding: 26px 30px;
-      border-radius: 14px;
-      border-left: 4px dashed;
-      max-width: 840px;
-      text-align: left;
-    }
-
-    .transform-header {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
-
-    .transform-arrow {
-      font-size: 26px;
-      opacity: 0.65;
-      margin: 22px 0;
-      font-family: var(--font-mono);
-    }
-
-    .transform-card ul {
-      margin: 0;
-      padding-left: 18px;
-      font-family: var(--font-mono);
-      opacity: 0.92;
-    }
-    .transform-card li { margin: 8px 0; }
-
-    /* -----------------------------------------------------
-       SCENARIO SECTION
-    ------------------------------------------------------ */
-    .scenario-section { text-align: center; }
-
-    .scenario-title {
-      font-size: 34px;
-      margin-bottom: 30px;
-    }
-
-    .scenario-card {
-      background: rgba(255,255,255,0.04);
-      padding: 26px 28px;
-      border-left: 4px solid var(--yellow);
-      border-radius: 14px;
-      margin: 0 auto 26px;
-      max-width: 900px;
-      text-align: left;
-    }
-
-    .scenario-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--yellow);
-      opacity: 0.95;
-      margin-bottom: 10px;
-    }
-
-    .scenario-question {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .scenario-explainer {
-      opacity: 0.82;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .scenario-solve {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--teal);
-      opacity: 0.95;
-    }
-
-    /* -----------------------------------------------------
-       MASTER SECTION
-    ------------------------------------------------------ */
-    .master-title { font-size: 34px; margin-bottom: 10px; }
-    .master-sub {
-      opacity: 0.82;
-      font-family: var(--font-mono);
-      max-width: 900px;
-      margin: 0 auto 30px;
-      font-size: 14px;
-    }
-
-    .master-grid {
-      display: grid;
-      gap: 20px;
-      max-width: 980px;
-      margin: 0 auto;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    .master-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed rgba(255,255,255,0.25);
-      padding: 24px 24px;
-      border-radius: 16px;
-      text-align: left;
-    }
-
-    .master-icon { font-size: 22px; margin-bottom: 10px; }
-    .master-card-title {
-      font-family: var(--font-mono);
-      color: var(--purple);
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .master-desc {
-      font-family: var(--font-mono);
-      opacity: 0.82;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-
-     /* -----------------------------------------------------
-       JOURNEY SECTION
-    ------------------------------------------------------ */
-    .copilot-journey { text-align: center; }
-
-    .journey-title { font-size: 34px; margin-bottom: 10px; }
-    .journey-sub {
-      font-family: var(--font-mono);
-      opacity: 0.82;
-      max-width: 900px;
-      margin: 0 auto 30px;
-      font-size: 14px;
-    }
-
-    .journey-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 22px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .journey-card {
-      background: rgba(255,255,255,0.04);
-      border-radius: 16px;
-      padding: 26px;
-      border: 2px solid transparent;
-      text-decoration: none;
-      color: white;
-      transition: 0.2s ease;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .journey-card:hover { transform: translateY(-4px); }
-
-    .journey-icon { font-size: 22px; margin-bottom: 12px; }
-
-    .journey-level-label {
-      font-family: var(--font-mono);
-      letter-spacing: 0.2em;
-      font-size: 11px;
-      opacity: 0.95;
-      margin-bottom: 10px;
-    }
-
-    .journey-card-title { font-size: 18px; margin-bottom: 8px; }
-    .journey-card-desc { font-family: var(--font-mono); opacity: 0.82; font-size: 13px; margin-bottom: 14px; }
-
-    .journey-link {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      opacity: 0.9;
-    }
-
-    .beginner-card { border: 1px dashed rgba(0,212,170,0.55); }
-    .intermediate-card-link { border: 1px dashed rgba(255,221,85,0.55); }
-    .advanced-card-link { border: 1px dashed rgba(161,0,255,0.55); }
-
-    .green { color: var(--teal); }
-    .yellow { color: var(--yellow); }
-    .purple { color: var(--purple); }
-
-    /* -----------------------------------------------------
-       LEVEL SECTIONS (ROUTED BY HASH)
-    ------------------------------------------------------ */
-    .level-section {
-      display: none; /* route-based */
-      text-align: left;
-    }
-
-    #beginner.level-section { border-left: 6px solid var(--teal); padding-left: 36px; }
-    #intermediate.level-section { border-left: 6px solid var(--yellow); padding-left: 36px; }
-    #advanced.level-section { border-left: 6px solid var(--purple); padding-left: 36px; }
-
-    .level-headline { font-size: 26px; margin-bottom: 12px; }
-    .level-subtext { font-family: var(--font-mono); opacity: 0.82; max-width: 920px; margin-bottom: 24px; }
-
-    .level-steps { display: grid; gap: 18px; max-width: 980px; }
-
-    .level-step-card, .advanced-card, .intermediate-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed rgba(255,255,255,0.22);
-      border-radius: 16px;
-      padding: 22px;
-    }
-
-    .step-number {
-      font-family: var(--font-mono);
-      letter-spacing: 0.18em;
-      font-size: 11px;
-      opacity: 0.8;
-      margin-bottom: 8px;
-    }
-
-    .step-title, .power-title {
-      font-family: var(--font-display);
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .step-expl, .step-scenario, .scenario-problem, .scenario-retail {
-      font-family: var(--font-mono);
-      opacity: 0.82;
-      font-size: 13px;
-      line-height: 1.65;
-      margin-bottom: 10px;
-    }
-
-    details.step-prompt, details.limit-prompt, details.bonus-prompt {
-      background: rgba(161,0,255,0.14);
-      border: 1px dashed rgba(161,0,255,0.35);
-      border-radius: 12px;
-      padding: 12px;
-      position: relative;
-    }
-
-    details.step-prompt summary,
-    details.limit-prompt summary,
-    details.bonus-prompt summary {
-      cursor: pointer;
-      list-style: none;
-      font-family: var(--font-mono);
-      font-size: 13px;
-    }
-    details.step-prompt summary::-webkit-details-marker,
-    details.limit-prompt summary::-webkit-details-marker,
-    details.bonus-prompt summary::-webkit-details-marker { display: none; }
-
-    .step-copy, .limit-copy, .bonus-copy, .diag-copy {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 11px;
-      background: rgba(255,255,255,0.18);
-      color: white;
-      border-radius: 8px;
-      border: none;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-family: var(--font-mono);
-    }
-
-    pre.step-text, pre.limit-text, pre.bonus-text, pre.diagnostic-text {
-      margin: 10px 0 0;
-      white-space: pre-wrap;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: #fff;
-      opacity: 0.95;
-    }
-
-    /* -----------------------------------------------------
-       LIMITATIONS SECTION + TABLE + DIAGNOSTIC
-    ------------------------------------------------------ */
-    .limitation-card {
-      border-left: 4px solid var(--red);
-      background: rgba(255,255,255,0.04);
-      padding: 24px;
-      border-radius: 16px;
-      margin-bottom: 24px;
-      border-top: 1px dashed rgba(255,255,255,0.16);
-      border-right: 1px dashed rgba(255,255,255,0.16);
-      border-bottom: 1px dashed rgba(255,255,255,0.16);
-    }
-
-    .limitation-label {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #ffd1d1;
-    }
-
-    .limit-block h4 {
-      margin: 12px 0 6px;
-      color: var(--purple);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 0.1em;
-    }
-
-    .limit-block p { font-family: var(--font-mono); opacity: 0.85; font-size: 13px; }
-
-    .limit-ref-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--font-mono);
-      margin-top: 18px;
-      overflow: hidden;
-      border-radius: 14px;
-    }
-
-    .limit-ref-table thead tr { background: var(--purple); color: white; }
-    .limit-ref-table th, .limit-ref-table td { padding: 12px 10px; font-size: 13px; }
-
-    .limit-ref-table tbody tr:nth-child(odd) { background: var(--navy2); }
-    .limit-ref-table tbody tr:nth-child(even) { background: var(--navy3); }
-
-    .limitations-diagnostic-banner {
-      background: #39006e;
-      text-align: center;
-    }
-
-    .diagnostic-prompt-box {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.5);
-      padding: 22px;
-      border-radius: 16px;
-      max-width: 980px;
-      margin: 0 auto;
-      position: relative;
-      text-align: left;
-    }
-
-    /* -----------------------------------------------------
-       FOOTER + BACK TO TOP
-    ------------------------------------------------------ */
-    .guide-footer {
-      text-align: center;
-      padding: 60px 20px;
-      border-top: 1px dashed rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.06);
-    }
-
-    .footer-row {
-      margin-top: 18px;
-      display: flex;
-      gap: 18px;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .footer-row a {
-      color: var(--teal);
-      text-decoration: underline;
-      font-family: var(--font-mono);
-      font-size: 13px;
-    }
-
-    .reset-btn {
-      border: 1px solid var(--red);
-      color: var(--red);
-      background: transparent;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 26px;
-      right: 26px;
-      background: var(--purple);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.25s ease;
-      border: 1px solid rgba(255,255,255,0.12);
-      font-family: var(--font-mono);
-      z-index: 2000;
-    }
-
-    .back-to-top.show { opacity: 1; visibility: visible; }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      section { padding: 90px 6vw; }
-      .info-section { flex-direction: column; align-items: stretch; }
-      .search-row { flex-direction: column; }
-      .search-scope { width: 100%; }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Tableau × Copilot · Practical Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  .ai-landing-note {
+  margin: 18px auto 0;
+  width: fit-content;
+  padding: 8px 14px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #f5a623;
+  border: 1px dashed rgba(245,166,35,0.6);
+  border-radius: 20px;
+  background: rgba(245,166,35,0.08);
+}
+/* ===============================
+   GLOBAL THEME & RESET
+================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d1b2a;
+  --nav-bg: #0a1628;
+  --card: #112240;
+  --text: #e8eaf0;
+  --muted: #7a8599;
+
+  --purple: #A100FF;
+  --teal: #00c2cb;
+  --amber: #f5a623;
+  --red: #e84040;
+  --green: #00c97a;
+
+  --border: 1px dashed rgba(0, 194, 203, 0.3);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+  height: 100%;
+}
+
+/* ===============================
+   TYPOGRAPHY
+================================ */
+h1, h2, h3, h4, .mono {
+  font-family: "Courier New", Courier, monospace;
+}
+
+h1 { font-size: 64px; line-height: 1.1; }
+h2 { font-size: 36px; }
+h3 { font-size: 20px; }
+
+p { color: var(--muted); line-height: 1.6; }
+
+small { color: var(--muted); }
+
+/* ===============================
+   NAVIGATION
+================================ */
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--purple);
+  width: 0%;
+  z-index: 9999;
+}
+
+nav {
+  position: fixed;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--nav-bg);
+  border-bottom: 1px solid rgba(161,0,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 1000;
+}
+
+nav .logo {
+  color: var(--purple);
+  font-size: 14px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 22px;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+nav a.active {
+  border-bottom: 2px solid var(--purple);
+  padding-bottom: 4px;
+}
+
+/* ===============================
+   PAGE SYSTEM
+================================ */
+.page {
+  display: none;
+  min-height: 100vh;
+  padding: 120px 8vw 80px;
+  animation: fadeIn 0.25s ease;
+}
+
+.page.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===============================
+   CARDS & INTERACTIONS
+================================ */
+.card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.tag {
+  display: inline-block;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-right: 6px;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn {
+  padding: 14px 22px;
+  font-family: "Courier New", monospace;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.btn-purple {
+  background: var(--purple);
+  color: white;
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  background: var(--nav-bg);
+  padding: 40px;
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+</style>
+ <script>
+/* ============================================
+   PAGE ROUTER (MULTI-PAGE, NO RELOAD)
+============================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  const pages = document.querySelectorAll(".page");
+  const navLinks = document.querySelectorAll("nav a");
+
+  function showPage(id) {
+    pages.forEach(p => {
+      p.classList.remove("active");
+      p.style.opacity = 0;
+    });
+
+    const page = document.getElementById(id);
+    if (!page) return;
+
+    page.classList.add("active");
+    setTimeout(() => page.style.opacity = 1, 10);
+
+    navLinks.forEach(a => a.classList.remove("active"));
+    document.querySelector(`nav a[data-page="${id}"]`)?.classList.add("active");
+
+    window.scrollTo({ top: 0, behavior: "instant" });
+    updateProgress();
+  }
+
+  navLinks.forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      showPage(link.dataset.page);
+    });
+  });
+
+  // default page
+  showPage("home");
+});
+
+/* ============================================
+   SCROLL PROGRESS BAR (PER PAGE)
+============================================ */
+function updateProgress() {
+  const active = document.querySelector(".page.active");
+  if (!active) return;
+
+  const scrollTop = active.scrollTop;
+  const height = active.scrollHeight - active.clientHeight;
+  const percent = height > 0 ? (scrollTop / height) * 100 : 0;
+
+  document.getElementById("progress").style.width = percent + "%";
+}
+
+window.addEventListener("scroll", updateProgress, true);
+
+/* ============================================
+   COPY TO CLIPBOARD (ALL PROMPT BOXES)
+============================================ */
+function copyText(btn) {
+  const pre = btn.closest(".prompt-box")?.querySelector("pre");
+  if (!pre) return;
+
+  navigator.clipboard.writeText(pre.innerText.trim());
+
+  const original = btn.innerText;
+  btn.innerText = "Copied ✓";
+  btn.style.background = "var(--green)";
+  btn.style.color = "#000";
+
+  setTimeout(() => {
+    btn.innerText = original;
+    btn.style.background = "var(--purple)";
+    btn.style.color = "#fff";
+  }, 2000);
+}
+
+/* ============================================
+   COLLAPSIBLE PROMPT ANIMATION
+============================================ */
+function togglePrompt(el) {
+  const box = el.nextElementSibling;
+  if (!box) return;
+
+  box.style.maxHeight = box.style.maxHeight ? null : box.scrollHeight + "px";
+}
+
+/* ============================================
+   BACK TO TOP BUTTON
+============================================ */
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("backTop");
+  if (!btn) return;
+
+  btn.style.display = window.scrollY > 300 ? "block" : "none";
+});
+
+function backToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ============================================
+   MOBILE NAV (HAMBURGER)
+============================================ */
+function toggleNav() {
+  document.getElementById("navLinks").classList.toggle("open");
+}
+</script> 
 </head>
+<body>
 
-   <body>
-  <div id="progress-bar"></div>
+<!-- TOP PROGRESS BAR -->
+<div id="progress"></div>
 
-  <!-- Sticky Nav -->
-  <nav class="top-nav">
-    <div class="nav-left">TABLEAU × COPILOT</div>
-    <ul class="nav-links">
-      <li><a href="#usecases">Use Cases</a></li>
-      <li><a href="#scenarios">Scenarios</a></li>
-      <li><a href="#journey">Your Level</a></li>
-      <li><a href="#limitations">Limitations</a></li>
-    </ul>
-    <a href="#usecases" class="nav-cta">Enter Guide →</a>
-  </nav>
+<!-- FIXED NAV -->
+<nav>
+  <div class="logo mono">TABLEAU × COPILOT</div>
 
-  <!-- Global Search -->
-  <div id="searchShell" class="search-shell">
-    <div class="search-row">
-      <div class="search-input-wrap">
-        <span class="search-ico">⌕</span>
-        <input id="searchInput" type="text" placeholder="Search Tableau problems, prompts, concepts…" />
-        <button id="searchClear" class="search-clear" aria-label="Clear search">×</button>
+  <button class="mono" id="hamburger"
+    onclick="toggleNav()"
+    aria-label="Open menu"
+    style="display:none;background:transparent;border:0;color:var(--text);font-size:18px;cursor:pointer;">
+    ☰
+  </button>
+
+  <ul id="navLinks">
+    <li><a href="#" class="active" data-page="home">Home</a></li>
+    <li><a href="#" data-page="usecases">Use Cases</a></li>
+    <li><a href="#" data-page="scenarios">Scenarios</a></li>
+    <li><a href="#" data-page="mechanics">Mechanics</a></li>
+    <li><a href="#" data-page="skill">Skill Level</a></li>
+    <li><a href="#" data-page="limitations">Limitations</a></li>
+  </ul>
+</nav>
+
+<!-- BACK TO TOP -->
+<button id="backTop"
+  onclick="backToTop()"
+  class="btn btn-purple mono"
+  style="display:none; position:fixed; bottom:22px; right:22px; z-index:1200;">
+  ↑ Back to Top
+</button>
+
+<!-- PAGE-SPECIFIC LAYOUT CSS (allowed; still embedded) -->
+<style>
+  /* Make each page independently scrollable (so progress bar is per page) */
+  .page {
+    height: calc(100vh - 63px); /* 3px progress + 60px nav */
+    overflow-y: auto;
+    padding: 90px 8vw 80px;
+  }
+
+  /* Mobile nav */
+  @media (max-width: 900px) {
+    nav { padding: 0 18px; }
+    nav ul {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      left: 0;
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(161,0,255,0.3);
+      padding: 14px 18px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    nav ul.open { display: flex; }
+    #hamburger { display: block !important; }
+  }
+
+  /* HERO */
+  .hero {
+    height: calc(100vh - 63px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .pill {
+    display: inline-block;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+  }
+
+  .hero h1 { margin-bottom: 14px; }
+  .hero .purple-line { color: var(--purple); display:block; margin-top: 6px; }
+
+  .hero .sub {
+    font-size: 18px;
+    max-width: 820px;
+    margin: 0 auto;
+    color: var(--muted);
+  }
+
+  .cta-row {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .scroll-hint .arrow {
+    display: inline-block;
+    margin-top: 6px;
+    animation: bounce 1.6s infinite ease-in-out;
+    color: var(--muted);
+  }
+
+  @keyframes bounce {
+    0% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 0.5; }
+  }
+
+  /* SECTION BLOCKS */
+  .block-label {
+    font-family: "Courier New", monospace;
+    color: var(--muted);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .block-label.lines {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .block-label.lines:before,
+  .block-label.lines:after {
+    content: "";
+    height: 1px;
+    width: 120px;
+    background: rgba(122,133,153,0.35);
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .section-sub {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 26px;
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  /* STATS SECTION (2-col) */
+  .stats-wrap {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 26px;
+    align-items: start;
+    margin-top: 24px;
+  }
+
+  .stats-left {
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .stats-left .teal-link {
+    color: var(--teal);
+    text-decoration: underline;
+    cursor: default;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .stat-tile {
+    background: var(--card);
+    border: var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 18px;
+    transition: 0.2s ease;
+  }
+
+  .stat-tile:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+
+  .stat-num {
+    font-family: "Courier New", monospace;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .caps {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .stat-desc {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* TRANSFORMATION */
+  .transform-wrap {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .transform-card {
+    background: var(--card);
+    border: var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 22px 22px 18px;
+  }
+
+  .transform-card ul { margin-top: 14px; padding-left: 18px; }
+  .transform-card li { margin: 10px 0; color: var(--text); opacity: 0.92; }
+
+  .tlabel {
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .without { border-left: 4px dashed var(--red); }
+  .with { border-left: 4px dashed var(--green); }
+
+  .arrow-mid {
+    text-align: center;
+    color: var(--teal);
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+  }
+
+  /* WHY COPILOT (6 cards) */
+  .why-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .why-card .icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .why-card .title {
+    color: var(--teal);
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .why-card .desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 1000px) {
+    .stats-wrap { grid-template-columns: 1fr; }
+    .transform-wrap { grid-template-columns: 1fr; }
+    .arrow-mid { transform: rotate(0deg); }
+    .why-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- =========================
+     PAGE 1 — HOME
+========================= -->
+<div id="home" class="page active">
+
+  <!-- Section A — Hero -->
+  <section class="hero">
+    <div>
+      <div class="pill">◈ TABLEAU × COPILOT · PRACTICAL GUIDE · ACCENTURE 2026</div>
+
+      <div class="ai-landing-note">
+  ⚠ AI‑generated content — verify accuracy before use
+</div>
+
+      <h1 class="mono">
+        You're about to enter the prompt versing era for any<br>
+        Tableau requirement.
+        <span class="purple-line">with assistance of Microsoft Copilot.</span>
+      </h1>
+
+      <p class="sub">
+        No guesswork. No Stack Overflow rabbit holes.
+        Just the right Copilot prompt — that actually works.
+      </p>
+
+      <div class="cta-row">
+        <button class="btn btn-purple" data-goto="usecases">See What's Covered ↓</button>
+        <button class="btn btn-outline" data-goto="scenarios">Jump to Scenarios →</button>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      Scroll to explore<br>
+      <span class="arrow">↓</span>
+    </div>
+  </section>
+
+  <!-- Section B — Stats -->
+  <section style="margin-top: 40px;">
+    <div class="stats-wrap">
+      <div class="stats-left">
+        Most Tableau users spend <strong>70%</strong> of their time figuring out how to build something —
+        not actually building it. Copilot changes that.
+        <span class="teal-link">ship the right viz</span>.
       </div>
 
-      <select id="searchScope" class="search-scope" aria-label="Search scope">
-        <option value="all">All sections</option>
-        <option value="usecases">Use Cases</option>
-        <option value="scenarios">Scenarios</option>
-        <option value="levels">Your Level</option>
-        <option value="limitations">Limitations</option>
-      </select>
+      <div class="stat-grid">
+        <div class="stat-tile card">
+          <div class="stat-num" style="color:var(--purple);">70%</div>
+          <div class="caps">TIME SAVED</div>
+          <div class="stat-desc">on repeated Tableau tasks</div>
+        </div>
+
+        <div class="stat-tile card">
+          <div class="stat-num" style="color:var(--teal);">10+</div>
+          <div class="caps">USE CASES</div>
+          <div class="stat-desc">covered with ready prompts</div>
+        </div>
+
+        <div class="stat-tile card">
+          <div class="stat-num" style="color:var(--amber);">0</div>
+          <div class="caps">PRIOR COPILOT</div>
+          <div class="stat-desc">experience needed</div>
+        </div>
+
+        <div class="stat-tile card">
+          <div class="stat-num" style="color:var(--green);">1</div>
+          <div class="caps">PROMPT AWAY</div>
+          <div class="stat-desc">from any Tableau solution</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section C — Transformation -->
+  <section style="margin-top: 70px;">
+    <div class="block-label lines">THE TRANSFORMATION</div>
+    <h2 class="section-title mono">What changes when you use Copilot for Tableau.</h2>
+
+    <div class="transform-wrap">
+      <div class="transform-card without card">
+        <div class="tlabel" style="color:var(--red);">✕ WITHOUT COPILOT</div>
+        <ul>
+          <li>Analysts waste hours searching docs for the right chart</li>
+          <li>Chart selection becomes guesswork and rework</li>
+          <li>Leadership requests a change — you rebuild from scratch</li>
+          <li>Data errors hit and you troubleshoot alone</li>
+          <li>Delivery slows down and confidence drops</li>
+        </ul>
+      </div>
+
+      <div class="arrow-mid">↓</div>
+
+      <div class="transform-card with card">
+        <div class="tlabel" style="color:var(--green);">✓ WITH COPILOT</div>
+        <ul>
+          <li>Describe what you want — get step‑by‑step instantly</li>
+          <li>Calculated fields generated, explained, ready to paste</li>
+          <li>Leadership changes handled with one follow‑up prompt</li>
+          <li>Errors diagnosed with the most likely root cause</li>
+          <li>Dashboards ship faster with fewer iterations</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section D — Why Copilot -->
+  <section style="margin-top: 70px;">
+    <div class="block-label">WHY IT MATTERS</div>
+    <h2 class="section-title mono">Walk out ready to ship.</h2>
+    <p class="section-sub">
+      Not just Tableau knowledge — Copilot workflows you can apply the next morning.
+    </p>
+
+    <div class="why-grid">
+      <div class="card why-card">
+        <div class="icon">🎯</div>
+        <div class="title mono">Prompt Any Requirement</div>
+        <div class="desc">Turn any stakeholder ask into a working Copilot prompt in under 60 seconds.</div>
+      </div>
+
+      <div class="card why-card">
+        <div class="icon">🔧</div>
+        <div class="title mono">Debug Like a Senior</div>
+        <div class="desc">Diagnose broken vizzes, logic errors, and slow dashboards with confidence.</div>
+      </div>
+
+      <div class="card why-card">
+        <div class="icon">📐</div>
+        <div class="title mono">Design for Leadership</div>
+        <div class="desc">Build executive dashboards with layout, color, and storytelling guidance.</div>
+      </div>
+
+      <div class="card why-card">
+        <div class="icon">🚀</div>
+        <div class="title mono">Ship Without Blockers</div>
+        <div class="desc">From data connection to publishing — Copilot closes every gap fast.</div>
+      </div>
+
+      <div class="card why-card">
+        <div class="icon">📊</div>
+        <div class="title mono">Understand Your Data</div>
+        <div class="desc">Validate grain, keys, nulls, joins, and quality before building visuals.</div>
+      </div>
+
+      <div class="card why-card">
+        <div class="icon">⚡</div>
+        <div class="title mono">Resolve Errors Instantly</div>
+        <div class="desc">Paste the error + context. Get the fix path and the correct Tableau syntax.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- =========================
+   NEXT PAGES (Chunk 4+)
+   usecases / scenarios / mechanics / skill / limitations
+========================= -->
+
+<script>
+/* CTA buttons navigate pages without reload */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-goto]");
+  if (!btn) return;
+  const target = btn.dataset.goto;
+  const nav = document.querySelector(`nav a[data-page="${target}"]`);
+  if (nav) nav.click();
+});
+
+/* Ensure page scroll resets when switching pages (page div scrolling) */
+document.addEventListener("click", (e) => {
+  const nav = e.target.closest("nav a[data-page]");
+  if (!nav) return;
+  setTimeout(() => {
+    const active = document.querySelector(".page.active");
+    if (active) active.scrollTop = 0;
+    updateProgress();
+  }, 30);
+});
+</script>
+
+  <style>
+/* ===============================
+   USE CASES PAGE STYLES
+================================ */
+.uc-label {
+  font-family: "Courier New", monospace;
+  color: var(--muted);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.uc-headline {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.uc-callout {
+  background: rgba(0,194,203,0.06);
+  border: var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  color: var(--text);
+  margin: 18px 0 28px;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.uc-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.uc-card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  transition: 0.2s ease;
+}
+
+.uc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.uc-num {
+  font-family: "Courier New", monospace;
+  font-size: 80px;
+  line-height: 1;
+  color: var(--purple);
+  opacity: 0.3;
+  font-weight: 700;
+}
+
+.uc-title {
+  font-family: "Courier New", monospace;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.uc-desc {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 12px;
+  max-width: 820px;
+}
+
+.uc-tags {
+  margin-bottom: 14px;
+}
+
+/* ===============================
+   COLLAPSIBLE PROMPT BOX
+   (Smooth max-height transition)
+================================ */
+.prompt-box {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(161,0,255,0.25);
+}
+
+.prompt-toggle {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  color: var(--teal);
+  background: rgba(0,194,203,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prompt-toggle span {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.prompt-body {
+  background: #2a004e; /* dark purple box */
+  color: #ffffff;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  position: relative;
+}
+
+.prompt-body .copy {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--purple);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.prompt-body .copy:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.prompt-body pre {
+  padding: 18px 18px 18px;
+  padding-right: 110px;
+  white-space: pre-wrap;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .uc-card { grid-template-columns: 1fr; }
+  .uc-num { font-size: 64px; }
+}
+</style>
+
+<!-- =========================
+     PAGE 2 — USE CASES
+========================= -->
+<div id="usecases" class="page">
+
+  <div class="uc-label">10 USE CASES · ONE COPILOT</div>
+  <div class="uc-headline mono">10 Use Cases. One Copilot.</div>
+  <p style="max-width:920px;color:var(--muted);margin-top:6px;">
+    Each card gives you the exact Copilot prompt to solve that Tableau requirement — right now.
+  </p>
+
+  <div class="uc-callout">
+    ◈ <strong>THIS IS NOT A THEORY GUIDE</strong> — Every prompt is tested against real Tableau scenarios. Copy. Paste. Ship.
+  </div>
+
+  <div class="uc-grid">
+
+    <!-- 01 -->
+    <div class="uc-card">
+      <div class="uc-num">01</div>
+      <div>
+        <div class="uc-title mono">Building Dashboards from Scratch</div>
+        <div class="uc-desc">Turn a vague stakeholder ask into a complete worksheet plan + dashboard layout in minutes.</div>
+        <div class="uc-tags">
+          <span class="tag">Layout</span><span class="tag">KPI Tiles</span><span class="tag">Story Flow</span><span class="tag">Dashboard</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Act as a senior Tableau developer. I need to build a dashboard from scratch.
+Goal: [describe stakeholder goal].
+Data source: [your data source] with fields: [list fields].
+Audience: [executive / ops / finance].
+Give me:
+1) The exact set of worksheets to build (names + chart types)
+2) Which fields go on Rows/Columns/Marks/Filters for each
+3) A dashboard layout (top KPI row + supporting views)
+4) Interactivity (filter actions, highlight actions)
+5) Formatting rules (colors, spacing, titles) so it looks exec-ready.</pre>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="search-meta">
-      <span id="searchCount">Type to search</span>
-      <span class="search-shortcut">Ctrl / ⌘ K · Esc clears</span>
+    <!-- 02 -->
+    <div class="uc-card">
+      <div class="uc-num">02</div>
+      <div>
+        <div class="uc-title mono">Fixing &amp; Debugging a Visualization</div>
+        <div class="uc-desc">Diagnose wrong totals, wrong splits, missing marks, and “why is this number changing?” issues.</div>
+        <div class="uc-tags">
+          <span class="tag">Aggregation</span><span class="tag">Filters</span><span class="tag">Joins</span><span class="tag">Debug</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I’m debugging a Tableau viz and the numbers are wrong.
+Expected: [expected result].
+Actual: [what I see].
+View: [describe chart type + dimensions/measures].
+Filters applied: [list filters].
+Calculated fields used: [paste calc syntax].
+Explain the 5 most likely causes (aggregation level, filter order, join duplication, granularity mismatch, table calc direction).
+Then give step-by-step checks to isolate the root cause and fix it.</pre>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="searchEmpty" class="search-empty" style="display:none;">
-      No matches found. Try “LOD”, “slow dashboard”, “context filter”, “COUNTD”, “RAG”.
+    <!-- 03 -->
+    <div class="uc-card">
+      <div class="uc-num">03</div>
+      <div>
+        <div class="uc-title mono">Writing Calculated Fields &amp; Formulas</div>
+        <div class="uc-desc">Get correct Tableau syntax for IF/THEN, DATE logic, LOD, string ops — plus explanation.</div>
+        <div class="uc-tags">
+          <span class="tag">IF/THEN</span><span class="tag">Dates</span><span class="tag">RAG</span><span class="tag">Calcs</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Write a Tableau calculated field for this business logic:
+[explain logic in plain English].
+Fields available: [field names].
+Output should return: [dimension label / numeric measure].
+Constraints: handle NULLs safely, avoid divide-by-zero, and explain each line.
+Also give 2 test cases with expected outputs so I can validate correctness.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="uc-card">
+      <div class="uc-num">04</div>
+      <div>
+        <div class="uc-title mono">Connecting to Data Sources</div>
+        <div class="uc-desc">Pick the right connection method and model your data correctly before building visuals.</div>
+        <div class="uc-tags">
+          <span class="tag">Live vs Extract</span><span class="tag">Relationships</span><span class="tag">Joins</span><span class="tag">Schema</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Help me connect Tableau to [SQL Server / Snowflake / Redshift / BigQuery].
+Tables: [list tables] with keys: [list keys].
+Goal: [what the dashboard needs].
+Tell me:
+1) Live vs Extract recommendation (and why)
+2) Relationship vs Join vs Blend choice
+3) Exact join keys + join type
+4) Grain checks (what is a row?)
+5) Data quality checks (duplicates, null keys, date formats)
+6) Performance tips before I build any worksheets.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="uc-card">
+      <div class="uc-num">05</div>
+      <div>
+        <div class="uc-title mono">Designing for Leadership &amp; Executives</div>
+        <div class="uc-desc">Convert analysis into an executive narrative with KPIs, drivers, and clean layout hierarchy.</div>
+        <div class="uc-tags">
+          <span class="tag">Exec Layout</span><span class="tag">KPIs</span><span class="tag">Color Rules</span><span class="tag">Story</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Act as an executive dashboard designer (Tableau).
+Audience: [VP / Director / Leadership].
+Goal: [what leadership wants to decide].
+Data: [your data source] with metrics: [your metric list].
+Design a dashboard layout with:
+- Top KPI row (3–6 KPIs) + RAG logic guidance
+- Trend view + breakdown view + driver view
+- Titles/subtitles wording that guides interpretation
+- Color + spacing rules for readability
+- What NOT to show (noise reduction).</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="uc-card">
+      <div class="uc-num">06</div>
+      <div>
+        <div class="uc-title mono">Performance Optimization</div>
+        <div class="uc-desc">Reduce load time by optimizing marks, filters, calculations, and connection design.</div>
+        <div class="uc-tags">
+          <span class="tag">Performance Recorder</span><span class="tag">Marks</span><span class="tag">Filters</span><span class="tag">Extracts</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau dashboard is slow.
+Load time: [seconds]. Sheets: [count]. Filters: [count]. Connection: [live/extract].
+Data size: [rows]. Calculations: [briefly describe].
+Give me a prioritized performance checklist:
+1) Use Performance Recorder (what to look for)
+2) Extract vs Live decision
+3) Filter order / context filter guidance
+4) Reduce marks (how)
+5) Optimize calculations (LOD/table calcs)
+6) Layout best practices (containers, dashboard size)
+Include “quick wins” vs “deep fixes”.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="uc-card">
+      <div class="uc-num">07</div>
+      <div>
+        <div class="uc-title mono">Creating LOD Expressions</div>
+        <div class="uc-desc">Write FIXED/INCLUDE/EXCLUDE LODs correctly and understand how filters affect results.</div>
+        <div class="uc-tags">
+          <span class="tag">FIXED</span><span class="tag">INCLUDE</span><span class="tag">EXCLUDE</span><span class="tag">Order of Ops</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I need an LOD expression in Tableau for this requirement:
+[describe business requirement].
+Dataset grain: [grain]. Filters: [what users will filter].
+Tell me whether I should use FIXED vs INCLUDE vs EXCLUDE (and why).
+Then write the exact LOD syntax using fields: [field list].
+Also explain how context filters vs dimension filters will impact the result,
+and give me a validation method using known totals.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="uc-card">
+      <div class="uc-num">08</div>
+      <div>
+        <div class="uc-title mono">Building Parameters &amp; Filters</div>
+        <div class="uc-desc">Create dynamic toggles (metric switch, time window switch) that drive every chart cleanly.</div>
+        <div class="uc-tags">
+          <span class="tag">Parameters</span><span class="tag">Dynamic Metric</span><span class="tag">Date Logic</span><span class="tag">UX</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I need a Tableau parameter-driven setup.
+User should choose: [option A / B / C] and the dashboard updates everywhere.
+Fields: [list relevant fields]. Charts affected: [list chart types].
+Give me:
+1) Parameter setup (type, values, default)
+2) Calculated field using the parameter (exact syntax)
+3) How to apply it across all worksheets
+4) Common pitfalls (order of ops, performance, formatting)
+5) UX tips so the control is intuitive.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="uc-card">
+      <div class="uc-num">09</div>
+      <div>
+        <div class="uc-title mono">Storytelling with Data</div>
+        <div class="uc-desc">Make the dashboard speak: the right titles, annotations, and insight sequence for decisions.</div>
+        <div class="uc-tags">
+          <span class="tag">Narrative</span><span class="tag">Annotations</span><span class="tag">Executive Story</span><span class="tag">Clarity</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Help me turn this Tableau dashboard into a story.
+Audience: [stakeholder type]. Goal: [decision they need to make].
+Charts: [list charts]. KPIs: [your metric list].
+Write:
+1) The ideal sequence of views (what comes first/second/third)
+2) Titles + subtitles that explain “what this means”
+3) 3 insight callouts with suggested annotations
+4) What to remove to reduce noise
+5) How to make comparisons obvious (YoY/WoW/targets).</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="uc-card">
+      <div class="uc-num">10</div>
+      <div>
+        <div class="uc-title mono">Publishing &amp; Sharing Workbooks</div>
+        <div class="uc-desc">Publish with confidence: permissions, refresh, performance, and governance checklist included.</div>
+        <div class="uc-tags">
+          <span class="tag">Tableau Server</span><span class="tag">RLS</span><span class="tag">Refresh</span><span class="tag">QA</span>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">
+            ▸ Copilot Prompt to Use <span>copy-ready</span>
+          </div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I’m ready to publish my Tableau workbook to Tableau Server.
+Users: [who will use it]. Security needs: [row-level security or project access].
+Data source: [live/extract] with refresh needs: [schedule].
+Give me:
+1) Pre-publish QA checklist (numbers validation + edge cases)
+2) Performance checks (load time target + what to test)
+3) Permissions setup recommendation (project/workbook/datasource)
+4) RLS approach (if needed) and how to validate it
+5) Naming conventions + documentation notes
+6) Post-publish monitoring checklist.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==========================================
+   PLACEHOLDERS so nav doesn't break (filled in Chunk 5+)
+=========================================== -->
+<style>
+/* ===============================
+   SCENARIOS PAGE STYLES
+================================ */
+.sc-label {
+  font-family: "Courier New", monospace;
+  color: var(--muted);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.sc-headline {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.sc-sub {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 980px;
+  margin: 8px 0 18px;
+}
+
+/* Decision scenario cards */
+.decision-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.decision-card {
+  background: var(--card);
+  border: var(--border);
+  border-left: 4px solid var(--amber);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.decision-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.scenario-badge {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+
+.decision-q {
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.decision-why {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.decision-solved {
+  font-family: "Courier New", monospace;
+  color: var(--teal);
+  font-size: 12px;
+}
+
+/* FreshMart Library */
+.fm-label {
+  font-family: "Courier New", monospace;
+  color: var(--muted);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-top: 44px;
+  margin-bottom: 10px;
+}
+
+.fm-headline {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+.fm-index {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0 6px;
+  margin: 10px 0 18px;
+  scrollbar-color: rgba(0,194,203,0.35) transparent;
+}
+
+.fm-index a {
+  white-space: nowrap;
+  text-decoration: none;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: var(--teal);
+  border: 1px solid rgba(0,194,203,0.35);
+  border-radius: 999px;
+  padding: 8px 12px;
+  transition: 0.2s ease;
+}
+
+.fm-index a:hover {
+  background: rgba(0,194,203,0.08);
+  transform: translateY(-2px);
+}
+
+.fm-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.fm-card {
+  background: var(--card);
+  border: var(--border);
+  border-left: 4px solid var(--amber);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.fm-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.fm-top {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.fm-title {
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.fm-tag {
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  color: var(--teal);
+  border: 1px solid rgba(0,194,203,0.4);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.fm-sections {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fm-sec-title {
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.fm-sec-body {
+  color: var(--text);
+  opacity: 0.92;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Copilot prompt box (reuse your collapsible engine) */
+.fm-prompt {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(161,0,255,0.25);
+}
+
+.fm-prompt .prompt-toggle {
+  background: rgba(0,194,203,0.04);
+  color: var(--teal);
+}
+
+.fm-prompt .prompt-body {
+  background: #2a004e; /* dark purple */
+}
+
+.fm-skill {
+  margin-top: 14px;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: var(--teal);
+  opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+  .sc-headline, .fm-headline { font-size: 34px; }
+}
+</style>
+
+<!-- =========================
+     PAGE 3 — SCENARIOS
+========================= -->
+<div id="scenarios" class="page">
+
+  <!-- Sub-section A — Real Decision Scenarios -->
+  <div class="sc-label">⚡ REAL SCENARIOS · RETAIL CONTEXT</div>
+  <div class="sc-headline mono">Real scenarios. Real prompts.</div>
+  <p class="sc-sub">
+    These are the situations Tableau teams hit in production. Each one maps to a Use Case — so you can copy the prompt and get unblocked fast.
+  </p>
+
+  <div class="decision-grid">
+    <div class="decision-card">
+      <div class="scenario-badge">⚡ SCENARIO</div>
+      <div class="decision-q mono">"My bar chart shows the right total but wrong breakdown by region. What's wrong?"</div>
+      <div class="decision-why">
+        This is usually caused by duplicated rows from joins/relationships, incorrect aggregation level, or a filter/order-of-operations mismatch.
+      </div>
+      <div class="decision-solved">→ Solved in Use Case 02 · Fixing &amp; Debugging a Visualization</div>
+    </div>
+
+    <div class="decision-card">
+      <div class="scenario-badge">⚡ SCENARIO</div>
+      <div class="decision-q mono">"Leadership wants a KPI tile that turns red below target, yellow near it, green above. How?"</div>
+      <div class="decision-why">
+        KPI RAG tiles combine threshold logic + calculated fields + formatting rules. It’s simple once the calc is correct — and painful when it isn’t.
+      </div>
+      <div class="decision-solved">→ Solved in Use Case 03 · Writing Calculated Fields &amp; Formulas</div>
+    </div>
+
+    <div class="decision-card">
+      <div class="scenario-badge">⚡ SCENARIO</div>
+      <div class="decision-q mono">"My dashboard takes 45 seconds to load. What do I check first?"</div>
+      <div class="decision-why">
+        Slow dashboards usually come from too many marks, expensive COUNTD, poor filter design, live connections, and heavy calculations — you need a diagnosis path.
+      </div>
+      <div class="decision-solved">→ Solved in Use Case 06 · Performance Optimization</div>
     </div>
   </div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="pill">TABLEAU × COPILOT · PRACTICAL GUIDE · Your Company Name 2025</div>
+  <!-- Sub-section B — FreshMart Retail Prompt Library -->
+  <div class="fm-label">FRESHMART RETAIL · PROMPT LIBRARY</div>
+  <div class="fm-headline mono">Prompts That Actually Work.</div>
+  <p class="sc-sub">
+    Every scenario below is based on how retail analytics teams actually work. Read the situation, use the prompt, get unblocked.
+  </p>
 
-    <h1>
-      You’re about to solve any Tableau requirement.<br />
-      <span>with Microsoft Copilot.</span>
-    </h1>
+  <!-- Horizontal index bar -->
+  <div class="fm-index">
+    #fm0101 Duplicate Values</a>
+    #fm0202 Data Blending Issues</a>
+    #fm0303 Publish to Server</a>
+    #fm0404 Dashboard Performance</a>
+    #fm0505 Load Time Reduction</a>
+    #fm0606 Date Filter Logic</a>
+    #fm0707 Visualising Requirements</a>
+    #fm0808 Understanding Data</a>
+    #fm0909 KPI Scorecard (RAG)</a>
+    #fm1010 Null Handling</a>
+    #fm1111 LOD Same-Store</a>
+    #fm1212 Forecasting</a>
+  </div>
 
-    <p class="subtext">
-      No guesswork. No Stack Overflow rabbit holes. Just the right Copilot prompt — that actually works.
-    </p>
+  <div class="fm-grid">
 
-    <div class="cta-area">
-      <a class="btn btn-solid" href="#coverage">See What's Covered ↓</a>
-      <a class="btn btn-outline" href="#usecases">Jump to Use Cases →</a>
+    <!-- 01 -->
+    <div class="fm-card" id="fm01">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 01 — Checking for Duplicate Values</div>
+        <span class="fm-tag">Data Quality · Calculated Fields</span>
+      </div>
+
+      <div class="fm-sections">
+        <div>
+          <div class="fm-sec-title mono">WHAT</div>
+          <div class="fm-sec-body">Identify duplicate Order IDs that inflate totals and cause mismatched revenue.</div>
+        </div>
+        <div>
+          <div class="fm-sec-title mono">WHY</div>
+          <div class="fm-sec-body">Duplicates silently overstate KPIs — finance will flag it, and you’ll lose trust if you can’t prove the root cause.</div>
+        </div>
+        <div>
+          <div class="fm-sec-title mono">RETAIL SCENARIO</div>
+          <div class="fm-sec-body">FreshMart has 1.2M transactions. Revenue looks 12% higher than expected. You suspect duplicate Order IDs are inflating totals.</div>
+        </div>
+        <div>
+          <div class="fm-sec-title mono">WORKAROUND</div>
+          <div class="fm-sec-body">Create a calc to flag duplicates and validate by counting duplicates vs unique, then filter out flagged rows safely.</div>
+        </div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I have a Tableau data source connected to a sales transactions table. How do I create a calculated field or view that identifies duplicate Order IDs so I can flag and exclude them from my revenue calculation? Use [Order ID] and [Sales Amount] as placeholders and give me a validation approach to confirm the duplicates are driving the 12% inflation.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Data Quality · Calculated Fields</div>
     </div>
 
-    <div class="scroll-hint">Scroll to explore<br />↓</div>
-  </section>
+    <!-- 02 -->
+    <div class="fm-card" id="fm02">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 02 — Solving Data Blending Issues</div>
+        <span class="fm-tag">Data Blending · Multi-Source</span>
+      </div>
 
-  <!-- COVERAGE / STATS -->
-  <section id="coverage" class="info-section container">
-    <div class="info-left">
-      Most Tableau users spend 70% of their time figuring out how to build something —
-      not actually building it. Copilot changes that. Ask the right question, get the right answer,
-      <a href="#usecases">ship the right viz</a>.
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Fix asterisks and wrong aggregation caused by blending mismatch.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Blending issues create “looks right, is wrong” dashboards — totals can be incorrect even when charts render.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">Primary POS sales + secondary CRM loyalty. Loyalty score shows asterisks (*) and aggregates incorrectly.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Validate linking fields, data types, and granularity. Consider relationship/join instead of blending where possible.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>In Tableau, I'm blending two data sources — a POS transactions sheet (primary) and a CRM loyalty CSV (secondary). The linking field is Customer ID. My secondary source shows asterisks instead of values and aggregates incorrectly. Walk me step by step through fixing this blending issue and tell me when I should replace the blend with a join or a relationship.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Data Blending · Multi-Source</div>
     </div>
 
-    <div class="info-right">
-      <div class="stat-tile searchable">
-        <div class="stat-number purple">70%</div>
-        <div class="stat-label">TIME SAVED</div>
-        <div class="stat-sub">on repeated Tableau tasks</div>
+    <!-- 03 -->
+    <div class="fm-card" id="fm03">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 03 — Publishing Workbooks to Server</div>
+        <span class="fm-tag">Publishing · Row-Level Security</span>
       </div>
 
-      <div class="stat-tile searchable">
-        <div class="stat-number teal">10+</div>
-        <div class="stat-label">USE CASES</div>
-        <div class="stat-sub">covered with ready prompts</div>
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Publish to Tableau Server with row-level security so each manager sees only their region.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Incorrect RLS can expose data. Correct RLS prevents leaks and reduces support tickets.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart has 5 store managers. Each should view only their region’s data. Mapping exists in an Excel file.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use user-to-region mapping, implement RLS via data source filters, entitlements table, or server groups depending on setup.</div></div>
       </div>
 
-      <div class="stat-tile searchable">
-        <div class="stat-number purple">0</div>
-        <div class="stat-label">PRIOR COPILOT</div>
-        <div class="stat-sub">experience needed</div>
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I need to publish a Tableau workbook to Tableau Server with row-level security so each user only sees data for their assigned region. The user-region mapping is in a separate Excel file. Give me the exact steps to set this up before publishing, including how to validate RLS with a test user.</pre>
+        </div>
       </div>
 
-      <div class="stat-tile searchable">
-        <div class="stat-number teal">1</div>
-        <div class="stat-label">PROMPT AWAY</div>
-        <div class="stat-sub">from any Tableau solution</div>
-      </div>
+      <div class="fm-skill">Tag: Publishing · Row-Level Security</div>
     </div>
-  </section>
 
-  <!-- USE CASES (Tabs) -->
-  <section id="usecases" class="usecase-section">
-    <div class="container">
-      <h2 class="usecase-title">10 Use Cases. One Copilot.</h2>
-      <p class="usecase-sub">
-        Each card gives you the exact Copilot prompt to solve that Tableau requirement — right now.
-      </p>
-
-      <div class="usecase-callout searchable">
-        ◈ <strong>THIS IS NOT A THEORY GUIDE</strong> — Every prompt is tested against real Tableau scenarios.
-        Copy. Paste. Ship.
+    <!-- 04 -->
+    <div class="fm-card" id="fm04">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 04 — Dashboard Performance Optimisation</div>
+        <span class="fm-tag">Performance · SQL · Dashboard Design</span>
       </div>
 
-      <div class="tab-bar" id="usecaseTabs">
-        <button class="active" data-tab="uc1">01</button>
-        <button data-tab="uc2">02</button>
-        <button data-tab="uc3">03</button>
-        <button data-tab="uc4">04</button>
-        <button data-tab="uc5">05</button>
-        <button data-tab="uc6">06</button>
-        <button data-tab="uc7">07</button>
-        <button data-tab="uc8">08</button>
-        <button data-tab="uc9">09</button>
-        <button data-tab="uc10">10</button>
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Speed up a sluggish KPI dashboard with filters and live SQL connection.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Stakeholders abandon slow dashboards. Performance issues kill adoption.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart weekly KPI dashboard has 9 charts, 4 filters, live SQL connection. Stakeholders complain it’s sluggish.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use a checklist: extract vs live, filter order, reduce marks, simplify calcs, optimize dashboard layout and containers.</div></div>
       </div>
 
-       <div class="tab-content active" id="uc1">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">01</div>
-          <div>
-            <h3 class="card-title">Building Dashboards from Scratch</h3>
-            <p class="card-desc">Get step‑by‑step layout guidance and generated worksheets based on your data.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Generate a complete Tableau dashboard layout based on this data source. My fields are: [list fields]. My stakeholder goal is: [goal]. Provide: (1) recommended worksheet set, (2) exact chart types, (3) dashboard layout zones, (4) interactions (filters/actions), and (5) formatting rules for exec-readiness.</pre>
-            </details>
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>My Tableau dashboard has 9 worksheets, 4 quick filters, and a live SQL Server connection. It feels slow for end users. Give me a checklist of performance optimisation steps I should take — covering extract vs live, filter order, mark count reduction, and layout best practices. Prioritize quick wins first.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Performance · SQL · Dashboard Design</div>
+    </div>
+
+    <!-- 05 -->
+    <div class="fm-card" id="fm05">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 05 — Reducing Dashboard Load Time</div>
+        <span class="fm-tag">Load Time · Performance Recorder · Extracts</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Diagnose a 38-second dashboard and cut it under 8 seconds before review.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Quarterly reviews require fast load. Slow dashboards create meeting failure.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">Store-level tracker for 200 stores takes 38 seconds to load; leadership demands under 8 seconds.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use Performance Recorder to isolate slow queries; apply top fixes: extract, pre-aggregate, reduce marks, simplify filters/calcs.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>My Tableau dashboard takes 38 seconds to load. It covers 200 stores with 3 years of daily sales data. Walk me through how to diagnose what's causing the slowness using Tableau's Performance Recorder, and give me the top 5 fixes I should apply immediately — with expected impact and why.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Load Time · Performance Recorder · Extracts</div>
+    </div>
+
+    <!-- 06 -->
+    <div class="fm-card" id="fm06">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 06 — Logical Approaches for Date Filters</div>
+        <span class="fm-tag">Date Logic · Parameters · Calculated Fields</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Build a dynamic time-window selector using parameters + calcs (not built-in filter).</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Retail stakeholders want “This Week / Last 4 Weeks / This Quarter / YTD” without manual range selection.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart wants one toggle controlling multiple time windows dynamically based on today’s date.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use a parameter for window choice + calculated field returning TRUE/FALSE for in-range dates; apply as filter across sheets.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>In Tableau, I need to build dynamic relative date filters for This Week, Last 4 Weeks, This Quarter, and Year-to-Date using a parameter and calculated field — not the built-in date filter. Show me how to build this logic step by step so it updates automatically based on today's date.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Date Logic · Parameters · Calculated Fields</div>
+    </div>
+
+    <!-- 07 -->
+    <div class="fm-card" id="fm07">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 07 — Visualising a Business Requirement</div>
+        <span class="fm-tag">Requirement Translation · YoY · Chart Selection</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Translate stakeholder language into the right chart + calculations + dashboard layout.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">The hardest part is not building — it’s choosing what to build so stakeholders understand it instantly.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">Category manager asks: “Which categories drive growth vs decline vs last year, and how does it differ by region?”</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Define YoY variance and growth %, pick a chart (bar + variance, slope, or heatmap), and design an executive flow.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>A stakeholder wants to see product category performance vs last year by region — identifying growth and decline. Help me decide the best chart type for this in Tableau, what calculated fields I need (YoY growth %, variance), and how to lay out the dashboard so it's clear for a non-technical audience.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Requirement Translation · YoY · Chart Selection</div>
+    </div>
+
+    <!-- 08 -->
+    <div class="fm-card" id="fm08">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 08 — Understanding the Data Before Building</div>
+        <span class="fm-tag">Data Understanding · Data Modelling · Joins</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Ask the right data questions before connecting: grain, keys, joins, nulls, date formats.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Most Tableau issues come from bad modelling decisions made before the first chart is built.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">You received 4 Excel files: Store Master, Daily Sales, Product Catalogue, Returns Log.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Confirm grain and keys, test join cardinality, identify null/duplicate risks, and plan relationship model before building.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I have 4 Excel files for a retail client: Store Master, Daily Sales, Product Catalogue, and Returns Log. Before I connect them in Tableau, help me understand what questions I should ask about the data — like grain, date formats, key fields, nulls, and how they should be joined — so I don't run into issues later.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Data Understanding · Data Modelling · Joins</div>
+    </div>
+
+    <!-- 09 -->
+    <div class="fm-card" id="fm09">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 09 — Building a Retail KPI Scorecard</div>
+        <span class="fm-tag">KPI Design · RAG Logic · Leadership Dashboards</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Build a one-page KPI scorecard with RAG status against targets stored separately.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Leadership dashboards fail when targets and thresholds are inconsistent or hard-coded incorrectly.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart wants Revenue, Margin %, Units, Returns Rate, Footfall with RAG against target Excel file.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Model targets as a joined/related table; create standardized RAG calc; apply consistent color rules across tiles.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I need to build a KPI scorecard in Tableau for a retail client with 5 metrics: Revenue, Margin %, Units Sold, Returns Rate, and Customer Footfall. Each needs a RAG indicator based on target thresholds stored in a separate target Excel file. Walk me through the calculated fields for RAG logic and the best layout for a leadership audience.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: KPI Design · RAG Logic · Leadership Dashboards</div>
+    </div>
+
+    <!-- 10 -->
+    <div class="fm-card" id="fm10">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 10 — Handling Null Values in Retail Data</div>
+        <span class="fm-tag">Null Handling · Data Cleaning · Filters</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Replace NULL dimension values cleanly and handle NULL measures without losing totals.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">NULLs silently distort analysis and break filters, causing missing segments and wrong KPIs.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">Returns Reason Code is NULL for ~18% rows; appears blank in filters and distorts returns analysis.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use IFNULL() / ZN() patterns; replace NULL dimensions with “Not Captured”; ensure measure totals stay consistent.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>My Tableau data has NULL values in a Reason Code dimension field for about 18% of rows. They're appearing as blank in filters and breaking my returns analysis. Show me how to replace NULLs with a label like 'Not Captured' using a calculated field, and how to handle NULLs in measures without them being excluded from totals.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Null Handling · Data Cleaning · Filters</div>
+    </div>
+
+    <!-- 11 -->
+    <div class="fm-card" id="fm11">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 11 — LOD for Same-Store Sales Analysis</div>
+        <span class="fm-tag">LOD Expressions · Fixed · Store Analysis</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Compare each store’s current year sales against its own baseline average across all years.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Same-store analysis requires stable baselines unaffected by view filters.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart wants to compare CY sales vs store’s average annual sales across all years regardless of filters.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use FIXED LOD for baseline; manage context filters if baseline must respond to certain filters.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I need to calculate each store's average annual sales across all years as a baseline, then compare it to this year's performance — regardless of what filters the user applies. Explain how to write a FIXED LOD expression in Tableau for this same-store sales comparison and where to place it in the view.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: LOD Expressions · Fixed · Store Analysis</div>
+    </div>
+
+    <!-- 12 -->
+    <div class="fm-card" id="fm12">
+      <div class="fm-top">
+        <div class="fm-title mono">Card 12 — Forecasting &amp; Trend Lines</div>
+        <span class="fm-tag">Forecasting · Trend Analysis · Planning</span>
+      </div>
+
+      <div class="fm-sections">
+        <div><div class="fm-sec-title mono">WHAT</div><div class="fm-sec-body">Add a 13-week forecast to a weekly sales trend and explain confidence intervals.</div></div>
+        <div><div class="fm-sec-title mono">WHY</div><div class="fm-sec-body">Planning teams need forward-looking signals with clear uncertainty communication.</div></div>
+        <div><div class="fm-sec-title mono">RETAIL SCENARIO</div><div class="fm-sec-body">FreshMart planning wants a 13-week sales forecast to support stock ordering decisions.</div></div>
+        <div><div class="fm-sec-title mono">WORKAROUND</div><div class="fm-sec-body">Use Tableau’s built-in forecasting; configure model options; interpret confidence bands for stakeholders.</div></div>
+      </div>
+
+      <div class="fm-prompt prompt-box">
+        <div class="prompt-toggle" onclick="togglePrompt(this)">▸ Copilot Prompt to Use <span>copy-ready</span></div>
+        <div class="prompt-body">
+          <button class="copy" onclick="copyText(this)">Copy</button>
+          <pre>I have a weekly sales trend line chart in Tableau. The planning team wants a 13-week forward forecast added to it for stock planning purposes. Walk me through how to add Tableau's built-in forecast, how to configure the model settings, and what the confidence bands mean so I can explain it to a non-technical stakeholder.</pre>
+        </div>
+      </div>
+
+      <div class="fm-skill">Tag: Forecasting · Trend Analysis · Planning</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+/* Anchor scrolling inside the scenarios page (scrollable div) */
+document.querySelectorAll('#scenarios .fm-index a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = a.getAttribute('href').replace('#','');
+    const target = document.getElementById(id);
+    const page = document.getElementById('scenarios');
+    if (target && page) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+/* Keep progress bar correct for scrollable page divs */
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("scroll", updateProgress);
+});
+</script>
+
+<style>
+/* ===============================
+   MECHANICS PAGE STYLES
+================================ */
+.mech-label {
+  font-family: "Courier New", monospace;
+  color: var(--muted);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.mech-headline {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.mech-sub {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 980px;
+  margin: 8px 0 18px;
+}
+
+.mech-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.mech-card {
+  background: var(--card);
+  border: var(--border);
+  border-left: 4px dashed rgba(0,194,203,0.55);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.mech-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.mech-title {
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.mech-sections {
+  display: grid;
+  gap: 10px;
+}
+
+.mech-sec-title {
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.mech-sec-body {
+  color: var(--text);
+  opacity: 0.92;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Mechanics prompt box uses same collapsible system */
+.mech-prompt {
+  margin-top: 14px;
+}
+
+/* Make mechanics prompt toggle consistent */
+.mech-prompt .prompt-toggle {
+  background: rgba(0,194,203,0.04);
+  color: var(--teal);
+}
+.mech-prompt .prompt-body {
+  background: #2a004e;
+}
+
+@media (max-width: 900px) {
+  .mech-headline { font-size: 34px; }
+}
+</style>
+
+<!-- =========================
+     PAGE 4 — MECHANICS
+========================= -->
+<div id="mechanics" class="page">
+
+  <div class="mech-label">TABLEAU MECHANICS · HOW &amp; WHY</div>
+  <div class="mech-headline mono">The stuff nobody explains. Until now.</div>
+  <p class="mech-sub">
+    These are the building blocks every Tableau user hits — but rarely understands deeply.
+    Each card tells you what it is, why you need it, when to use it, and the exact Copilot prompt to implement it.
+  </p>
+
+  <div class="mech-grid">
+
+    <!-- 01 Context Filters -->
+    <div class="mech-card">
+      <div class="mech-title mono">01 — Context Filters</div>
+      <div class="mech-sections">
+        <div>
+          <div class="mech-sec-title mono">WHAT IT IS</div>
+          <div class="mech-sec-body">Context filters run first (after extract/data source filters) and define the dataset other filters operate on.</div>
+        </div>
+        <div>
+          <div class="mech-sec-title mono">WHY YOU NEED IT</div>
+          <div class="mech-sec-body">Without context, Top N and dependent filters can compute globally and then filter — producing “looks right, is wrong” results.</div>
+        </div>
+        <div>
+          <div class="mech-sec-title mono">RETAIL SCENARIO</div>
+          <div class="mech-sec-body">FreshMart wants Top 5 products within North region. Without Region as context, Tableau ranks Top 5 globally then applies region filter — wrong list.</div>
+        </div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>In Tableau, I have a Top 10 filter on Product Name and a Region filter set to North. The Top 10 is pulling from all regions instead of just North. Explain why this happens and walk me through adding Region as a Context Filter to fix it. Also tell me when NOT to use context filters (performance risks).</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc2">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">02</div>
-          <div>
-            <h3 class="card-title">Fixing &amp; Debugging a Visualization</h3>
-            <p class="card-desc">Get pinpoint explanations for why a viz is wrong — and the exact steps to fix it.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Help me debug this Tableau viz. Here is what I expected: [expected]. Here is what I see: [actual]. Here are my fields + calcs: [paste]. Tell me the most likely causes (aggregation, filters, joins/blends, granularity). Then give step-by-step checks to fix it.</pre>
-            </details>
+    <!-- 02 Data Source Filters -->
+    <div class="mech-card">
+      <div class="mech-title mono">02 — Data Source Filters</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Filters applied at the data source level, before data is available to worksheets.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Reduces data volume early to improve performance and prevent accidental access to restricted data.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart has 5 years of transactions, but analysts only need last 2 years. Data source filter on Order Date improves load time significantly.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I'm connected to a SQL Server table with 5 years of retail sales data. I only ever need the last 2 years in my workbook. Show me how to apply a Data Source Filter on Order Date in Tableau, explain how it differs from a normal filter, and what risks exist if I use it incorrectly.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc3">
-        <div class="usecase-card searchable">
-          <div class="card-num teal">03</div>
-          <div>
-            <h3 class="card-title">Writing Calculated Fields &amp; Formulas</h3>
-            <p class="card-desc">Generate correct Tableau formulas without memorizing syntax.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Write a Tableau calculated field that does the following business logic: [plain English logic]. My fields are: [field list]. Output should be [dimension/measure]. Also explain each line and list edge cases (nulls, 0 division, filter impact).</pre>
-            </details>
+    <!-- 03 Workbook-Level Filters -->
+    <div class="mech-card">
+      <div class="mech-title mono">03 — Workbook-Level Filters (Apply to All Worksheets)</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">A filter you apply on one sheet and then push to other sheets using the same data source.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Without it, each sheet filters independently, creating inconsistent storytelling across dashboards.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart executive dashboard has 6 worksheets. Selecting Region = North should update all sheets consistently.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I have a Tableau workbook with 6 worksheets all using the same data source. I want a Region filter on my overview sheet to apply across all other sheets. Walk me through applying the filter to all worksheets, and explain the difference between "All Using This Data Source" vs "Selected Worksheets".</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc4">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">04</div>
-          <div>
-            <h3 class="card-title">Connecting to Data Sources</h3>
-            <p class="card-desc">Simplify connection steps for any database — including joins and schema checks.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Guide me through connecting Tableau to [SQL Server/Redshift/Snowflake/etc]. My tables are [tables]. Tell me: best connection type (live vs extract), key fields to join, relationship vs join, and a checklist to validate grain, duplicates, and null risks before I build.</pre>
-            </details>
+    <!-- 04 Filter Order of Operations -->
+    <div class="mech-card">
+      <div class="mech-title mono">04 — Understanding Filter Order of Operations</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Tableau applies filters in a strict sequence (Extract → Data Source → Context → Dimension → Measure → Table Calc).</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">If you don’t understand order, Top N, LODs, and table calcs will produce surprising results.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart margin % changes unexpectedly when a date filter is applied because table calcs run after most filters.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau dashboard uses a date range filter, a Top N filter, dimension filters, and a table calculation (running total). Numbers change unexpectedly when filtering. Explain Tableau’s filter order of operations with a diagram-style description, and tell me which category each of my filters belongs to so I can fix the logic.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc5">
-        <div class="usecase-card searchable">
-          <div class="card-num teal">05</div>
-          <div>
-            <h3 class="card-title">Designing for Leadership &amp; Executives</h3>
-            <p class="card-desc">Get dashboard layouts that reflect business‑level clarity and messaging.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Design an executive-ready Tableau dashboard for this goal: [goal]. Audience: [leadership persona]. Must include: KPI tiles, trend view, breakdown, and key drivers. Recommend: layout grid, color rules, fonts, spacing, and the story flow (what users read first/second/third).</pre>
-            </details>
+    <!-- 05 Calendar Date Filters & Range Pickers -->
+    <div class="mech-card">
+      <div class="mech-title mono">05 — Calendar Date Filters &amp; Range Pickers</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Date filters can be relative, range sliders, or discrete selections — each behaves differently.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Retail reporting depends on dates; wrong date filter type leads to misleading comparisons (YoY/WoW).</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart managers need a start/end picker to select any custom period and still show YoY comparison.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I want a custom date range filter in Tableau using two date parameters (Start Date, End Date) with calendar pickers. The selection should drive all charts AND a Year-over-Year comparison calc. Walk me through creating parameters, the date-in-range calculated field, and the YoY calc that respects the selected range.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc6">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">06</div>
-          <div>
-            <h3 class="card-title">Performance Optimization</h3>
-            <p class="card-desc">Diagnose slow dashboards and get targeted improvements instantly.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">My Tableau dashboard is slow. Dataset size: [rows]. Connection: [live/extract]. Sheets: [count]. Filters: [count]. Walk me through Performance Recorder diagnosis, then give a prioritized fix list (extract vs live, filter order, context filters, reduce marks, simplify calcs, optimize joins/relationships).</pre>
-            </details>
+    <!-- 06 Relative Date Filters -->
+    <div class="mech-card">
+      <div class="mech-title mono">06 — Relative Date Filters (Dynamic)</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Relative date filters auto-update based on today’s date (e.g., last 7 days always stays current).</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Static filters break dashboards over time; relative filters keep dashboards evergreen.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart ops team wants a rolling 7-day sales view that updates every morning automatically.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Show me how to create a relative date filter in Tableau for a rolling 7-day window that always updates based on today’s date. Also show how to do Last Full Week (Mon–Sun), Last Full Month, and Year-to-Date — using both built-in filters and a calculated field approach, and when each is better.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc7">
-        <div class="usecase-card searchable">
-          <div class="card-num teal">07</div>
-          <div>
-            <h3 class="card-title">Creating LOD Expressions</h3>
-            <p class="card-desc">Build accurate FIXED, INCLUDE, EXCLUDE statements for any requirement.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">I need an LOD for this business question: [question]. My grain is [grain]. My fields: [fields]. Recommend FIXED vs INCLUDE vs EXCLUDE, write the exact LOD syntax, explain how filters affect it (context/dimension), and how to validate it against known totals.</pre>
-            </details>
+    <!-- 07 Measure to Dimension -->
+    <div class="mech-card">
+      <div class="mech-title mono">07 — Converting a Measure to a Dimension</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Changing a numeric field from Measure (aggregated) to Dimension (categorical grouping).</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">IDs like Store ID must group data, not be summed. Wrong field type silently breaks analysis.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart Store ID imports as a number measure; Tableau tries to SUM it instead of grouping by store.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>In my Tableau data source, Store ID and Postcode are being treated as measures (green pills) but I need them as dimensions (blue pills) for grouping. Explain why Tableau classified them as measures, how to convert them correctly, whether I should do it in the data source or in the view, and whether it impacts existing calculations.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc8">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">08</div>
-          <div>
-            <h3 class="card-title">Building Parameters &amp; Filters</h3>
-            <p class="card-desc">Auto‑generate parameter logic and dynamic filter systems.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Help me build a parameter-driven filter system. Users should switch between: [options]. Show steps to create parameter, calculated field logic, how to apply across sheets, and how to avoid common pitfalls (order of operations, performance).</pre>
-            </details>
+    <!-- 08 Dimension to Measure -->
+    <div class="mech-card">
+      <div class="mech-title mono">08 — Converting a Dimension to a Measure</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Converting a text/categorical field into a numeric measure so it can be summed/averaged.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">You cannot aggregate a dimension. Converting unlocks trends, averages, and KPI calculations.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart satisfaction scores are stored as text “1”–“5”. You need avg satisfaction per store.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I have a customer satisfaction score field stored as a string dimension with values "1" to "5". I need average satisfaction per store. Walk me through converting it to a numeric measure using INT() or FLOAT(), handling null/non-numeric values safely, and then using AVG() correctly in the view.</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc9">
-        <div class="usecase-card searchable">
-          <div class="card-num teal">09</div>
-          <div>
-            <h3 class="card-title">Storytelling with Data</h3>
-            <p class="card-desc">Turn insights into clear narrative sequences for stakeholders.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">My stakeholder wants a clear story from this analysis: [analysis]. Suggest the best storytelling layout (sequence of views), annotations, KPI callouts, and the exact wording for titles/subtitles. Also give 3 “what changed + why” insights to highlight.</pre>
-            </details>
+    <!-- 09 Screenshots to prompt Copilot -->
+    <div class="mech-card">
+      <div class="mech-title mono">09 — Using Screenshots to Prompt Copilot</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Pasting screenshots of Tableau views/errors/calcs into Copilot for visual diagnosis.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Explaining a chart in text is imprecise. Screenshots give Copilot the full context fast.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart bar chart totals don’t match. You paste the view + calc screenshot so Copilot can identify the mismatch.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>[Paste your Tableau screenshot here] This is my current Tableau view showing sales by region. The Grand Total does not match the sum of the bars. Based on what you can see, what is likely causing this discrepancy? Walk me through what to check in my calculated field, filter setup, and aggregation settings to fix it. Note: I will paste the calc text below too: [paste calc].</pre>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="tab-content" id="uc10">
-        <div class="usecase-card searchable">
-          <div class="card-num purple">10</div>
-          <div>
-            <h3 class="card-title">Publishing &amp; Sharing Workbooks</h3>
-            <p class="card-desc">Automate publishing workflows, permissions &amp; governance.</p>
-            <details class="prompt-box">
-              <summary>Copilot Prompt to Use ▸</summary>
-              <button class="copy-btn" type="button">COPY</button>
-              <pre class="prompt-text">Guide me through publishing this Tableau workbook to Tableau Server. I need: permissions approach, project/folder placement, extract refresh strategy, row-level security checklist, naming conventions, and a pre-publish QA checklist (numbers validation + performance).</pre>
-            </details>
+    <!-- 10 Copilot writes calculated field -->
+    <div class="mech-card">
+      <div class="mech-title mono">10 — Getting Copilot to Write Full Calculated Fields</div>
+      <div class="mech-sections">
+        <div><div class="mech-sec-title mono">WHAT IT IS</div><div class="mech-sec-body">Describing business logic in English and having Copilot generate Tableau calc syntax correctly.</div></div>
+        <div><div class="mech-sec-title mono">WHY YOU NEED IT</div><div class="mech-sec-body">Tableau syntax has quirks. Copilot produces correct first drafts and explains what each line does.</div></div>
+        <div><div class="mech-sec-title mono">RETAIL SCENARIO</div><div class="mech-sec-body">FreshMart wants to flag discounts >30% in Electronics as “High Risk Discount” for audit review.</div></div>
+        <div class="mech-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>Write me a Tableau calculated field that flags a transaction as "High Risk Discount" if Discount % > 0.30 AND Category = "Electronics". Otherwise return "Standard". Then explain each part of the syntax, how to handle NULL Discount %, and how to validate the result on a sample view.</pre>
           </div>
         </div>
       </div>
-
     </div>
-  </section>
 
-      <!-- TRANSFORMATION -->
-  <section class="transform-section">
-    <div class="container">
-      <div class="transform-label">T H E&nbsp;&nbsp;T R A N S F O R M A T I O N</div>
-      <h2 class="transform-title">What changes when you use Copilot for Tableau.</h2>
+  </div>
 
-      <div class="transform-card without searchable" style="border-color: var(--red);">
-        <div class="transform-header" style="color: var(--red);">✕ WITHOUT COPILOT</div>
-        <ul>
-          <li>Analysts spend hours searching docs for the right chart type</li>
-          <li>Calculated fields take 3 tries and a StackOverflow visit</li>
-          <li>Leadership asks for a change — you rebuild from scratch</li>
-          <li>Data connections break and there's no clear fix path</li>
-          <li>Formatting and design are guesswork</li>
-        </ul>
-      </div>
+</div>
 
-      <div class="transform-arrow">↓</div>
+<script>
+/* Keep progress bar correct for scrollable page divs */
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("scroll", updateProgress);
+});
+</script>
 
-      <div class="transform-card with searchable" style="border-color: var(--teal);">
-        <div class="transform-header" style="color: var(--teal);">✓ WITH COPILOT</div>
-        <ul>
-          <li>Describe what you want — get the exact steps in seconds</li>
-          <li>Calculated fields generated, explained, and ready to paste</li>
-          <li>Leadership changes handled with one follow‑up prompt</li>
-          <li>Data connection errors diagnosed and resolved instantly</li>
-          <li>Design &amp; formatting guided by best‑practice prompts</li>
-        </ul>
-      </div>
+<style>
+/* ===============================
+   SKILL LEVEL PAGE STYLES
+================================ */
+.skill-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.skill-pick {
+  background: var(--card);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-align: center;
+  border: 2px dashed transparent;
+}
+
+.skill-pick:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.skill-pick.beginner { border-color: var(--green); }
+.skill-pick.intermediate { border-color: var(--amber); }
+.skill-pick.advanced { border-color: var(--purple); }
+
+.skill-pick .icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.skill-pick .title {
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+}
+
+.skill-section {
+  margin-top: 60px;
+}
+
+.skill-headline {
+  font-family: "Courier New", monospace;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.skill-sub {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 980px;
+  margin-bottom: 18px;
+}
+
+.skill-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.skill-card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.skill-step {
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.22em;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.beginner-accent { border-left: 4px solid var(--green); }
+.intermediate-accent { border-left: 4px solid var(--amber); }
+.advanced-accent { border-left: 4px solid var(--purple); }
+
+/* Banner */
+.skill-banner {
+  margin-top: 70px;
+  background: #2a004e;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 34px;
+}
+
+.skill-banner h3 {
+  font-family: "Courier New", monospace;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.banner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.banner-item {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.banner-item span {
+  font-size: 22px;
+  margin-right: 6px;
+}
+
+.banner-note {
+  margin-top: 20px;
+  font-style: italic;
+  color: #d8b4fe;
+}
+
+@media (max-width: 900px) {
+  .skill-picker { grid-template-columns: 1fr; }
+  .banner-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- =========================
+     PAGE 5 — SKILL LEVEL
+========================= -->
+<div id="skill" class="page">
+
+  <!-- Level Picker -->
+  <div class="skill-picker">
+    <div class="skill-pick beginner" onclick="document.getElementById('beginner').scrollIntoView({behavior:'smooth'})">
+      <div class="icon">🌱</div>
+      <div class="title mono">BEGINNER</div>
     </div>
-  </section>
-
-  <!-- SCENARIOS -->
-  <section id="scenarios" class="scenario-section">
-    <div class="container">
-      <h2 class="scenario-title">Real scenarios. Real prompts.</h2>
-
-      <div class="scenario-card searchable">
-        <div class="scenario-label">⚡ S C E N A R I O</div>
-        <div class="scenario-question">“My bar chart shows the right total but wrong breakdown by region. What’s wrong?”</div>
-        <p class="scenario-explainer">
-          This usually points to a mismatch between aggregation levels, missing dimensions,
-          or a hidden filter affecting part of the view.
-        </p>
-        <div class="scenario-solve">→ Solved in Use Case 02 · Fixing &amp; Debugging</div>
-      </div>
-
-      <div class="scenario-card searchable">
-        <div class="scenario-label">⚡ S C E N A R I O</div>
-        <div class="scenario-question">“Leadership wants a KPI tile that turns red below target, yellow near it, green above. How?”</div>
-        <p class="scenario-explainer">
-          Multi‑state KPI logic requires threshold logic + formatting rules that beginners rarely know.
-        </p>
-        <div class="scenario-solve">→ Solved in Use Case 03 · Calculated Fields</div>
-      </div>
-
-      <div class="scenario-card searchable">
-        <div class="scenario-label">⚡ S C E N A R I O</div>
-        <div class="scenario-question">“My dashboard takes 45 seconds to load. What do I check first?”</div>
-        <p class="scenario-explainer">
-          Slow dashboards come from extracts, filters, joins, blends, and mark counts — identifying the bottleneck is key.
-        </p>
-        <div class="scenario-solve">→ Solved in Use Case 06 · Performance Optimization</div>
-      </div>
+    <div class="skill-pick intermediate" onclick="document.getElementById('intermediate').scrollIntoView({behavior:'smooth'})">
+      <div class="icon">⚡</div>
+      <div class="title mono">INTERMEDIATE</div>
     </div>
-  </section>
+    <div class="skill-pick advanced" onclick="document.getElementById('advanced').scrollIntoView({behavior:'smooth'})">
+      <div class="icon">🚀</div>
+      <div class="title mono">ADVANCED</div>
+    </div>
+  </div>
 
-  <!-- WHAT YOU'LL MASTER -->
-  <section class="master-section">
-    <div class="container">
-      <div class="master-label">W H A T&nbsp;&nbsp;Y O U ' L L&nbsp;&nbsp;M A S T E R</div>
-      <h2 class="master-title">Walk out ready to ship.</h2>
-      <p class="master-sub">
-        Not just Tableau knowledge — Copilot workflows you can apply the next morning on a real requirement.
-      </p>
+  <!-- BEGINNER -->
+  <div id="beginner" class="skill-section">
+    <div class="skill-headline mono">You don't need to learn Tableau. You need to learn what to ask.</div>
+    <p class="skill-sub">Copilot becomes powerful once you ask the right question at the right moment.</p>
 
-      <div class="master-grid">
-        <div class="master-card searchable">
-          <div class="master-icon">🎯</div>
-          <div class="master-card-title">Prompt Any Requirement</div>
-          <p class="master-desc">Translate stakeholder asks into a working Copilot prompt in under 60 seconds.</p>
+    <div class="skill-grid">
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 01</div>Understand what Tableau actually does (and what it doesn't).</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 02</div>Understand your data — grain, keys, dates, nulls.</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 03</div>Connect data correctly before building anything.</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 04</div>Build your first correct chart (not just a pretty one).</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 05</div>Fix a chart that looks right but is wrong.</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 06</div>Ask Copilot why an error is happening.</div>
+      <div class="skill-card beginner-accent"><div class="skill-step">STEP 07</div>Assemble your first dashboard with confidence.</div>
+    </div>
+  </div>
+
+  <!-- INTERMEDIATE -->
+  <div id="intermediate" class="skill-section">
+    <div class="skill-headline mono">You know enough to build. Now learn enough to build it right.</div>
+    <p class="skill-sub">This is where most analysts struggle — and where Copilot helps the most.</p>
+
+    <div class="skill-grid">
+      <div class="skill-card intermediate-accent">Calculations that work on one sheet but not another.</div>
+      <div class="skill-card intermediate-accent">Filters giving wrong or confusing results.</div>
+      <div class="skill-card intermediate-accent">Year-over-Year and period comparisons.</div>
+      <div class="skill-card intermediate-accent">Dashboards that become slow as complexity grows.</div>
+      <div class="skill-card intermediate-accent">When to use parameters vs filters.</div>
+      <div class="skill-card intermediate-accent">When an LOD is required — and when it isn’t.</div>
+    </div>
+  </div>
+
+  <!-- ADVANCED -->
+  <div id="advanced" class="skill-section">
+    <div class="skill-headline mono">You already know Tableau. Now use Copilot to think faster than your stakeholders.</div>
+    <p class="skill-sub">Advanced users don’t ask “how do I build this?” — they ask “what’s the best way to build this?”</p>
+
+    <div class="skill-grid">
+      <div class="skill-card advanced-accent">Pressure‑test business logic before it reaches leadership.</div>
+      <div class="skill-card advanced-accent">Generate and compare multiple solution approaches.</div>
+      <div class="skill-card advanced-accent">Translate vague stakeholder language into precise builds.</div>
+      <div class="skill-card advanced-accent">Document dashboards and logic automatically.</div>
+      <div class="skill-card advanced-accent">Redesign dashboards purely for performance.</div>
+      <div class="skill-card advanced-accent">Use Copilot during peer and manager reviews.</div>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <div class="skill-banner">
+    <h3 class="mono">What Copilot can't do in Tableau</h3>
+    <div class="banner-grid">
+      <div class="banner-item"><span>❌</span>It can’t click, drag, or build the dashboard for you.</div>
+      <div class="banner-item"><span>❌</span>It can’t see your live data unless you show it.</div>
+      <div class="banner-item"><span>❌</span>It can’t guarantee correctness without validation.</div>
+    </div>
+    <div class="banner-note mono">
+      Used well, Copilot makes a good Tableau analyst great. It doesn’t replace the analyst.
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* Keep progress bar accurate */
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("scroll", updateProgress);
+});
+</script>
+
+<style>
+/* ===============================
+   LIMITATIONS PAGE STYLES
+================================ */
+.lim-label {
+  font-family: "Courier New", monospace;
+  color: var(--muted);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.lim-headline {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.lim-sub {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 980px;
+  margin: 8px 0 18px;
+}
+
+.lim-callout {
+  border: 1px dashed rgba(245,166,35,0.55);
+  background: rgba(245,166,35,0.06);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin: 14px 0 22px;
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.lim-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.lim-card {
+  background: var(--card);
+  border: var(--border);
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.lim-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+.lim-title {
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.lim-sections {
+  display: grid;
+  gap: 10px;
+}
+
+.lim-sec-title {
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.lim-sec-body {
+  color: var(--text);
+  opacity: 0.92;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.lim-prompt {
+  margin-top: 14px;
+}
+
+/* Reference table */
+.ref-title {
+  font-family: "Courier New", monospace;
+  font-size: 24px;
+  margin-top: 50px;
+  margin-bottom: 12px;
+}
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.ref-table th {
+  background: rgba(161,0,255,0.18);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 12px;
+  border-bottom: 1px solid rgba(0,194,203,0.25);
+}
+
+.ref-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0,194,203,0.12);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.ref-table tr:nth-child(odd) { background: rgba(17,34,64,0.9); }
+.ref-table tr:nth-child(even) { background: rgba(17,34,64,0.72); }
+
+.ref-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Diagnostic banner */
+.diagnostic {
+  margin-top: 40px;
+  background: #2a004e;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 26px;
+}
+
+.diagnostic h3 {
+  font-family: "Courier New", monospace;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.diagnostic p {
+  margin-top: 6px;
+  margin-bottom: 14px;
+  color: #d2cbe3;
+}
+
+.diagnostic .prompt-box {
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.diagnostic .prompt-toggle {
+  background: rgba(255,255,255,0.06);
+  color: var(--teal);
+}
+
+/* FOOTER */
+.app-footer {
+  background: var(--nav-bg);
+  border-top: 1px solid rgba(0,194,203,0.15);
+  padding: 34px 18px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.app-footer .line1,
+.app-footer .line2 {
+  font-family: "Courier New", monospace;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.app-footer .line2 { margin-top: 8px; color: var(--muted); }
+
+.app-footer .footer-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.app-footer a {
+  color: var(--teal);
+  text-decoration: underline;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.reset-page {
+  border: 1px solid var(--red);
+  color: var(--red);
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: "Courier New", monospace;
+  cursor: pointer;
+  font-size: 12px;
+  transition: 0.2s ease;
+}
+
+.reset-page:hover {
+  background: rgba(232,64,64,0.08);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .lim-headline { font-size: 34px; }
+}
+</style>
+
+<!-- =========================
+     PAGE 6 — LIMITATIONS
+========================= -->
+<div id="limitations" class="page">
+
+  <div class="lim-label">KNOW THE WALLS · TABLEAU LIMITATIONS</div>
+  <div class="lim-headline mono">Where Tableau stops. And what to do next.</div>
+  <p class="lim-sub">
+    Every experienced analyst hits these walls. These are by‑design constraints — with the exact Copilot prompt to navigate each one.
+  </p>
+
+  <div class="lim-callout">⚠ These are not bugs. These are by-design constraints you need to architect around.</div>
+
+  <div class="lim-grid">
+
+    <!-- 01 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 01 — Cannot Mix Aggregate &amp; Non‑Aggregate Arguments</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">You can’t combine SUM([Sales]) with row-level [Sales] in the same calculated field.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Tableau evaluates row-level and aggregated calculations at different granularities; mixing them creates ambiguity.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">You try SUM([Sales]) / [Sales] for share of total and Tableau throws “Cannot mix aggregate and non‑aggregate”.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use an LOD total so both sides are aggregate: SUM([Sales]) / {FIXED : SUM([Sales])}.</div></div>
+
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I'm getting this Tableau error: "Cannot mix aggregate and non-aggregate arguments." I'm trying to calculate each product's share of total sales. Explain exactly why the error happens, the difference between row-level vs aggregate calcs, and show me the correct fix using an LOD like {FIXED : SUM([Sales])} — with full syntax.</pre>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="master-card searchable">
-          <div class="master-icon">🔧</div>
-          <div class="master-card-title">Debug Like a Senior</div>
-          <p class="master-desc">Diagnose broken vizzes, slow dashboards, and incorrect calcs fast.</p>
-        </div>
+    <!-- 02 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 02 — FIXED LOD Ignores Dimension Filters</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">{FIXED ...} often ignores dashboard dimension filters, so totals don’t change when users filter.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">FIXED LOD is computed before dimension filters in the order of operations.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">A manager filters Region = North but your company total stays “All regions”, breaking % share.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Promote the filter to Context or use INCLUDE/EXCLUDE depending on intent.</div></div>
 
-        <div class="master-card searchable">
-          <div class="master-icon">📐</div>
-          <div class="master-card-title">Design for Leadership</div>
-          <p class="master-desc">Build exec‑ready dashboards with layout, color, and storytelling guidance.</p>
-        </div>
-
-        <div class="master-card searchable">
-          <div class="master-icon">🚀</div>
-          <div class="master-card-title">Ship Without Blockers</div>
-          <p class="master-desc">From data connection to published workbook — Copilot fills every gap.</p>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My FIXED LOD ignores a Region filter. Explain why based on Tableau's order of operations. Give two fixes: (1) promote Region to a Context Filter so FIXED respects it, and (2) rewrite using INCLUDE/EXCLUDE — include syntax and trade-offs.</pre>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- JOURNEY -->
-  <section id="journey" class="copilot-journey">
-    <div class="container">
-      <div class="journey-label">YOUR COPILOT JOURNEY · PICK YOUR LEVEL</div>
-      <h2 class="journey-title">Where are you with Tableau?</h2>
-      <p class="journey-sub">
-        Copilot works differently depending on what you already know.
-        Find your level — and start from exactly the right place.
-      </p>
+    <!-- 03 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 03 — Data Blending Only Supports Left Join Behavior</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">Blended secondary data behaves like a left join to the primary; you can’t force inner/full joins via blending.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Blending is a post-query merge at the view’s linking level, not a true relational join.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">POS sales (primary) blended with targets (secondary) shows NULL targets even when targets exist due to linking/grain issues.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use Relationships/Joins where possible; otherwise handle NULLs with ZN()/IFNULL() and verify link fields.</div></div>
 
-      <div class="journey-grid">
-        <a href="#beginner" class="journey-card beginner-card searchable">
-          <div class="journey-icon">🌱</div>
-          <div class="journey-level-label green">BEGINNER</div>
-          <h3 class="journey-card-title">I'm new to Tableau</h3>
-          <p class="journey-card-desc">Never built a dashboard.<br>Don’t know where to start.</p>
-          <div class="journey-link green">Jump to my level →</div>
-        </a>
-
-        <a href="#intermediate" class="journey-card intermediate-card-link searchable">
-          <div class="journey-icon">⚡</div>
-          <div class="journey-level-label yellow">INTERMEDIATE</div>
-          <h3 class="journey-card-title">I know the basics</h3>
-          <p class="journey-card-desc">I can build charts<br>but struggle with complex logic.</p>
-          <div class="journey-link yellow">Jump to my level →</div>
-        </a>
-
-        <a href="#advanced" class="journey-card advanced-card-link searchable">
-          <div class="journey-icon">🚀</div>
-          <div class="journey-level-label purple">ADVANCED</div>
-          <h3 class="journey-card-title">I'm fluent in Tableau</h3>
-          <p class="journey-card-desc">I know Tableau well.<br>I want Copilot to make me sharper.</p>
-          <div class="journey-link purple">Jump to my level →</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEVEL 01 -->
-  <section id="beginner" class="level-section">
-    <div class="container">
-      <div class="section-label">🌱 LEVEL 01 · BEGINNER</div>
-      <h2 class="level-headline">You don't need to learn Tableau. You need to learn what to ask.</h2>
-      <p class="level-subtext">Copilot becomes your Tableau teacher, your syntax guide, and your error fixer — all at once. Here’s how to use it from day one.</p>
-
-      <div class="level-steps">
-        <div class="level-step-card searchable">
-          <div class="step-number">STEP 01</div>
-          <h3 class="step-title">Understand What Tableau Even Does</h3>
-          <p class="step-expl">Before touching the tool, ask Copilot to explain Tableau's purpose in plain language relevant to your role.</p>
-          <p class="step-scenario"><strong>Retail Scenario:</strong> You joined FreshMart and your manager says “you’ll be working in Tableau.” You have no idea what that means.</p>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">Explain what Tableau is used for in a retail business context. I'm new to data analytics. Tell me what kinds of questions Tableau helps answer, what data it connects to, and what I’ll be building day-to-day as a junior analyst at a retail company.</pre>
-          </details>
-        </div>
-
-        <div class="level-step-card searchable">
-          <div class="step-number">STEP 02</div>
-          <h3 class="step-title">Understand Your Data Before Connecting</h3>
-          <p class="step-expl">The biggest beginner mistake is connecting data without understanding it. Copilot helps you ask the right questions first.</p>
-          <p class="step-scenario"><strong>Retail Scenario:</strong> Your manager sends “FreshMart_Sales_Q1.xlsx” and says build a sales dashboard.</p>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">I've received an Excel file with retail sales data. Before I connect it to Tableau, what questions should I ask about the data? Tell me how to identify the grain of the data, key fields for a sales dashboard, data quality risks, and how to check if it’s structured correctly for Tableau.</pre>
-          </details>
-        </div>
-
-        <div class="level-step-card searchable">
-          <div class="step-number">STEP 03</div>
-          <h3 class="step-title">Connect Data &amp; Understand the Data Pane</h3>
-          <p class="step-expl">Beginners get lost when they see blue vs green fields. Copilot can explain the entire pane for your dataset.</p>
-          <p class="step-scenario"><strong>Retail Scenario:</strong> You connected the FreshMart file; half the fields are blue and half green.</p>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">I've connected an Excel file to Tableau for the first time. I see blue fields and green fields. Explain what dimensions vs measures mean, why the distinction matters, and classify Store Name, Order Date, Sales Amount, Product Category — with reasons.</pre>
-          </details>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I'm blending POS sales (primary) with an Excel targets file (secondary). Explain why Tableau blending behaves like a left join and how that impacts NULLs. Walk me through how to fix linking-field and granularity issues, and when I should replace the blend with a Relationship or Join.</pre>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- LEVEL 02 -->
-  <section id="intermediate" class="level-section">
-    <div class="container">
-      <div class="section-label">⚡ LEVEL 02 · INTERMEDIATE</div>
-      <h2 class="level-headline">You know enough to build. Now learn enough to build it right.</h2>
-      <p class="level-subtext">These are the prompts that bridge the gap between “it works” and “it’s actually correct.”</p>
+    <!-- 04 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 04 — Table Calculations Cannot Be Nested Inside LOD Expressions</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">You can’t use RUNNING_SUM / WINDOW_* / RANK inside FIXED/INCLUDE/EXCLUDE LOD expressions.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">LODs compute at the data source level before the view; table calcs compute after the view renders.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">You try RUNNING_SUM inside a FIXED LOD for cumulative targets and Tableau rejects it.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Compute LOD as its own field, bring it into view, then apply table calc on top — never nested.</div></div>
 
-      <div class="level-steps">
-        <div class="intermediate-card searchable">
-          <div class="step-number">SCENARIO 01</div>
-          <h3 class="step-title">Your Calculations Work Sometimes</h3>
-          <p class="scenario-problem"><strong>Problem:</strong> Your IF/THEN works on one sheet but returns NULL on another.</p>
-          <p class="scenario-retail"><strong>Retail Scenario:</strong> Margin % works on product sheet but shows NULL on store sheet.</p>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">I have a calculated field in Tableau: [Margin %] = (SUM([Sales]) - SUM([Cost])) / SUM([Sales]). It works on my product-level sheet but shows NULL on my store-level sheet. Explain why this happens and how to fix it — aggregation differences, how dimensions affect calcs, and whether I need an LOD expression.</pre>
-          </details>
-        </div>
-
-        <div class="intermediate-card searchable">
-          <div class="step-number">SCENARIO 02</div>
-          <h3 class="step-title">Your Filters Are Giving Wrong Results</h3>
-          <p class="scenario-problem"><strong>Problem:</strong> Top N + Region filter returns unexpected rows.</p>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">I have a Top 10 filter on Product Name and a Region filter set to 'North'. But my Top 10 includes products with no North sales. Explain Tableau’s filter order of operations, why this happens, and walk me through using a Context Filter to fix it.</pre>
-          </details>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I'm trying to use RUNNING_SUM inside a FIXED LOD and it's failing. Explain why table calcs can't be nested in LODs (order of operations). Then show me how to restructure the logic: compute the LOD first, then apply RUNNING_SUM in the view — with exact field examples.</pre>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- LEVEL 03 -->
-  <section id="advanced" class="level-section">
-    <div class="container">
-      <div class="section-label">🚀 LEVEL 03 · ADVANCED</div>
-      <h2 class="level-headline">You already know Tableau. Now use Copilot to think faster than your stakeholders.</h2>
-      <p class="level-subtext">At this level, Copilot isn’t your teacher — it’s your senior thought partner.</p>
+    <!-- 05 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 05 — Parameters Don’t Auto‑Update Like Filters</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">Parameters are workbook variables; their value lists can become stale and won’t update with new data unless configured dynamically.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Parameters aren’t data-driven fields by default; they’re static controls until configured as Dynamic Parameters.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">A new Product Category arrives in the database, but it doesn’t appear in the parameter dropdown.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use a Dynamic Parameter or replace the parameter with a filter if you need auto-updating values.</div></div>
 
-      <div class="level-steps">
-        <div class="advanced-card searchable">
-          <div class="step-number">POWER USE 01</div>
-          <h3 class="power-title">Pressure‑Test Your Logic</h3>
-          <details class="step-prompt">
-            <summary>COPILOT PROMPT TO USE ▸</summary>
-            <button class="step-copy" type="button">COPY</button>
-            <pre class="step-text">Here is a calculated field I've written in Tableau: [paste your calculation]. I'm using it for [business purpose]. Review this logic, identify edge cases where it might return incorrect results, suggest a more robust version, and explain trade-offs.</pre>
-          </details>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau parameter dropdown doesn't update when new values are added to the data. Explain why parameters don't auto-update, how Dynamic Parameters work, and walk me through converting my static parameter into a dynamic one — with steps and validation checks.</pre>
+          </div>
         </div>
       </div>
     </div>
-  </section>
 
+    <!-- 06 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 06 — COUNTD Is Slow on Large Datasets</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">COUNTD (distinct count) can severely slow dashboards, especially on live connections.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Distinct count requires expensive de-duplication across the result set, which is harder to optimize.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">Unique shoppers per week using COUNTD(Customer ID) takes 18 seconds on a 2M row live connection.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Pre-aggregate distinct counts, use extracts, or compute distinct in the database/Prep layer.</div></div>
 
-      <!-- LIMITATIONS HEADER -->
-  <section id="limitations" class="tableau-limitations">
-    <div class="container">
-      <div class="limitations-label">KNOW THE WALLS · TABLEAU LIMITATIONS</div>
-      <h2 class="limitations-headline">Where Tableau stops. And what to do next.</h2>
-      <p class="limitations-subtext" style="font-family: var(--font-mono); opacity: 0.82;">
-        Real, by-design limitations — with the exact Copilot prompt to navigate each one.
-      </p>
-      <div class="usecase-callout searchable" style="border-color: rgba(255,221,85,0.55);">
-        ⚠ These are not bugs. These are by-design constraints you need to architect around.
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau dashboard is slow because I'm using COUNTD([Customer ID]) on a large live dataset. Explain why COUNTD is expensive, what faster alternatives exist (extracts, pre-aggregation, database-side distinct), and give me a priority-ordered fix plan for a retail customer analytics dashboard.</pre>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- LIMITATION CARDS -->
-  <section id="limitationCards" class="limitation-cards">
-    <div class="container">
+    <!-- 07 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 07 — Secondary Blend LOD Needs the Linking Field in the View</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">You can’t reliably use LOD expressions from a blended secondary source unless the link field is present in the view.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">The secondary source is queried only at the granularity of linking fields visible in the view.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">Targets (secondary) LOD fails unless Store ID (link field) is on Detail, even if you don’t want to show it.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Add the linking field to Detail (not visible to users) or replace blending with relationship/join.</div></div>
 
-      <div class="limitation-card searchable">
-        <div class="limitation-label">LIMITATION 01 — Cannot Mix Aggregate &amp; Non‑Aggregate</div>
-        <div class="limit-block"><h4>THE LIMITATION</h4><p>You cannot combine SUM([Sales]) with row‑level [Sales] in the same expression.</p></div>
-        <div class="limit-block"><h4>WHY IT HAPPENS</h4><p>Aggregate and row‑level calcs run at different granularities — Tableau cannot resolve both together.</p></div>
-        <div class="limit-block"><h4>RETAIL SCENARIO</h4><p>You try SUM([Sales]) / [Sales] to get product share — Tableau errors out.</p></div>
-        <div class="limit-block"><h4>WORKAROUND</h4><p>Use a FIXED LOD: <code>{FIXED : SUM([Sales])}</code> then divide aggregated values.</p></div>
-        <details class="limit-prompt">
-          <summary>COPILOT PROMPT TO USE ▸</summary>
-          <button class="limit-copy" type="button">COPY</button>
-          <pre class="limit-text">I'm getting this Tableau error: 'Cannot mix aggregate and non-aggregate arguments.' Explain exactly why it happens and show me how to fix product share of total sales using a FIXED LOD — with correct syntax.</pre>
-        </details>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I'm blending a secondary source and my FIXED LOD from the secondary fails unless the linking field is in the view. Explain why the link field must be present, how to add it to Detail without changing the chart, and whether I should restructure this as a join/relationship instead.</pre>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div class="limitation-card searchable">
-        <div class="limitation-label">LIMITATION 02 — FIXED LOD Ignores Dimension Filters</div>
-        <div class="limit-block"><h4>THE LIMITATION</h4><p>FIXED LODs compute before dimension filters — ignoring user selections.</p></div>
-        <div class="limit-block"><h4>WHY IT HAPPENS</h4><p>FIXED LOD sits higher in Tableau’s order of operations.</p></div>
-        <div class="limit-block"><h4>RETAIL SCENARIO</h4><p>Region filter = “North”, but FIXED company sales still show all regions.</p></div>
-        <div class="limit-block"><h4>WORKAROUND</h4><p>Promote Region to Context or rewrite with INCLUDE.</p></div>
-        <details class="limit-prompt">
-          <summary>COPILOT PROMPT TO USE ▸</summary>
-          <button class="limit-copy" type="button">COPY</button>
-          <pre class="limit-text">My FIXED LOD ignores Region filter. Explain why based on Tableau's order of operations, and give two fixes: (1) promote the filter to Context, (2) rewrite as INCLUDE — with syntax for both.</pre>
-        </details>
+    <!-- 08 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 08 — Floating Point Precision Makes LOD Comparisons Unreliable</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">Decimal results can be slightly off (0.3200000001 vs 0.32), breaking equality checks in IF statements.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Floating point arithmetic can’t represent many decimals exactly in binary.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">Margin LOD equals 0.3200000001; IF [Margin LOD] = 0.32 returns FALSE unexpectedly.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use ROUND([value], 2) or compare with a tolerance range using ABS().</div></div>
+
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau LOD returns decimals like 0.3200000001 and my IF comparison fails. Explain floating point precision in Tableau and show me two fixes: using ROUND() and using tolerance logic like ABS([LOD]-0.32) < 0.0001 — with exact syntax.</pre>
+          </div>
+        </div>
       </div>
-
     </div>
-  </section>
 
-  <!-- QUICK REFERENCE TABLE -->
-  <section class="limitations-summary">
-    <div class="container">
-      <h2 class="summary-title" style="font-size: 30px;">Quick Reference — Tableau Limitations at a Glance</h2>
+    <!-- 09 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 09 — Only Relevant Values Creates Extra Queries &amp; Confusion</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">“Only Relevant Values” on filters can trigger additional queries and confusing filter behavior.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Tableau needs to re-query to compute which values are “relevant” after other filters change.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">Region filter changes cause Product filter to lag/refresh and users see missing items unexpectedly.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use context filters strategically, limit filter dependencies, or disable Only Relevant Values when performance/UX suffers.</div></div>
 
-      <table class="limit-ref-table searchable">
-        <thead>
-          <tr>
-            <th>#</th><th>Limitation</th><th>Error / Symptom</th><th>Quick Fix</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>01</td><td>Mixing Aggregate / Non‑Aggregate</td><td>"Cannot mix aggregate and non‑aggregate"</td><td>Use FIXED to align granularity</td></tr>
-          <tr><td>02</td><td>FIXED LOD Ignores Filters</td><td>Totals don’t change with filters</td><td>Use Context or INCLUDE</td></tr>
-        </tbody>
-      </table>
-
-      <p class="summary-note" style="font-family: var(--font-mono); opacity:0.75; margin-top: 12px;">
-        Bookmark this section. You will hit every one of these in production.
-      </p>
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>My Tableau dashboard filters use "Only Relevant Values" and users complain filters refresh slowly and options disappear unexpectedly. Explain why Only Relevant Values triggers extra queries, how it interacts with filter order, and give me a better filter design approach for a retail dashboard (Region → Store → Product).</pre>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <!-- DIAGNOSTIC BANNER -->
-  <section class="limitations-diagnostic-banner">
-    <div class="container">
-      <h2 class="diagnostic-title" style="font-size: 32px; margin-bottom: 10px;">Hit a wall? Start here.</h2>
-      <p class="diagnostic-sub" style="font-family: var(--font-mono); opacity: 0.85; margin-bottom: 16px;">
-        When you don't know which limitation you've hit, use this diagnostic prompt first:
-      </p>
+    <!-- 10 -->
+    <div class="lim-card">
+      <div class="lim-title mono">LIMITATION 10 — Table Calculations Run After Most Filters (Can Mislead)</div>
+      <div class="lim-sections">
+        <div><div class="lim-sec-title mono">THE LIMITATION</div><div class="lim-sec-body">Table calcs compute after the view is built; filtering can change the table calc result unexpectedly.</div></div>
+        <div><div class="lim-sec-title mono">WHY IT HAPPENS</div><div class="lim-sec-body">Table calcs operate on the post-aggregation result set; they’re not “data source level” calculations.</div></div>
+        <div><div class="lim-sec-title mono">RETAIL SCENARIO</div><div class="lim-sec-body">A running total changes when a user applies a filter, causing leadership to question your numbers.</div></div>
+        <div><div class="lim-sec-title mono">WORKAROUND</div><div class="lim-sec-body">Use LOD/pre-aggregation for stable baselines and carefully control partitioning/addressing for table calcs.</div></div>
 
-      <div class="diagnostic-prompt-box searchable">
-        <button class="diag-copy" type="button">COPY</button>
-        <pre class="diagnostic-text">I'm getting an unexpected result in Tableau.
+        <div class="lim-prompt prompt-box">
+          <div class="prompt-toggle" onclick="togglePrompt(this)">▸ COPILOT PROMPT TO USE <span>copy-ready</span></div>
+          <div class="prompt-body">
+            <button class="copy" onclick="copyText(this)">Copy</button>
+            <pre>I have a running total table calculation in Tableau and it changes unexpectedly when filters are applied. Explain why table calculations run late in the order of operations, how partitioning/addressing affects the result, and suggest alternatives (LOD or pre-aggregation) when I need stable totals.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Reference Summary Grid -->
+  <div class="ref-title mono">Quick Reference — Tableau Limitations at a Glance</div>
+
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Limitation</th>
+        <th>Symptom</th>
+        <th>Quick Fix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>01</td><td>Mix aggregate & non‑aggregate</td><td>Error message</td><td>Use FIXED total LOD</td></tr>
+      <tr><td>02</td><td>FIXED ignores dimension filters</td><td>Totals don’t change</td><td>Context filter or INCLUDE/EXCLUDE</td></tr>
+      <tr><td>03</td><td>Blending behaves like left join</td><td>Unexpected NULLs</td><td>Relationship/Join or IFNULL/ZN</td></tr>
+      <tr><td>04</td><td>Table calcs can’t be in LODs</td><td>Nesting fails</td><td>Split logic: LOD then table calc</td></tr>
+      <tr><td>05</td><td>Parameters not auto-updating</td><td>Stale dropdown values</td><td>Dynamic parameter or filter</td></tr>
+      <tr><td>06</td><td>COUNTD is slow</td><td>Long load times</td><td>Extract/pre-aggregate</td></tr>
+      <tr><td>07</td><td>Secondary blend LOD needs link field</td><td>LOD errors</td><td>Add link field to Detail</td></tr>
+      <tr><td>08</td><td>Floating point precision</td><td>Equality checks fail</td><td>ROUND or tolerance logic</td></tr>
+      <tr><td>09</td><td>Only Relevant Values adds queries</td><td>Filter lag/options vanish</td><td>Reduce dependencies/avoid ORV</td></tr>
+      <tr><td>10</td><td>Table calcs run late</td><td>Numbers shift with filters</td><td>Control addressing or use LOD</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ref-note">Bookmark this section. You will hit every one of these in production.</div>
+
+  <!-- Diagnostic Banner -->
+  <div class="diagnostic">
+    <h3 class="mono">Hit a wall? Start here.</h3>
+    <p>When you don’t know which limitation you’ve hit, use this diagnostic prompt first:</p>
+
+    <div class="prompt-box">
+      <div class="prompt-toggle" onclick="togglePrompt(this)">▸ UNIVERSAL DIAGNOSTIC COPILOT PROMPT <span>copy-ready</span></div>
+      <div class="prompt-body" style="background:#ffffff0d;">
+        <button class="copy" onclick="copyText(this)">Copy</button>
+        <pre style="color:#fff;">I'm getting an unexpected result in Tableau.
 Here is what I'm trying to do: [describe your goal].
 Here is what's actually happening: [describe the result or error].
 Here are the fields and calculations I'm using: [paste field names and calc syntax].
 
 Based on this, diagnose which Tableau limitation or order-of-operations issue I've likely hit — and give me the most direct fix.</pre>
       </div>
-
-      <p class="diagnostic-bottom" style="font-family: var(--font-mono); opacity: 0.85; margin-top: 14px;">
-        <em>This single prompt resolves 80% of Tableau walls — because it forces you to describe exactly what you're seeing.</em>
-      </p>
     </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer class="guide-footer" id="glossary">
-    <p class="footer-main" style="font-family: var(--font-mono); opacity:0.9;">
-      Tableau × Copilot Guide — Practical Prompts for Real Requirements
+    <p style="margin-top:12px;font-style:italic;color:#d8b4fe;">
+      This single prompt resolves 80% of Tableau walls — because it forces you to describe exactly what you're seeing.
     </p>
+  </div>
 
-    <div class="footer-row">
-      <a href="#glossary">Glossary</a>
-      <button class="reset-btn" onclick="resetProgress()">↺ Reset Progress</button>
+</div>
+
+<!-- GLOBAL FOOTER TEMPLATE (cloned into each page via JS) -->
+<template id="footerTpl">
+  <div class="app-footer">
+    <div class="line1">Tableau × Copilot Guide · Practical Prompts for Real Requirements</div>
+    <div class="line2">Curated for Accenture Analytics Teams · 2025</div>
+    <div class="footer-actions">
+      <a href="#" onclick="openGlossary(event)">Glossary</a>
+      <button class="reset-page" onclick="resetPage()">↺ Reset Page</button>
     </div>
-  </footer>
+  </div>
+</template>
 
-  <!-- Back to top -->
-  <button id="backToTop" class="back-to-top" onclick="scrollToTop()">Back to Top ↑</button>
+<script>
+/* ============================================
+   FOOTER INJECTION (each page gets footer)
+============================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  const tpl = document.getElementById("footerTpl");
+  if (!tpl) return;
+  document.querySelectorAll(".page").forEach(pg => {
+    const clone = tpl.content.cloneNode(true);
+    pg.appendChild(clone);
+  });
+});
 
-  <!-- -----------------------------------------------------
-       JAVASCRIPT: progress bar + tabs + routes + search + copy
-  ------------------------------------------------------ -->
-  <script>
-    /* Scroll progress + back to top */
-    window.addEventListener("scroll", () => {
-      const scrollTop = document.documentElement.scrollTop;
-      const fullHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const progress = fullHeight > 0 ? (scrollTop / fullHeight) * 100 : 0;
-      document.getElementById("progress-bar").style.width = progress + "%";
+/* ============================================
+   RESET PAGE (resets scroll + collapses prompts + goes Home)
+============================================ */
+function resetPage() {
+  // collapse all prompt bodies
+  document.querySelectorAll(".prompt-body").forEach(b => b.style.maxHeight = null);
 
-      const btn = document.getElementById("backToTop");
-      if (scrollTop > 300) btn.classList.add("show");
-      else btn.classList.remove("show");
-    });
+  // reset all page scrolls
+  document.querySelectorAll(".page").forEach(p => p.scrollTop = 0);
 
-    function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+  // close mobile nav if open
+  document.getElementById("navLinks")?.classList.remove("open");
 
-    function resetProgress() {
-      localStorage.clear();
-      document.querySelectorAll("input[type='checkbox']").forEach(cb => cb.checked = false);
-      alert("Progress reset successfully!");
-    }
+  // reset progress
+  document.getElementById("progress").style.width = "0%";
 
-    /* Use Case Tabs */
-    document.querySelectorAll('#usecaseTabs button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#usecaseTabs button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      });
-    });
+  // go Home
+  const homeLink = document.querySelector('nav a[data-page="home"]');
+  if (homeLink) homeLink.click();
 
-    /* Level Routing (hash routes) */
-    window.showLevelFromHash = function showLevelFromHash() {
-      const all = document.querySelectorAll('.level-section');
-      all.forEach(s => s.style.display = 'none');
+  // clear local storage (safe reset)
+  try { localStorage.clear(); } catch(e) {}
+}
 
-      const h = location.hash;
-      if (h === '#beginner' || h === '#intermediate' || h === '#advanced') {
-        const el = document.querySelector(h);
-        if (el) el.style.display = 'block';
-      }
-    };
-    window.addEventListener('hashchange', window.showLevelFromHash);
-    window.showLevelFromHash();
+/* ============================================
+   GLOSSARY (simple modal via alert)
+   (no frameworks; minimal)
+============================================ */
+function openGlossary(e) {
+  e.preventDefault();
+  alert(
+`GLOSSARY (quick)
+• LOD = Level of Detail expression (FIXED/INCLUDE/EXCLUDE)
+• Context Filter = filter that defines the dataset for other filters
+• Table Calc = calculation after the view is built (RUNNING_SUM etc.)
+• ORV = Only Relevant Values (can trigger extra queries)
+• RLS = Row Level Security (restrict rows by user)
+Tip: Use the Universal Diagnostic Prompt in Limitations when stuck.`
+  );
+}
 
-    /* Copy buttons (works for all: usecase, step, limit, diag, bonus) */
-    function attachCopyHandlers() {
-      const buttons = document.querySelectorAll('.copy-btn, .step-copy, .limit-copy, .bonus-copy, .diag-copy');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+/* ============================================
+   Ensure progress bar uses active page scroll (already wired)
+============================================ */
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("scroll", updateProgress);
+});
+</script>
 
-          const root = btn.closest('details') || btn.closest('.diagnostic-prompt-box') || btn.parentElement;
-          const pre = root ? root.querySelector('pre') : null;
-          if (!pre) return;
-
-          const text = pre.innerText.trim();
-          try {
-            await navigator.clipboard.writeText(text);
-            const old = btn.textContent;
-            btn.textContent = "COPIED";
-            setTimeout(() => btn.textContent = old, 1100);
-          } catch {
-            const old = btn.textContent;
-            btn.textContent = "COPY (manual)";
-            setTimeout(() => btn.textContent = old, 1100);
-          }
-        });
-      });
-    }
-    attachCopyHandlers();
-
-    /* Global Search: scope + highlight + empty state + sticky polish */
-    (() => {
-      const input = document.getElementById("searchInput");
-      const scopeSelect = document.getElementById("searchScope");
-      const clearBtn = document.getElementById("searchClear");
-      const emptyEl = document.getElementById("searchEmpty");
-      const countEl = document.getElementById("searchCount");
-      const shell = document.getElementById("searchShell");
-
-      if (!input || !scopeSelect) return;
-
-      const sections = {
-        all: ["#usecases", "#scenarios", "#journey", "#beginner", "#intermediate", "#advanced", "#limitations", "#limitationCards"],
-        usecases: ["#usecases"],
-        scenarios: ["#scenarios"],
-        levels: ["#journey", "#beginner", "#intermediate", "#advanced"],
-        limitations: ["#limitations", "#limitationCards"]
-      };
-
-      const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-      function highlightMatches(root, query) {
-        const regex = new RegExp(escapeRegExp(query), "gi");
-        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-          acceptNode(node) {
-            if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-            const p = node.parentElement;
-            if (!p) return NodeFilter.FILTER_REJECT;
-            if (p.closest("script, style, input, textarea, select, button")) return NodeFilter.FILTER_REJECT;
-            return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-          }
-        });
-
-        const nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
-
-        nodes.forEach(node => {
-          const text = node.nodeValue;
-          const frag = document.createDocumentFragment();
-          let lastIndex = 0;
-
-          text.replace(regex, (match, offset) => {
-            const before = text.slice(lastIndex, offset);
-            if (before) frag.appendChild(document.createTextNode(before));
-            const mark = document.createElement("mark");
-            mark.className = "hl";
-            mark.textContent = match;
-            frag.appendChild(mark);
-            lastIndex = offset + match.length;
-            return match;
-          });
-
-          const after = text.slice(lastIndex);
-          if (after) frag.appendChild(document.createTextNode(after));
-          node.parentNode.replaceChild(frag, node);
-        });
-      }
-
-      function restoreCard(card) {
-        if (!card.dataset.originalHtml) {
-          card.dataset.originalHtml = card.innerHTML;
-        } else {
-          card.innerHTML = card.dataset.originalHtml;
-        }
-        card.style.display = "";
-      }
-
-      function setSectionVisibility(scopeKey, searching) {
-        sections.all.forEach(sel => {
-          document.querySelectorAll(sel).forEach(el => {
-            if (!el.dataset.origDisplay) el.dataset.origDisplay = getComputedStyle(el).display;
-          });
-        });
-
-        if (!searching || scopeKey === "all") {
-          sections.all.forEach(sel => {
-            document.querySelectorAll(sel).forEach(el => el.style.display = el.dataset.origDisplay || "");
-          });
-          if (typeof window.showLevelFromHash === "function") window.showLevelFromHash();
-          return;
-        }
-
-        sections.all.forEach(sel => {
-          document.querySelectorAll(sel).forEach(el => el.style.display = "none");
-        });
-
-        (sections[scopeKey] || []).forEach(sel => {
-          document.querySelectorAll(sel).forEach(el => el.style.display = el.dataset.origDisplay || "");
-        });
-      }
-
-      function getScopedCards(scopeKey) {
-        if (scopeKey === "all") return Array.from(document.querySelectorAll(".searchable"));
-
-        const containers = (sections[scopeKey] || [])
-          .flatMap(sel => Array.from(document.querySelectorAll(sel)));
-
-        const cards = [];
-        containers.forEach(c => cards.push(...c.querySelectorAll(".searchable")));
-        return cards;
-      }
-
-      function runSearch() {
-        const query = input.value.toLowerCase().trim();
-        const scopeKey = scopeSelect.value;
-
-        const scopedCards = getScopedCards(scopeKey);
-        scopedCards.forEach(restoreCard);
-
-        const searching = query.length > 0;
-        setSectionVisibility(scopeKey, searching);
-
-        if (!searching) {
-          emptyEl.style.display = "none";
-          countEl.textContent = "Type to search";
-          attachCopyHandlers(); // restore copy handlers after HTML restore
-          return;
-        }
-
-        let visible = 0;
-        scopedCards.forEach(card => {
-          const hay = card.textContent.toLowerCase();
-          const match = hay.includes(query);
-          if (!match) card.style.display = "none";
-          else {
-            visible++;
-            highlightMatches(card, query);
-          }
-        });
-
-        countEl.textContent = `${visible} result${visible === 1 ? "" : "s"} · Scope: ${scopeSelect.options[scopeSelect.selectedIndex].text}`;
-        emptyEl.style.display = visible === 0 ? "block" : "none";
-
-        attachCopyHandlers(); // ensure copy still works after highlights
-      }
-
-      input.addEventListener("input", runSearch);
-      scopeSelect.addEventListener("change", runSearch);
-
-      clearBtn.addEventListener("click", () => {
-        input.value = "";
-        runSearch();
-        input.focus();
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-          e.preventDefault();
-          input.focus();
-        }
-        if (e.key === "Escape") {
-          input.value = "";
-          runSearch();
-          input.blur();
-        }
-      });
-
-      window.addEventListener("scroll", () => {
-        if (!shell) return;
-        if (window.scrollY > 120) shell.classList.add("stuck");
-        else shell.classList.remove("stuck");
-      });
-
-      runSearch();
-    })();
-  </script>
 </body>
 </html>
+
+<script>
+/* Keep progress bar correct for scrollable page divs */
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("scroll", updateProgress);
+});
+</script>
+
+  
+  
