@@ -34,6 +34,16 @@ html, body {
   font-family: "Segoe UI", Arial, sans-serif;
   height: 100%;
 }
+/* ===== Blueprint Background ===== */
+.blueprint-bg {
+  position: relative;
+  background-color: #0b1a2b;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  overflow: hidden;
+}
 
 /* ===============================
    TYPOGRAPHY
@@ -49,6 +59,32 @@ h3 { font-size: 20px; }
 p { color: var(--muted); line-height: 1.6; }
 
 small { color: var(--muted); }
+
+/* ===== Reset Loud Typography ===== */
+.hero h1,
+.hero h2,
+.hero p,
+.hero span {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  letter-spacing: normal;
+}   
+.hero-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: #eaf2ff;
+  line-height: 1.2;
+}
+
+.hero-title .highlight {
+  color: #4da3ff; /* blueprint blue */
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  max-width: 640px;
+  margin: 18px auto 0;
+}
 
 /* ===============================
    NAVIGATION
@@ -146,6 +182,34 @@ nav a.active {
   margin-right: 6px;
 }
 
+  .stat-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 22px;
+  text-align: center;
+  transition: transform .15s ease, border-color .15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: #4da3ff;
+}
+
+.stat-value {
+  font-size: 42px;
+  font-weight: 700;
+  color: #4da3ff;
+}
+
+.stat-label {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+} 
+
 /* ===============================
    BUTTONS
 ================================ */
@@ -169,6 +233,37 @@ nav a.active {
   border: 1px solid var(--teal);
   color: var(--teal);
 }
+ .hero-actions {
+  margin-top: 36px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: #4da3ff;
+  color: #081425;
+  padding: 14px 26px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(77,163,255,0.35);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #8bbcff;
+  border: 1px solid rgba(139,188,255,0.5);
+  padding: 14px 26px;
+  border-radius: 6px;
+}
+  
 
 /* ===============================
    FOOTER
