@@ -978,6 +978,7 @@
         <a href="#" class="navLink" data-target="mechanics">Mechanics</a>
         <a href="#" class="navLink" data-target="skill">Skill Level</a>
         <a href="#" class="navLink" data-target="limitations">Limitations</a>
+        <a href="#" class="navLink" data-target="bonus">Bonus</a>
       </nav>
 
       <button class="hamburger" id="hamburger" aria-label="Open navigation">
@@ -2616,6 +2617,275 @@ Give me a review checklist and critique:
         </div>
 
         <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+
+         <!-- PAGE 7 — BONUS -->
+<section class="page" id="page-bonus" data-page="bonus">
+  <div class="container">
+
+    <!-- ================= PROMPT COACH ================= -->
+    <div style="margin-top:10px;">
+      <div class="section-kicker kickerLeft">BONUS LEVEL · COPILOT PROMPT COACH</div>
+      <h2 style="margin-bottom:6px;">How to talk to Copilot like a power user.</h2>
+
+      <p class="muted" style="max-width:980px;line-height:1.6;margin-top:0;">
+        Copilot is only as good as the prompt you give it.  
+        This Prompt Coach teaches you how to structure prompts so Copilot gives
+        <b>usable, decision‑ready output</b> — not generic summaries.
+      </p>
+
+      <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top:16px;">
+        <div class="card">
+          <h3 class="ucTitle">1️⃣ CONTEXT</h3>
+          <p class="innerText">
+            Tell Copilot <b>where</b> you are and <b>what</b> you’re working with.
+            <br><br>
+            Example: “In this Teams meeting…” / “In this Excel sheet…”
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="ucTitle">2️⃣ TASK</h3>
+          <p class="innerText">
+            Be explicit about the outcome.
+            <br><br>
+            Summarize? Decide? Extract actions? Create MOM?
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="ucTitle">3️⃣ FORMAT</h3>
+          <p class="innerText">
+            Always specify structure.
+            <br><br>
+            Bullet points, table, sections, executive tone, etc.
+          </p>
+        </div>
+      </div>
+
+      <!-- Prompt Coach Example Card -->
+      <div class="card leftBorderPurple" style="margin-top:18px;">
+        <h3 class="ucTitle">Prompt Coach · Teams Meeting Notes</h3>
+
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top:12px;">
+          <div class="card">
+            <p class="innerLabel red">❌ WEAK PROMPT</p>
+            <p class="innerText">“Summarize the meeting.”</p>
+          </div>
+
+          <div class="card">
+            <p class="innerLabel amber">⚠ BETTER PROMPT</p>
+            <p class="innerText">“Summarize this Teams meeting and list action items.”</p>
+          </div>
+
+          <div class="card">
+            <p class="innerLabel green">✅ PROMPT COACH VERSION</p>
+            <div class="promptBox" style="max-height:320px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+In this Teams meeting, create structured notes with:
+- Agenda
+- Key discussion points
+- Decisions made
+- Action items (owner + due date if mentioned)
+
+Keep it concise and suitable for leadership sharing.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner" style="margin-top:14px;">
+          <p class="bannerTitle">Prompt Coach Rule of Thumb</p>
+          <div class="bannerNote">
+            ❌ Don’t ask Copilot “what happened”  
+            ✅ Ask Copilot “what happened, why it matters, and what to do next”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= COPILOT AT WORK ================= -->
+    <div style="margin-top:30px;">
+      <div class="section-kicker kickerLeft">BONUS LEVEL · COPILOT AT WORK</div>
+      <h2 style="margin-bottom:6px;">Turn meetings & spreadsheets into decisions.</h2>
+      <p class="muted" style="max-width:980px;line-height:1.6;margin-top:0;">
+        This section shows how high-performing Copilot users use it <b>inside Teams meetings</b> and <b>inside Excel</b>
+        to capture decisions, generate MOMs, and act immediately — not later.
+      </p>
+
+      <!-- ================= TEAMS MEETINGS ================= -->
+      <div style="margin-top:22px;">
+        <div class="section-kicker kickerLeft">MICROSOFT TEAMS · MEETINGS</div>
+        <h2 class="purple" style="margin-top:6px;">Never lose decisions again.</h2>
+
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+
+          <div class="card leftBorderPurple">
+            <h3 class="ucTitle">Live Meeting Notes (Structured)</h3>
+            <p class="innerText">Convert conversation into clean, structured notes.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Summarize this Teams meeting into structured notes with:
+- Agenda
+- Key discussion points
+- Decisions made
+- Open questions
+- Action items (with owner + due date if mentioned)
+
+Keep it concise and executive-friendly.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderPurple">
+            <h3 class="ucTitle">Create MOM (Minutes of Meeting)</h3>
+            <p class="innerText">Turn raw conversation into a formal MOM for email or storage.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Create a formal MOM from this Teams meeting with:
+- Meeting objective
+- Participants
+- Summary of discussion
+- Decisions taken
+- Action items (bullet format)
+
+Use professional tone suitable for client or leadership circulation.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderPurple">
+            <h3 class="ucTitle">Decision Log (Very Addictive)</h3>
+            <p class="innerText">Extract only decisions + assumptions + risks (no fluff).</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+From this Teams meeting, extract ONLY:
+- Final decisions
+- Assumptions agreed
+- Risks raised
+
+Ignore general discussion. Output as a clean decision log.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderPurple">
+            <h3 class="ucTitle">Action Tracker Creation</h3>
+            <p class="innerText">Turn meetings into execution instantly.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Create an action tracker from this Teams meeting.
+For each action include:
+- Action description
+- Owner
+- Priority (High/Medium/Low)
+- Due date (if not mentioned, suggest one)
+
+Present it as a table.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= EXCEL ================= -->
+      <div style="margin-top:34px;">
+        <div class="section-kicker kickerLeft">MICROSOFT EXCEL · COPILOT</div>
+        <h2 class="green" style="margin-top:6px;">Make Excel work *for* you.</h2>
+
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+
+          <div class="card leftBorderGreen">
+            <h3 class="ucTitle">Instant Data Understanding</h3>
+            <p class="innerText">First prompt power users run on any Excel file.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Analyze this Excel sheet and explain:
+- What the data represents
+- Key metrics and dimensions
+- Any obvious data quality issues
+- What questions this data can answer
+
+Explain it like I'm presenting to leadership.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderGreen">
+            <h3 class="ucTitle">Auto Insights & Trends</h3>
+            <p class="innerText">Great for reviews, decks, and leadership mails.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+From this Excel data, identify:
+- Key trends
+- Major increases or drops
+- Outliers
+- Any risks or anomalies
+
+Summarize insights in bullet points.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderGreen">
+            <h3 class="ucTitle">Formula Generation (Very Addictive)</h3>
+            <p class="innerText">Stops Googling formulas forever.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Write the exact Excel formula to:
+[describe requirement]
+
+Explain the formula in simple terms and suggest an alternative if data grows large.
+              </div>
+            </div>
+          </div>
+
+          <div class="card leftBorderGreen">
+            <h3 class="ucTitle">Create Exec Summary from Excel</h3>
+            <p class="innerText">Perfect before sending decks or status mails.</p>
+            <div class="promptBox" style="max-height:420px;">
+              <button class="copyBtn" data-copy>Copy</button>
+              <div class="promptInner">
+Create a 1-page executive summary from this Excel data.
+Focus on:
+- Overall performance
+- Key drivers
+- Risks
+- Recommended actions
+
+Keep language crisp and leadership-ready.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="banner" style="margin-top:22px;">
+        <p class="bannerTitle">Why this bonus matters</p>
+        <div class="bannerNote">
+          Tableau tells the story.  
+          Teams captures decisions.  
+          Excel drives actions.  
+          <br><br>
+          <i>Copilot is the glue.</i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  </div>
+</section> 
 
           <!-- 01 -->
           <div class="card leftBorderRed">
