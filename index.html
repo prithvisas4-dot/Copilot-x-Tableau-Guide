@@ -89,15 +89,15 @@ h2.sec-h{font-family:var(--fh);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:80
 .buddy-close:hover{color:var(--red)}
 
 /* SVG Robot */
-.buddy-svg{width:120px;height:120px;margin:0 auto 20px}
-.robo-body{animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.robo-arm-l{transform-origin:28px 60px;animation:waveL 1.2s ease-in-out 3}
-@keyframes waveL{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-30deg)}75%{transform:rotate(10deg)}}
-.robo-eye{animation:blink 4s ease-in-out infinite}
-@keyframes blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-.robo-glow{animation:glow 2s ease-in-out infinite}
-@keyframes glow{0%,100%{opacity:.3}50%{opacity:.8}}
+
+
+
+
+
+
+
+
+
 
 .buddy-title{font-family:var(--fh);font-size:22px;font-weight:800;margin-bottom:8px}
 .buddy-title span{color:var(--purple)}
@@ -109,11 +109,9 @@ h2.sec-h{font-family:var(--fh);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:80
 .buddy-cta:hover{transform:translateY(-1px);box-shadow:0 6px 28px var(--purple-glow)}
 
 /* ─── FLOATING BUDDY ─────────────────────────────────── */
-#floatBuddy{position:fixed;bottom:28px;right:28px;z-index:2000;cursor:pointer;animation:fbFloat 3s ease-in-out infinite}
-@keyframes fbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-#floatBuddy svg{filter:drop-shadow(0 0 12px var(--purple))}
-.fb-tooltip{position:absolute;bottom:70px;right:0;background:var(--card);border:1px solid var(--border-p);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--white);white-space:nowrap;font-family:var(--fm);opacity:0;transition:var(--transition);pointer-events:none}
-#floatBuddy:hover .fb-tooltip{opacity:1;transform:translateY(-4px)}
+
+
+
 
 /* ─── CARDS ──────────────────────────────────────────── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:var(--transition);position:relative;overflow:hidden}
@@ -127,9 +125,9 @@ h2.sec-h{font-family:var(--fh);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:80
 .il-r{color:var(--red)}.il-a{color:var(--amber)}.il-p{color:var(--purple)}.il-g{color:var(--green)}
 
 /* ─── PROMPT BOX ─────────────────────────────────────── */
-.pbox{background:rgba(168,85,247,.1);border:1px solid var(--border-p);border-radius:10px;padding:16px 48px 16px 16px;margin-top:14px;position:relative;transition:var(--transition)}
+.pbox{background:rgba(168,85,247,.1);border:1px solid var(--border-p);border-radius:10px;padding:16px 48px 16px 16px;margin-top:14px;position:relative;transition:var(--transition);overflow:hidden}
 .pbox:hover{background:rgba(168,85,247,.14)}
-.pbox pre{font-family:var(--fm);font-size:12px;color:var(--white);white-space:pre-wrap;line-height:1.8}
+.pbox pre{font-family:var(--fm);font-size:12px;color:var(--white);white-space:pre-wrap;line-height:1.8;word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden}
 .cpybtn{position:absolute;top:10px;right:10px;background:var(--purple2);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-family:var(--fm);font-size:10px;cursor:pointer;transition:var(--transition);letter-spacing:.5px}
 .cpybtn:hover{background:var(--purple);transform:scale(1.05)}
 .cpybtn.done{background:var(--green)}
@@ -235,7 +233,7 @@ code.inline{color:var(--teal);background:rgba(45,212,191,.08);padding:2px 6px;bo
 /* ─── DIAG BANNER ────────────────────────────────────── */
 .diag{background:linear-gradient(135deg,#1e0040,#0d1e30);border:1px solid var(--border-p);border-radius:16px;padding:40px;text-align:center;margin-top:40px}
 .diag-pbox{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.2);padding:20px 48px 20px 20px;border-radius:10px;max-width:860px;margin:18px auto 0;position:relative;text-align:left}
-.diag-pbox pre{font-family:var(--fm);font-size:12px;white-space:pre-wrap;line-height:1.8}
+.diag-pbox pre{font-family:var(--fm);font-size:12px;white-space:pre-wrap;line-height:1.8;word-break:break-word;overflow-wrap:break-word;max-width:100%}
 
 /* ─── INFO LAYOUT ────────────────────────────────────── */
 .info-2{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
@@ -318,7 +316,7 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
 .mec h3{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:10px}
 .diag{background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(7,16,28,0));border:1px solid var(--border-p);border-radius:14px;padding:40px;text-align:center;margin-top:40px}
 .diag-pb{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);padding:18px 46px 18px 18px;border-radius:9px;max-width:840px;margin:16px auto 0;position:relative;text-align:left}
-.diag-pb pre{font-family:var(--fm);font-size:12px;white-space:pre-wrap;line-height:1.8;color:var(--white);opacity:.9}
+.diag-pb pre{font-family:var(--fm);font-size:12px;white-space:pre-wrap;line-height:1.8;color:var(--white);opacity:.9;word-break:break-word;overflow-wrap:break-word;max-width:100%}
 .tindex{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
 .tindex a{text-decoration:none;border:1px solid var(--border-p);color:var(--purple);font-family:var(--fm);font-size:10px;padding:4px 11px;border-radius:20px;transition:var(--transition)}
 .tindex a:hover{background:var(--purple-glow)}
@@ -380,7 +378,539 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
   .srch-bar{padding:8px 14px;flex-wrap:wrap}
 }
 
+
+/* ── PROMPT OVERFLOW FIX ──────────────────────────────────── */
+.pbox,.pb,.diag-pbox,.diag-pb{overflow:hidden;max-width:100%}
+.pbox pre,.pb pre,.diag-pbox pre,.diag-pb pre{
+  white-space:pre-wrap !important;
+  word-break:break-word !important;
+  overflow-wrap:break-word !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  font-size:11.5px;
+}
+/* Chart Types page mec card prompt boxes specifically */
+.mec .pbox pre, .mec .pb pre{
+  font-size:11px;
+  line-height:1.75;
+}
+
+
+/* ── PROMPT BUILDER STYLES ─────────────────────────────────── */
+.goal-btn,.aud-btn,.lvl-btn{background:var(--card);border:1px solid var(--border);color:var(--muted2);padding:10px 14px;font-family:var(--fm);font-size:11px;border-radius:8px;cursor:pointer;transition:var(--transition);text-align:left;letter-spacing:.3px;width:100%}
+.goal-btn:hover,.aud-btn:hover,.lvl-btn:hover{border-color:var(--border-p);color:var(--white)}
+.goal-btn.on{border-color:var(--purple);color:var(--purple);background:var(--purple-glow)}
+.aud-btn,.lvl-btn{width:auto;text-align:center}
+.aud-btn.on,.lvl-btn.on{border-color:var(--teal);color:var(--teal);background:rgba(45,212,191,.08)}
+.refine-chip{background:transparent;border:1px solid var(--border-p);color:var(--purple);font-family:var(--fm);font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:var(--transition);letter-spacing:.3px}
+.refine-chip:hover{background:var(--purple-glow);transform:translateY(-1px)}
+.ind-tab{display:none}.ind-tab.on{display:block}
+#goalGrid button{font-size:11px;padding:12px 10px}
+
+
+/* ── SPLINE 3D EMBED ──────────────────────────────────────────── */
+.spline-wrap{
+  width:200px;height:200px;border-radius:50%;overflow:hidden;
+  margin:0 auto 20px;position:relative;
+  filter:drop-shadow(0 0 32px rgba(168,85,247,.6));
+  animation:splineFloat 3s ease-in-out infinite;
+  cursor:pointer;
+  background:radial-gradient(circle at 50% 40%,rgba(168,85,247,.2),rgba(7,16,28,.95));
+}
+@keyframes splineFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-10px) rotate(2deg)}
+}
+spline-viewer{
+  width:100%;height:100%;
+  --background-color:transparent;
+  border:none;outline:none;
+}
+/* Fallback robot shown while Spline loads */
+.spline-fallback{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:64px;
+  animation:splineFloat 3s ease-in-out infinite;
+  transition:opacity .5s;
+}
+.spline-wrap.loaded .spline-fallback{opacity:0;pointer-events:none}
+
+
+/* Spline setup modal CTA callout */
+
+
+
+
+
+
+
+spline-viewer::part(logo),
+spline-viewer::part(watermark),
+spline-viewer [class*="logo"],
+spline-viewer [class*="watermark"],
+spline-viewer [class*="branding"] {
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+}
+/* Target the injected anchor tag Spline adds */
+spline-viewer > a,
+spline-viewer + a,
+#splineViewer + a,
+#robotSpline + a {
+  display:none !important;
+  pointer-events:none !important;
+}
+/* Nuclear option — hide any absolutely positioned link inside spline container */
+.spline-wrap > a,
+.spline-wrap a[href*="spline"],
+#robotWrap a,
+#robotWrap a[href*="spline"] {
+  display:none !important;
+  opacity:0 !important;
+}
+
+
+/* ══ SPLINE WATERMARK NUCLEAR KILL ══════════════════════ */
+spline-viewer {
+  --logo-display: none !important;
+  --watermark-opacity: 0 !important;
+  --branding-display: none !important;
+}
+spline-viewer::part(logo),
+spline-viewer::part(watermark),
+spline-viewer::part(branding),
+spline-viewer::part(badge) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+/* Any anchor Spline injects as sibling or child */
+spline-viewer ~ a,
+spline-viewer + a,
+spline-viewer > a,
+spline-viewer a,
+a[href*="spline.design"],
+a[href*="spline.design"] *,
+#splineViewer ~ a,
+#cSpline ~ a,
+#companionSpline ~ a {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+/* Target the wrapper divs spline injects */
+#companion a[href],
+#cWrap a[href],
+#buddySpline a[href] {
+  display: none !important;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   COMPANION ROBOT — fixed bottom-right, all pages
+══════════════════════════════════════════════════════ */
+#companion {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 150px;
+  height: 180px;
+  z-index: 1990;
+  cursor: pointer;
+}
+
+/* Idle bob */
+#companion.idle #cWrap {
+  animation: cBob 3.2s ease-in-out infinite;
+}
+@keyframes cBob {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  35%     { transform: translateY(-11px) rotate(2.5deg); }
+  70%     { transform: translateY(-5px) rotate(-1.5deg); }
+}
+
+/* Fly out to right on nav */
+#companion.flyout {
+  animation: cFlyOut .38s cubic-bezier(.6,0,1,.4) forwards;
+}
+@keyframes cFlyOut {
+  0%   { transform: translateX(0) rotate(0deg) scale(1); opacity:1; }
+  100% { transform: translateX(180px) rotate(20deg) scale(.7); opacity:0; }
+}
+
+/* Fly in from right on new page */
+#companion.flyin {
+  animation: cFlyIn .65s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes cFlyIn {
+  0%   { transform: translateX(180px) rotate(-12deg) scale(.7); opacity:0; }
+  60%  { transform: translateX(-8px) rotate(2deg) scale(1.05); opacity:1; }
+  100% { transform: translateX(0) rotate(0deg) scale(1); opacity:1; }
+}
+
+/* Wave on first load */
+#companion.wave {
+  animation: cWave .9s ease-in-out;
+}
+@keyframes cWave {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-12deg) translateY(-6px); }
+  50%     { transform: rotate(12deg) translateY(-10px); }
+  80%     { transform: rotate(-6deg) translateY(-4px); }
+}
+
+/* The clip circle */
+#cWrap {
+  width: 150px;
+  height: 180px;
+  border-radius: 0;
+  overflow: visible;
+  position: relative;
+  background: transparent;
+  box-shadow: none;
+  transition: transform .25s;
+}
+#companion:hover #cWrap {
+  transform: scale(1.1);
+}
+
+#cMask { display: none; }
+
+/* Speech bubble */
+#cBubble {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  background: var(--card, #0f2138);
+  border: 1px solid rgba(168,85,247,.55);
+  border-radius: 14px 14px 0 14px;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #f0f4ff;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px) scale(.92);
+  transform-origin: bottom right;
+  transition: opacity .28s, transform .28s;
+  pointer-events: none;
+  letter-spacing: .3px;
+  max-width: 210px;
+  white-space: normal;
+  text-align: right;
+  line-height: 1.5;
+}
+#companion:hover #cBubble,
+#companion.speaking #cBubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Pulse ring */
+#cRing {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(168,85,247,.5);
+  opacity: 0;
+  pointer-events: none;
+}
+#companion.pulse #cRing {
+  animation: cPulse .9s ease-out forwards;
+}
+@keyframes cPulse {
+  0%   { transform: scale(1);   opacity: .8; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+@media(max-width:600px){
+  #companion { width:110px; height:140px; bottom:8px; right:8px; }
+  #cWrap     { width:110px; height:140px; }
+}
+
 </style>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js">
+/* ── SPLINE 3D VIEWER ────────────────────────────────────── */
+(function(){
+  // Mark wrap as loaded once spline-viewer fires load
+  var wrap = document.getElementById('buddySpline');
+  var viewer = document.getElementById('splineViewer');
+  if(viewer){
+    viewer.addEventListener('load', function(){
+      if(wrap) wrap.classList.add('loaded');
+      // Trigger wave animation on the Spline character after 600ms
+      setTimeout(function(){
+        try{
+          // If your Spline scene has a 'wave' or 'greet' event trigger named
+          // 'mouseDown' on an object, Spline viewer emits it via triggerEvent:
+          if(viewer.triggerEvent) viewer.triggerEvent('wave');
+        }catch(e){}
+      }, 600);
+    });
+  }
+  // Click buddy float button to also trigger wave
+
+})();
+
+
+
+
+
+/* ── PERSISTENT ROBOT JS ──────────────────────────────────── */
+(function(){
+  var UNUSED=null; var robotFallback = document.getElementById('robotFallback');
+
+  // Click → open buddy overlay
+  if(robot){
+    robot.addEventListener('click', function(){ showBuddy(); });
+  }
+
+  // Hide fallback once Spline loads
+  if(robotSpline){
+    robotSpline.addEventListener('load', function(){
+      if(robotFallback) robotFallback.style.opacity = '0';
+      if(robot) robot.classList.add('loaded');
+    });
+  }
+  // Safety timeout
+  setTimeout(function(){
+    if(robotFallback) robotFallback.style.opacity = '0';
+    if(robot) robot.classList.add('loaded');
+  }, 5000);
+
+  // Subtle mouse parallax — robot tilts toward cursor
+  document.addEventListener('mousemove', function(e){
+    if(!robot) return;
+    var rect = robot.getBoundingClientRect();
+    var cx = rect.left + rect.width/2;
+    var cy = rect.top + rect.height/2;
+    var dx = (e.clientX - cx) / window.innerWidth;
+    var dy = (e.clientY - cy) / window.innerHeight;
+    // Only tilt when mouse is in the general area (right half of screen)
+    if(e.clientX > window.innerWidth * 0.5){
+      var inner = document.getElementById('robotInner');
+      if(inner) inner.style.transform = 'perspective(300px) rotateY('+(dx*18)+'deg) rotateX('+(-dy*12)+'deg) scale(1.04)';
+    }
+  });
+  document.addEventListener('mouseleave', function(){
+    var inner = document.getElementById('robotInner');
+    if(inner) inner.style.transform = '';
+  });
+})();
+
+
+/* ══ SPLINE WATERMARK NUCLEAR JS ════════════════════════ */
+(function killSplineWatermark(){
+  function strip(){
+    /* 1 — shadow DOM traversal */
+    document.querySelectorAll('spline-viewer').forEach(function(sv){
+      /* Direct shadow root */
+      [sv.shadowRoot, sv.attachShadow && sv.shadowRoot].forEach(function(sr){
+        if(!sr) return;
+        sr.querySelectorAll([
+          'a','[class*="logo"]','[class*="watermark"]',
+          '[class*="brand"]','[class*="badge"]','[class*="built"]'
+        ].join(',')).forEach(kill);
+        /* Also try canvas overlay divs */
+        sr.querySelectorAll('div[style*="position"]').forEach(function(el){
+          if(el.textContent && el.textContent.toLowerCase().includes('spline')) kill(el);
+        });
+      });
+      /* Sibling anchors injected after the viewer */
+      var s = sv;
+      while((s = s.nextElementSibling)){
+        if(s.tagName === 'A' || (s.href && s.href.includes('spline'))) kill(s);
+      }
+      /* Parent-level injected anchors */
+      if(sv.parentElement){
+        sv.parentElement.querySelectorAll('a[href*="spline"]').forEach(kill);
+      }
+    });
+    /* 2 — global anchor sweep */
+    document.querySelectorAll('a[href*="spline.design"]').forEach(kill);
+  }
+
+  function kill(el){
+    if(!el) return;
+    el.style.cssText += ';display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;position:absolute!important;width:0!important;height:0!important;overflow:hidden!important';
+  }
+
+  /* Fire immediately, on load, and on every DOM mutation */
+  strip();
+  window.addEventListener('DOMContentLoaded', strip);
+  window.addEventListener('load', strip);
+  [500,1000,2000,3500,6000].forEach(function(t){ setTimeout(strip, t); });
+
+  /* MutationObserver — catches anything injected after load */
+  try {
+    new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes.forEach(function(n){
+          if(n.nodeType !== 1) return;
+          if(n.tagName === 'A' && n.href && n.href.includes('spline')) kill(n);
+          if(n.querySelectorAll) n.querySelectorAll('a[href*="spline"]').forEach(kill);
+        });
+      });
+    }).observe(document.documentElement, {childList:true, subtree:true});
+  } catch(e){}
+})();
+
+
+/* ══════════════════════════════════════════════════════
+   COMPANION ROBOT JS — wave, travel, look-at, speak
+══════════════════════════════════════════════════════ */
+(function(){
+  var cp      = document.getElementById('companion');
+  var cWrap   = document.getElementById('cWrap');
+  var cSpline = document.getElementById('cSpline');
+  var cFb     = document.getElementById('companionFallback');
+  var cText   = document.getElementById('cText');
+  if(!cp) return;
+
+  /* Page-aware messages */
+  var pageMsg = {
+    home:         'Hey! 👋 Need Tableau help?',
+    usecases:     '30+ use cases here! 📊',
+    charts:       'Every chart type covered 🎯',
+    scenarios:    'Real retail scenarios 🛒',
+    mechanics:    'Deep-dive mechanics 🔧',
+    levels:       'Pick your skill level ⚡',
+    limits:       'Know the Tableau walls 🚧',
+    quickprompts: 'All prompts in one place 📋',
+    bonus:        'Teams & Excel tips here! 💬',
+    builder:      'Build your own prompt ✨'
+  };
+
+  var idleMsgs = [
+    'Need Tableau help? 👋',
+    'Try the Prompt Builder! ✨',
+    'Check Quick Prompts 📋',
+    'I know every chart type 🎯',
+    'Ask me anything! 💬',
+    'New to Tableau? Start here 🌱',
+    'Copy any prompt in 1 click ⚡'
+  ];
+  var msgIdx = 0;
+
+  function speak(msg, ms){
+    if(cText) cText.textContent = msg;
+    cp.classList.add('speaking');
+    clearTimeout(cp._speakTimer);
+    cp._speakTimer = setTimeout(function(){
+      cp.classList.remove('speaking');
+    }, ms || 3200);
+  }
+
+  function pulse(){
+    cp.classList.add('pulse');
+    setTimeout(function(){ cp.classList.remove('pulse'); }, 900);
+  }
+
+  /* ── Wave + greet on load ── */
+  setTimeout(function(){
+    cp.classList.add('idle','wave');
+    setTimeout(function(){ cp.classList.remove('wave'); }, 900);
+    pulse();
+    speak('Hey! 👋 I wave hi!', 3500);
+  }, 900);
+
+  /* ── Rotate idle messages every 7s ── */
+  setInterval(function(){
+    if(!cp.classList.contains('speaking')){
+      msgIdx = (msgIdx + 1) % idleMsgs.length;
+      speak(idleMsgs[msgIdx], 3000);
+    }
+  }, 7000);
+
+  /* ── Click opens buddy overlay ── */
+  cp.addEventListener('click', function(){
+    try{ if(cSpline && cSpline.triggerEvent) cSpline.triggerEvent('wave'); }catch(e){}
+    showBuddy();
+    speak('Opening the guide! 🚀', 2000);
+  });
+
+  /* ── Spline loaded → nothing to hide (no fallback shown) ── */
+  if(cSpline){
+    cSpline.addEventListener('load', function(){
+      cp.classList.add('loaded');
+    });
+  }
+
+  /* ── Mouse look-at — 3D tilt toward cursor ── */
+  var rafPending = false;
+  document.addEventListener('mousemove', function(e){
+    if(rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(function(){
+      if(!cWrap){ rafPending=false; return; }
+      var rect = cp.getBoundingClientRect();
+      var cx = rect.left + rect.width  / 2;
+      var cy = rect.top  + rect.height / 2;
+      var dx = (e.clientX - cx) / window.innerWidth;
+      var dy = (e.clientY - cy) / window.innerHeight;
+      /* Skip bob animation while mouse-driven */
+      cWrap.style.animation = 'none';
+      cWrap.style.transform =
+        'perspective(420px) rotateY('+(dx*26)+'deg) rotateX('+(-dy*16)+'deg)';
+      rafPending = false;
+    });
+  });
+
+  document.addEventListener('mouseleave', function(){
+    if(cWrap){
+      cWrap.style.transform = '';
+      cWrap.style.animation = '';
+    }
+  });
+
+  /* ── Page travel — intercept go() ── */
+  var _origGo = window.go;
+  window.go = function(id){
+    /* Fly out */
+    cp.classList.remove('idle','flyin','wave');
+    cp.classList.add('flyout');
+
+    setTimeout(function(){
+      /* Switch page */
+      if(_origGo) _origGo(id);
+      /* Fly in */
+      cp.classList.remove('flyout');
+      cp.classList.add('flyin');
+      /* Page-specific message */
+      speak(pageMsg[id] || 'Let's explore! 🚀', 3000);
+      pulse();
+      setTimeout(function(){
+        cp.classList.remove('flyin');
+        cp.classList.add('idle');
+      }, 680);
+    }, 360);
+    return false;
+  };
+})();
+
+
+/* ══ SHADOW DOM STYLE INJECTION ═════════════════════════ */
+(function injectShadowCSS(){
+  function tryInject(){
+    document.querySelectorAll('spline-viewer').forEach(function(sv){
+      try {
+        var sr = sv.shadowRoot;
+        if(sr && !sr._cssInjected){
+          var sheet = new CSSStyleSheet();
+          sheet.replaceSync('a, [class*="logo"], [class*="watermark"], [class*="brand"] { display:none!important; opacity:0!important; }');
+          sr.adoptedStyleSheets = [...(sr.adoptedStyleSheets||[]), sheet];
+          sr._cssInjected = true;
+        }
+      } catch(e){}
+    });
+  }
+  [0,500,1500,3000].forEach(function(t){ setTimeout(tryInject, t); });
+})();
+
+</script>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js"></script>
 </head>
 <body>
 
@@ -392,53 +922,16 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
 <div id="buddyOverlay">
   <div class="buddy-modal">
     <button class="buddy-close" onclick="closeBuddy()">✕</button>
-    <svg class="buddy-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#a855f7" stop-opacity=".2"/>
-          <stop offset="100%" stop-color="#07101c" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="body-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#7c3aed"/>
-          <stop offset="100%" stop-color="#a855f7"/>
-        </linearGradient>
-      </defs>
-      <!-- Glow -->
-      <circle cx="60" cy="60" r="55" fill="url(#bg)" class="robo-glow"/>
-      <!-- Body group -->
-      <g class="robo-body">
-        <!-- Torso -->
-        <rect x="35" y="55" width="50" height="38" rx="10" fill="url(#body-g)"/>
-        <!-- Head -->
-        <rect x="30" y="22" width="60" height="42" rx="12" fill="#7c3aed"/>
-        <!-- Eyes -->
-        <rect x="42" y="34" width="14" height="14" rx="3" fill="#2dd4bf" class="robo-eye"/>
-        <rect x="64" y="34" width="14" height="14" rx="3" fill="#2dd4bf" class="robo-eye"/>
-        <!-- Eye inner -->
-        <circle cx="49" cy="41" r="4" fill="#07101c"/>
-        <circle cx="71" cy="41" r="4" fill="#07101c"/>
-        <circle cx="51" cy="39" r="1.5" fill="#fff"/>
-        <circle cx="73" cy="39" r="1.5" fill="#fff"/>
-        <!-- Mouth -->
-        <path d="M46 56 Q60 64 74 56" stroke="#2dd4bf" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <!-- Antenna -->
-        <line x1="60" y1="22" x2="60" y2="12" stroke="#a855f7" stroke-width="2"/>
-        <circle cx="60" cy="10" r="4" fill="#a855f7"/>
-        <circle cx="60" cy="10" r="2" fill="#fff" opacity=".6"/>
-        <!-- Chest badge -->
-        <rect x="48" y="65" width="24" height="16" rx="5" fill="rgba(255,255,255,.1)" stroke="#2dd4bf" stroke-width="1"/>
-        <text x="60" y="77" text-anchor="middle" fill="#2dd4bf" font-size="8" font-family="monospace">AI</text>
-        <!-- Legs -->
-        <rect x="40" y="90" width="14" height="16" rx="6" fill="#6d28d9"/>
-        <rect x="66" y="90" width="14" height="16" rx="6" fill="#6d28d9"/>
-        <!-- Left arm (waving) -->
-        <g class="robo-arm-l">
-          <rect x="18" y="56" width="18" height="10" rx="5" fill="#7c3aed"/>
-        </g>
-        <!-- Right arm -->
-        <rect x="84" y="56" width="18" height="10" rx="5" fill="#7c3aed"/>
-      </g>
-    </svg>
+    <div style="width:220px;height:260px;border-radius:0;overflow:visible;margin:0 auto 8px;position:relative;background:transparent">
+      <spline-viewer
+        id="splineViewer"
+        url="https://prod.spline.design/7RK7XK1ZSGH4wxTq/scene.splinecode"
+        loading="lazy"
+        events-target="global"
+        style="width:130%;height:130%;margin-left:-15%;margin-top:-8%;background:transparent"
+      ></spline-viewer>
+
+    </div>
     <h2 class="buddy-title">Hey there! I'm <span>Copilot</span> 👋</h2>
     <p class="buddy-desc">Your AI buddy for all things Tableau. Tell me what you're stuck on — I'll give you the exact prompt to fix it.</p>
     <div class="buddy-chips">
@@ -449,24 +942,13 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
       <div class="chip" onclick="selectChip(this,'lod')">🧮 LOD Expression</div>
       <div class="chip" onclick="selectChip(this,'perf')">⚡ Performance</div>
     </div>
+    
     <button class="buddy-cta" onclick="closeBuddy()">Enter the Guide →</button>
   </div>
 </div>
 
 <!-- FLOATING BUDDY -->
-<div id="floatBuddy" onclick="showBuddy()">
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <circle cx="26" cy="26" r="26" fill="#7c3aed"/>
-    <rect x="14" y="10" width="24" height="18" rx="5" fill="#a855f7"/>
-    <rect x="17" y="14" width="6" height="6" rx="1.5" fill="#2dd4bf"/>
-    <rect x="29" y="14" width="6" height="6" rx="1.5" fill="#2dd4bf"/>
-    <path d="M18 24 Q26 28 34 24" stroke="#2dd4bf" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <rect x="12" y="28" width="28" height="16" rx="5" fill="#7c3aed"/>
-    <rect x="20" y="32" width="12" height="7" rx="3" fill="rgba(255,255,255,.12)" stroke="#2dd4bf" stroke-width=".7"/>
-    <text x="26" y="38" text-anchor="middle" fill="#2dd4bf" font-size="4" font-family="monospace">AI</text>
-  </svg>
-  <div class="fb-tooltip">Ask Copilot Buddy 👋</div>
-</div>
+
 
 <!-- ═══════════════════════════════════════════════════
      NAV
@@ -485,6 +967,7 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
     <li><a href="#" onclick="go('limits');return false" id="nl-limits">Limitations</a></li>
     <li><a href="#" onclick="go('quickprompts');return false" id="nl-quickprompts">Quick Prompts</a></li>
     <li><a href="#" onclick="go('bonus');return false" id="nl-bonus">Teams &amp; Excel</a></li>
+    <li><a href="#" onclick="go('builder');return false" id="nl-builder">✨ Prompt Builder</a></li>
   </ul>
   <button class="nav-pill" onclick="go('usecases');return false">Enter Guide →</button>
   <button class="hamburger" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -499,10 +982,14 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
   <a href="#" onclick="go('limits');closeMob()">Limitations</a>
   <a href="#" onclick="go('quickprompts');closeMob()">Quick Prompts</a>
   <a href="#" onclick="go('bonus');closeMob()">Teams &amp; Excel</a>
+  <a href="#" onclick="go('builder');closeMob()">✨ Prompt Builder</a>
 </div>
 
 <div class="page on" id="pg-home">
 <section class="hero">
+
+  <!-- Ambient 3D scene in hero background — replace URL with your own Spline scene -->
+  
   <div class="hero-badge">TABLEAU × COPILOT · DATA ANALYST GUIDE · 2025</div>
   <h1 class="hero-h">You're about to solve any<br>Tableau requirement.<br><span class="acc">with Microsoft Copilot.</span></h1>
   <p class="hero-sub">No guesswork. No Stack Overflow rabbit holes. Just the right Copilot prompt — that actually works.</p>
@@ -523,7 +1010,7 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
     </div>
     <div class="stat-grid">
       <div class="st searchable"><div class="st-n" style="color:var(--purple)">70%</div><div class="st-l">Time Saved</div><div class="st-s">on repeated Tableau tasks</div></div>
-      <div class="st searchable"><div class="st-n" style="color:var(--teal)">10+</div><div class="st-l">Use Cases</div><div class="st-s">covered with ready prompts</div></div>
+      <div class="st searchable"><div class="st-n" style="color:var(--teal)">51+</div><div class="st-l">Use Cases</div><div class="st-s">covered with ready prompts</div></div>
       <div class="st searchable"><div class="st-n" style="color:var(--amber)">0</div><div class="st-l">Prior Copilot</div><div class="st-s">experience needed</div></div>
       <div class="st searchable"><div class="st-n" style="color:var(--green)">1</div><div class="st-l">Prompt Away</div><div class="st-s">from any Tableau solution</div></div>
     </div>
@@ -566,7 +1053,7 @@ code.ci{color:var(--teal);background:rgba(45,212,191,.07);padding:1px 6px;border
   </div>
 </div>
 </section>
-<footer><div>Tableau × Copilot Guide · Practical Prompts for Real Requirements</div><div style="margin-top:6px;font-size:11px;color:var(--muted)">Curated for Accenture Analytics Teams · 2025</div><div class="ft-links"><a href="#">Glossary</a><button class="ft-rst" onclick="resetAll()">↺ Reset Progress</button></div></footer>
+<footer><div>Tableau × Copilot Guide · Practical Prompts for Real Requirements</div><div style="margin-top:6px;font-size:11px;color:var(--muted)">Open-source content · Built for the data community · 2025</div><div class="ft-links"><a href="#">Glossary</a><button class="ft-rst" onclick="resetAll()">↺ Reset Progress</button></div></footer>
 </div><!-- /pg-home -->
 
 <!-- ═══════════════════════════════════════════════════
@@ -1351,6 +1838,209 @@ PROMPT 6 — Prepare for Tableau:
 <footer><div>Tableau × Copilot Guide · Teams &amp; Excel Bonus</div><div class="ft-links"><button class="ft-rst" onclick="resetAll()">↺ Reset</button></div></footer>
 </div><!-- /pg-bonus -->
 
+
+<!-- ══════════════════════════════════════════════════════
+     CUSTOM PROMPT BUILDER PAGE
+═══════════════════════════════════════════════════════ -->
+<div class="page" id="pg-builder">
+<div class="wrap sec">
+  <div class="label">Custom Prompt Builder · Build Your Own</div>
+  <h2 class="sec-h">Any business requirement.<br><span style="color:var(--purple)">One custom Copilot prompt.</span></h2>
+  <p class="sub" style="max-width:720px">Don't see your exact scenario? Use this builder to generate a precise, business-specific Copilot prompt for any Tableau requirement — in seconds. Fill in the fields, click Generate, and copy the result straight into Copilot.</p>
+
+  <!-- BUILDER CARD -->
+  <div style="background:var(--card);border:1px solid var(--border-p);border-radius:16px;padding:36px;margin-bottom:36px">
+
+    <!-- STEP 1: What Are You Trying to Do? -->
+    <div style="margin-bottom:26px">
+      <div class="il" style="margin-top:0;font-size:11px;letter-spacing:1.5px">STEP 01 · What Are You Trying to Do?</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px" id="goalGrid">
+        <button class="goal-btn" data-goal="build" onclick="selectGoal(this)">📊 Build a Chart / Dashboard</button>
+        <button class="goal-btn" data-goal="debug" onclick="selectGoal(this)">🐛 Debug / Fix Something</button>
+        <button class="goal-btn" data-goal="calc" onclick="selectGoal(this)">🧮 Write a Calculation</button>
+        <button class="goal-btn" data-goal="data" onclick="selectGoal(this)">🔌 Connect / Prepare Data</button>
+        <button class="goal-btn" data-goal="perf" onclick="selectGoal(this)">⚡ Improve Performance</button>
+        <button class="goal-btn" data-goal="publish" onclick="selectGoal(this)">📤 Publish / Share</button>
+        <button class="goal-btn" data-goal="design" onclick="selectGoal(this)">🎨 Design for Executives</button>
+        <button class="goal-btn" data-goal="lod" onclick="selectGoal(this)">📐 LOD Expression</button>
+        <button class="goal-btn" data-goal="other" onclick="selectGoal(this)">✏️ Something Else</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Your Data Fields -->
+    <div style="margin-bottom:22px">
+      <div class="il" style="font-size:11px;letter-spacing:1.5px">STEP 02 · Your Key Data Fields <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(comma separated)</span></div>
+      <input id="b-fields" type="text" placeholder="e.g. Order Date, Sales Amount, Region, Product Category, Customer ID"
+        style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border-p);border-radius:8px;padding:11px 14px;color:var(--white);font-family:var(--fm);font-size:12px;outline:none;margin-top:10px;transition:var(--transition)"
+        onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='rgba(168,85,247,.2)'">
+    </div>
+
+    <!-- STEP 3: Business Requirement -->
+    <div style="margin-bottom:22px">
+      <div class="il" style="font-size:11px;letter-spacing:1.5px">STEP 03 · Describe Your Requirement in Plain English</div>
+      <textarea id="b-req" rows="3" placeholder="e.g. I want to show revenue growth compared to last year for each region, with a colour indicator that goes green when growth is positive and red when negative..."
+        style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border-p);border-radius:8px;padding:11px 14px;color:var(--white);font-family:var(--fm);font-size:12px;outline:none;margin-top:10px;resize:vertical;line-height:1.7;transition:var(--transition)"
+        onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='rgba(168,85,247,.2)'"></textarea>
+    </div>
+
+    <!-- STEP 4: Audience -->
+    <div style="margin-bottom:22px">
+      <div class="il" style="font-size:11px;letter-spacing:1.5px">STEP 04 · Who Is This For?</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="aud-btn on" data-aud="analyst" onclick="selectAud(this)">📊 Fellow Analysts</button>
+        <button class="aud-btn" data-aud="exec" onclick="selectAud(this)">👔 Executives / Leadership</button>
+        <button class="aud-btn" data-aud="ops" onclick="selectAud(this)">⚙️ Operations Team</button>
+        <button class="aud-btn" data-aud="finance" onclick="selectAud(this)">💰 Finance Team</button>
+        <button class="aud-btn" data-aud="sales" onclick="selectAud(this)">🎯 Sales Team</button>
+        <button class="aud-btn" data-aud="dev" onclick="selectAud(this)">💻 Technical / Dev Team</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Skill Level -->
+    <div style="margin-bottom:28px">
+      <div class="il" style="font-size:11px;letter-spacing:1.5px">STEP 05 · Your Tableau Skill Level</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="lvl-btn" data-level="beginner" onclick="selectLevel(this)">🌱 Beginner</button>
+        <button class="lvl-btn on" data-level="intermediate" onclick="selectLevel(this)">⚡ Intermediate</button>
+        <button class="lvl-btn" data-level="advanced" onclick="selectLevel(this)">🚀 Advanced</button>
+      </div>
+    </div>
+
+    <!-- GENERATE BUTTON -->
+    <button onclick="generatePrompt()" style="width:100%;background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff;border:none;border-radius:10px;padding:15px;font-family:var(--fh);font-size:15px;font-weight:700;cursor:pointer;transition:var(--transition);letter-spacing:.5px"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 28px var(--purple-glow)'"
+      onmouseout="this.style.transform='';this.style.boxShadow=''">
+      ✨ Generate My Copilot Prompt
+    </button>
+  </div>
+
+  <!-- OUTPUT AREA -->
+  <div id="builderOutput" style="display:none">
+    <div style="background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(7,16,28,0));border:1px solid var(--border-p);border-radius:14px;padding:32px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="il" style="margin:0;font-size:11px;letter-spacing:1.5px">YOUR GENERATED COPILOT PROMPT</div>
+          <p style="font-size:12px;color:var(--muted2);margin-top:4px">Copy this directly into Microsoft Copilot, Teams Copilot, or Copilot in Excel.</p>
+        </div>
+        <button onclick="copyGenerated()" id="genCopyBtn" style="background:var(--purple2);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:var(--fm);font-size:12px;cursor:pointer;transition:var(--transition);white-space:nowrap"
+          onmouseover="this.style.background='var(--purple)'" onmouseout="this.style.background='var(--purple2)'">
+          📋 COPY PROMPT
+        </button>
+      </div>
+      <div style="background:rgba(0,0,0,.3);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:20px;position:relative">
+        <pre id="generatedPrompt" style="font-family:var(--fm);font-size:12px;color:var(--white);white-space:pre-wrap;line-height:1.85;word-break:break-word;overflow-wrap:break-word;max-width:100%;margin:0"></pre>
+      </div>
+
+      <!-- REFINEMENT CHIPS -->
+      <div style="margin-top:20px">
+        <div style="font-family:var(--fm);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Refine Your Prompt →</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="refineChips">
+          <button class="refine-chip" onclick="refinePrompt('moredetail')">+ More Detail</button>
+          <button class="refine-chip" onclick="refinePrompt('simpler')">↓ Simpler</button>
+          <button class="refine-chip" onclick="refinePrompt('performance')">⚡ Add Performance Notes</button>
+          <button class="refine-chip" onclick="refinePrompt('edgecases')">⚠ Add Edge Cases</button>
+          <button class="refine-chip" onclick="refinePrompt('stepbystep')">📋 Make Step-by-Step</button>
+          <button class="refine-chip" onclick="refinePrompt('syntax')">{ } Request Full Syntax</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COPY TO DIFFERENT TOOLS -->
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="copyToolGrid">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:var(--transition)"
+        onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(45,212,191,.15)'"
+        onclick="copyGenerated()">
+        <div style="font-size:22px;margin-bottom:6px">💬</div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--white);margin-bottom:4px">Copy for Copilot Chat</div>
+        <div style="font-size:10px;color:var(--muted2)">Tableau Desktop / Web</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:var(--transition)"
+        onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(45,212,191,.15)'"
+        onclick="copyWithTeamsNote()">
+        <div style="font-size:22px;margin-bottom:6px">🖥️</div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--white);margin-bottom:4px">Copy for Teams Copilot</div>
+        <div style="font-size:10px;color:var(--muted2)">Meeting / Chat panel</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:var(--transition)"
+        onmouseover="this.style.borderColor='rgba(168,85,247,.4)'" onmouseout="this.style.borderColor='rgba(45,212,191,.15)'"
+        onclick="copyWithExcelNote()">
+        <div style="font-size:22px;margin-bottom:6px">📊</div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--white);margin-bottom:4px">Copy for Excel Copilot</div>
+        <div style="font-size:10px;color:var(--muted2)">After Tableau export</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO ADD MORE USE CASES - TIPS SECTION -->
+  <div style="margin-top:52px">
+    <div class="label" style="margin-bottom:20px">How to Add More Use Cases for Your Team</div>
+    <h3 style="font-family:var(--fh);font-size:20px;font-weight:700;margin-bottom:18px">3 ways Tableau users can extend this guide for their own business requirements</h3>
+    <div class="g3" style="margin-bottom:32px">
+      <div class="card" style="border-left:3px solid var(--purple)">
+        <div style="font-size:24px;margin-bottom:10px">🔧</div>
+        <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--purple);margin-bottom:8px">Method 1: Use This Builder</div>
+        <p style="font-size:12px;color:var(--muted2);line-height:1.8">Fill in the 5 fields above. The builder generates a structured, business-specific prompt you can use immediately. Works for any industry — retail, finance, healthcare, manufacturing, logistics.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--teal)">
+        <div style="font-size:24px;margin-bottom:10px">📋</div>
+        <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--teal);margin-bottom:8px">Method 2: Adapt Existing Prompts</div>
+        <p style="font-size:12px;color:var(--muted2);line-height:1.8">Every prompt in this guide has <code style="color:var(--teal);font-family:var(--fm);font-size:11px">[bracketed placeholders]</code>. Replace them with your actual field names, measures, and business context. Each placeholder makes the prompt more precise.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--amber)">
+        <div style="font-size:24px;margin-bottom:10px">🤝</div>
+        <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--amber);margin-bottom:8px">Method 3: The Screenshot Technique</div>
+        <p style="font-size:12px;color:var(--muted2);line-height:1.8">Screenshot your Tableau view + the calculated field + the error message. Paste all three into Copilot. This works for scenarios no generic prompt can anticipate — Copilot diagnoses from the actual visual state of your workbook.</p>
+      </div>
+    </div>
+
+    <!-- QUICK TEMPLATE PROMPTS FOR COMMON INDUSTRIES -->
+    <div style="background:var(--card);border:1px solid var(--border-p);border-radius:14px;padding:28px">
+      <div class="il" style="margin-top:0;font-size:11px">INDUSTRY STARTER TEMPLATES — Paste & Customise</div>
+      <div class="tabs" id="indTabs" style="margin-top:14px">
+        <button class="on" data-ind="retail" onclick="showInd(this)">🛒 Retail</button>
+        <button data-ind="finance" onclick="showInd(this)">💰 Finance</button>
+        <button data-ind="mfg" onclick="showInd(this)">🏭 Manufacturing</button>
+        <button data-ind="health" onclick="showInd(this)">🏥 Healthcare</button>
+        <button data-ind="it" onclick="showInd(this)">💻 IT / Tech</button>
+        <button data-ind="hr" onclick="showInd(this)">👥 HR</button>
+      </div>
+      <div id="ind-retail" class="ind-tab on" style="margin-top:18px">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst at a retail company. My data has: Store ID, Store Name, Region, Order Date, Product Category, Product Name, Sales Amount, Units Sold, Discount %, Returns, Target Sales.
+
+I need to build [describe your specific requirement]. Walk me through the exact Tableau steps — field placement on Rows/Columns/Marks, any calculated fields needed with full syntax, how to handle any filtering or date logic, and how to format the final output for a [store manager / category director / C-suite] audience.</pre></div>
+      </div>
+      <div id="ind-finance" class="ind-tab" style="margin-top:18px;display:none">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst at a financial services company. My data has: Account ID, Client Segment, Relationship Manager, Date, Revenue, AUM (Assets Under Management), Product Type, Region, Actual vs Budget fields.
+
+I need to build [describe your specific requirement]. Walk me through the exact Tableau steps — field placement, calculated fields with full syntax, how to handle variance calculations (Actual vs Budget, YoY), and how to format for a [relationship manager / portfolio director / CFO] audience.</pre></div>
+      </div>
+      <div id="ind-mfg" class="ind-tab" style="margin-top:18px;display:none">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst at a manufacturing company. My data has: Plant ID, Production Line, Shift, Date/Time, Units Produced, Units Defective, Downtime Minutes, OEE %, SKU, Machine ID.
+
+I need to build [describe your specific requirement — OEE dashboard / defect analysis / downtime tracker]. Walk me through the exact Tableau steps — calculated fields with full syntax, how to handle time-based calculations like shift comparisons and rolling averages, and how to design for [shift supervisor / plant manager / operations director] audience.</pre></div>
+      </div>
+      <div id="ind-health" class="ind-tab" style="margin-top:18px;display:none">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst at a healthcare organisation. My data has: Patient ID, Department, Clinician ID, Admission Date, Discharge Date, Diagnosis Code, Length of Stay, Readmission Flag, Cost, Bed Occupancy.
+
+I need to build [describe your specific requirement — patient flow / readmission analysis / capacity dashboard]. Walk me through the exact Tableau steps — calculated fields with full syntax, how to handle patient-level vs aggregate-level analysis using LOD, and how to design for [clinical lead / hospital director / finance committee] audience. Note: no individual patient data should be visible in the final view.</pre></div>
+      </div>
+      <div id="ind-it" class="ind-tab" style="margin-top:18px;display:none">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst at a technology company. My data has: Ticket ID, System, Severity, Date Raised, Date Resolved, Assignee, Team, SLA Target (hours), Resolution Time (hours), Root Cause Category.
+
+I need to build [describe your specific requirement — SLA compliance / incident volume trend / MTTR analysis]. Walk me through the exact Tableau steps — calculated fields with full syntax including SLA breach logic, how to show trend vs target, and how to design for [IT manager / DevOps lead / CTO] audience.</pre></div>
+      </div>
+      <div id="ind-hr" class="ind-tab" style="margin-top:18px;display:none">
+        <div class="pbox" style="margin-top:0"><button class="cpybtn" onclick="cp(this)">COPY</button><pre>I'm a Tableau analyst working on HR analytics. My data has: Employee ID, Department, Job Level, Hire Date, Termination Date (if applicable), Location, Manager ID, Salary Band, Performance Rating, Training Hours.
+
+I need to build [describe your specific requirement — attrition analysis / headcount dashboard / performance distribution]. Walk me through the exact Tableau steps — calculated fields with full syntax including tenure calculations and attrition rate logic, how to handle active vs former employees with date filters, and how to design for [HR business partner / CHRO / department head] audience.</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div>Tableau × Copilot Guide · Custom Prompt Builder</div><div class="ft-links"><button class="ft-rst" onclick="resetAll()">↺ Reset</button></div></footer>
+</div><!-- /pg-builder -->
+
+
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
 <script>
 /* ── INIT: ensure home page visible on load ── */
@@ -1422,7 +2112,7 @@ function selectChip(el,cat){
 }
 
 /* ── PAGE NAV ───────────────────────────── */
-const pages={home:'pg-home',usecases:'pg-usecases',charts:'pg-charts',scenarios:'pg-scenarios',mechanics:'pg-mechanics',levels:'pg-levels',limits:'pg-limits',quickprompts:'pg-quickprompts',bonus:'pg-bonus'};
+const pages={home:'pg-home',usecases:'pg-usecases',charts:'pg-charts',scenarios:'pg-scenarios',mechanics:'pg-mechanics',levels:'pg-levels',limits:'pg-limits',quickprompts:'pg-quickprompts',bonus:'pg-bonus',builder:'pg-builder'};
 function go(id){
   if(event&&event.preventDefault)event.preventDefault();
   Object.values(pages).forEach(p=>{const el=document.getElementById(p);if(el){el.classList.remove('active');el.classList.remove('on')}});
@@ -1531,11 +2221,168 @@ function showLvl(id){
 }
 function closeMob(){const m=document.getElementById('mobMenu');if(m)m.classList.remove('open')}
 
+
+/* ── PROMPT BUILDER JS ──────────────────────────────────── */
+let selectedGoal = 'build';
+let selectedAud  = 'analyst';
+let selectedLevel= 'intermediate';
+
+function selectGoal(el){
+  document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  selectedGoal = el.dataset.goal;
+}
+function selectAud(el){
+  document.querySelectorAll('.aud-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  selectedAud = el.dataset.aud;
+}
+function selectLevel(el){
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  selectedLevel = el.dataset.level;
+}
+function showInd(btn){
+  document.querySelectorAll('#indTabs button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.ind-tab').forEach(t=>{t.classList.remove('on');t.style.display='none'});
+  var target = document.getElementById('ind-'+btn.dataset.ind);
+  if(target){target.classList.add('on');target.style.display='block';}
+}
+
+/* Goal opening sentences — all use double-quotes, no nested quotes */
+var goalOpeners = {
+  build:   "I need to build [REQ] in Tableau.",
+  debug:   "I have a Tableau issue and need help debugging it. The problem is: [REQ].",
+  calc:    "I need to write a Tableau calculated field for this logic: [REQ].",
+  data:    "I need to connect and prepare data in Tableau. My situation: [REQ].",
+  perf:    "My Tableau dashboard needs performance optimisation. Situation: [REQ].",
+  publish: "I need to publish my Tableau workbook. Requirements: [REQ].",
+  design:  "I need to design a Tableau dashboard. Requirement: [REQ].",
+  lod:     "I need a Tableau LOD expression that calculates: [REQ].",
+  other:   "I have a Tableau requirement: [REQ]."
+};
+
+var audienceContext = {
+  analyst: "The output is for fellow data analysts comfortable with detailed charts.",
+  exec:    "The output is for senior executives — they need instant insight, minimal cognitive load, and clear RAG status indicators.",
+  ops:     "The output is for an operations team who need actionable, frequently-updated metrics.",
+  finance: "The output is for a finance team — accuracy, variance vs budget, and clear number formatting are critical.",
+  sales:   "The output is for a sales team — pipeline, performance vs target, and territory breakdowns are their priority.",
+  dev:     "The output is for a technical/dev team — concise and precise, skip UI fluff, focus on architecture and edge cases."
+};
+
+var levelContext = {
+  beginner:     "I am new to Tableau — please explain every step in plain English including exactly which shelf to drag each field to.",
+  intermediate: "I know Tableau basics. I need help with the more complex logic, calculated fields, and edge cases.",
+  advanced:     "I am an advanced Tableau user. Skip basics, focus on the most efficient approach, performance implications, and edge cases."
+};
+
+function generatePrompt(){
+  var fields = document.getElementById('b-fields').value.trim();
+  var req    = document.getElementById('b-req').value.trim();
+
+  if(!req){
+    document.getElementById('b-req').style.borderColor='var(--red)';
+    document.getElementById('b-req').placeholder='Please describe your requirement first!';
+    return;
+  }
+  document.getElementById('b-req').style.borderColor='rgba(168,85,247,.2)';
+
+  var opener = (goalOpeners[selectedGoal] || goalOpeners.other).replace('[REQ]', req);
+  var fieldsLine = fields ? ('\nMy available data fields are: ' + fields + '.') : '';
+  var audLine    = audienceContext[selectedAud]    || '';
+  var levelLine  = levelContext[selectedLevel]     || '';
+  var audLabel   = selectedAud === 'exec' ? 'senior executives' : selectedAud;
+
+  var prompt = opener + fieldsLine + '\n\n' +
+    audLine + '\n' + levelLine +
+    '\n\nPlease give me:\n' +
+    '1. The exact step-by-step instructions to build this in Tableau Desktop — including which fields go on Rows, Columns, Marks (Colour, Size, Label, Detail), and Filters\n' +
+    '2. Any calculated fields I need — written with full Tableau syntax and an explanation of each part\n' +
+    '3. How to handle NULLs, zero-division, or missing data in this scenario\n' +
+    '4. The most common mistake analysts make when building this and how to avoid it\n' +
+    '5. How to validate that the output is correct before presenting to stakeholders';
+
+  document.getElementById('generatedPrompt').textContent = prompt;
+  document.getElementById('builderOutput').style.display = 'block';
+  setTimeout(function(){
+    document.getElementById('builderOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  }, 80);
+}
+
+function refinePrompt(type){
+  var current = document.getElementById('generatedPrompt').textContent;
+  var additions = {
+    moredetail:  '\n\nAdditional context: Please provide more detail on each step — assume I may not know where every menu item is in Tableau Desktop.',
+    simpler:     '\n\nNote: Please simplify the instructions. Use the most straightforward approach even if it is not the most optimised.',
+    performance: '\n\nAlso include: Performance implications of this approach on large datasets (1M+ rows) and what you would do differently if performance is a concern.',
+    edgecases:   '\n\nAlso include: All edge cases — NULLs, empty strings, zero denominators, date gaps, and any Tableau-specific gotchas for this calculation type.',
+    stepbystep:  '\n\nPlease format the response as a numbered step-by-step checklist I can follow sequentially.',
+    syntax:      '\n\nPlease include the full Tableau calculated field syntax for every formula mentioned — written exactly as I would type it into the Calculated Field editor, ready to copy and paste.'
+  };
+  document.getElementById('generatedPrompt').textContent = current + (additions[type] || '');
+}
+
+function copyGenerated(){
+  var text = document.getElementById('generatedPrompt').textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn = document.getElementById('genCopyBtn');
+    btn.textContent = '✓ COPIED!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function(){btn.textContent='📋 COPY PROMPT';btn.style.background='var(--purple2)';}, 2000);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=text;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Copied!');
+  });
+}
+
+function copyWithTeamsNote(){
+  var text = '[Type in Teams Copilot side panel during meeting or in Teams chat]\n\n' +
+             document.getElementById('generatedPrompt').textContent;
+  navigator.clipboard.writeText(text).then(function(){ alert('Copied with Teams context note!'); });
+}
+
+function copyWithExcelNote(){
+  var text = '[In Excel Copilot: Home ribbon → Copilot button. Data must be in a named Table first]\n\n' +
+             document.getElementById('generatedPrompt').textContent;
+  navigator.clipboard.writeText(text).then(function(){ alert('Copied with Excel context note!'); });
+}
 </script>
-</body>
-</html>
-HTMLEOF
-echo "File size: $(wc -c < /mnt/user-data/outputs/tableau-copilot-final.html) bytes"
-echo "Done"
+
+
+
+
+
+<!-- ══════════════════════════════════════════════
+     COMPANION ROBOT — persistent across all pages
+═══════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     COMPANION ROBOT — Spline 3D, persistent all pages
+═══════════════════════════════════════════════════════ -->
+<div id="companion" title="Hey! I'm your Copilot buddy 👋">
+
+  <!-- 3D Robot via Spline -->
+  <div id="cWrap">
+    <spline-viewer
+      id="cSpline"
+      url="https://prod.spline.design/7RK7XK1ZSGH4wxTq/scene.splinecode"
+      loading="lazy"
+      events-target="global"
+      style="width:140%;height:140%;margin-left:-20%;margin-top:-18%;background:transparent;border:none"
+    ></spline-viewer>
+    <!-- Watermark blocker — covers bottom-right of spline-viewer -->
+    <div id="cMask"></div>
+  </div>
+
+  <!-- Speech bubble -->
+  <div id="cBubble"><span id="cText">Hey! 👋 Need Tableau help?</span></div>
+
+  <!-- Glow ring -->
+  <div id="cRing"></div>
+</div>
+
 </body>
 </html>
